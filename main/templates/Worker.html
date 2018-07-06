@@ -1,0 +1,330 @@
+{% extends "wrapper.html" %}
+
+{% block content%}
+
+    <p></p>
+
+    <div class="container content" >
+
+        <div class="row">
+
+            <div class="col">
+
+                <div class="row" >
+
+                    <div class="col form-control">
+
+                        <div class="row" >
+                            <div class="col">
+                                <div class="product">
+                                    <div class="product-img" >
+                                        {% if worker.fotourl %}
+                                            <a href="#"><img src="{{  STATIC_URL }}{{ worker.fotourl }}" height="150px" alt=""></a>
+                                        {% else %}
+                                            <a href="#"><img src="{{  STATIC_URL }}/static/main/img/Foto.jpg" height="150px" alt=""></a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <p></p>
+                                <span class="input-group-btn">
+                                    {% if user.is_active %}
+                                        <button type="submit" class="btn btn-danger">Написать сообщение</button>
+                                    {% else %}
+                                        <button type="submit" class="btn btn-secondary">Написать сообщение</button>
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <div class="col">
+                                <div class="row" >
+                                    <div class="col" align="left">
+                                        <p>
+                                            <h2>{{ worker.name }} {{ worker.surname }}</h2>
+                                        </p>
+                                        <P>
+                                            {% if worker.isonline %}
+                                                <span class="text-success"><strong>Онлайн</strong></span>
+                                            {% else %}
+                                                <span class="text-dark"><strong>Был на сайте: </strong>{{ worker.lastonline }}</span>
+                                            {% endif %}
+                                        </p>
+                                        <p class="text-dark">
+
+                                            {% for prof in worker.profList %}
+                                                {{ prof.name }},
+                                            {% endfor %}
+
+                                        </p>
+                                        <p>
+                                            <span class="text-danger"><strong>Рейтинг: </strong>{{ worker.rating }}</span>
+                                        </p>
+                                        {% if userAauthorized %}
+                                            <p>
+                                                <span class="text-dark"><strong>Телефон: </strong>{{ worker.phonenumber }}</span>
+                                            </p>
+                                            <p>
+                                                <span class="text-dark"><strong>E-mail: </strong>{{ worker.emailaddress }}</span>
+                                            </p>
+                                        {% endif %}
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        {% if worker.description %}
+                            <p></p>
+                            <div class="row">
+                                <div class="col">
+                                    <p>
+                                        <strong>О себе: </strong>{{ worker.description }}
+
+                                    </p>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if worker.experience %}
+                            <p></p>
+                            <div class="row">
+                                <div class="col">
+                                    <p>
+                                        <strong>Опыт работы: </strong>{{ worker.experience }}
+                                    </p>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if worker.education %}
+                            <p></p>
+                            <div class="row">
+                                <div class="col">
+                                    <p>
+                                        <strong>Образование: </strong>{{ worker.education }}
+                                    </p>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if worker.servicelist %}
+                            <p></p>
+                            <p>
+                                <strong>Услуги и цены:</strong>
+                            </p>
+                            <div class="row" >
+                                <div class="col">
+                                    <table class="table table-sm">
+                                      <tbody>
+                                        {% for service in worker.servicelist %}
+                                            <tr>
+                                              <td>{{ service.service }}</td>
+                                              <td>{{ service.price }}р.</td>
+                                            </tr>
+                                        {% endfor %}
+                                      </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+
+
+                    <div class="col col-3 form-control" style="margin-left: 5px">
+                        <p></p>
+                        <div class="row">
+                            <div class="col">
+                                <table class="table table-sm">
+                                  <tbody>
+                                    <tr>
+                                      <td>Опыт работы</td>
+                                      <td> {{ worker.experiencewith }}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Город</td>
+                                      <td>{{ worker.city }}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Данные проверены</td>
+                                      <td>
+                                          {% if worker.datacheck %}
+                                            <H2 class="text-success">+</H2>
+                                          {% else %}
+                                            <H2 class="text-danger">-</H2>
+                                          {% endif %}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Наличие ИП</td>
+                                      <td>
+                                        {% if worker.haveip %}
+                                            <H2 class="text-success">+</H2>
+                                          {% else %}
+                                            <H2 class="text-danger">-</H2>
+                                          {% endif %}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Проверка ФСО</td>
+                                      <td>
+                                          {% if worker.fsocheck %}
+                                            <H2 class="text-success">+</H2>
+                                          {% else %}
+                                            <H2 class="text-danger">-</H2>
+                                          {% endif %}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Разрешение на работу</td>
+                                      <td>
+                                          {% if worker.workpermit %}
+                                            <H2 class="text-success">+</H2>
+                                          {% else %}
+                                            <H2 class="text-danger">-</H2>
+                                          {% endif %}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Аттестация СРО СВЗ</td>
+                                      <td> <H2 class="text-success">+</H2> </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row" style="margin-top: 5px">
+                    <div class="col form-control">
+
+                        <div class="row">
+                            <div class="col col-1"><h5 class="text-dark">Отзывы: </h5></div>
+                            <div class="col"><h5 class="text-danger">{{worker.commentscount}}</h5></div>
+                        </div>
+
+                        <div class="row ">
+                            <div class="col">
+                                <hr class="text-dark bg-dark" style="border: none; height: 2px;">
+                            </div>
+                        </div>
+
+                        {% for comment in comments %}
+
+                            <div class="row border" style="margin: 5px">
+                                <div class="col col-2">
+                                    <div class="row">
+                                        <div class="col"><h5 class="text-danger">{{ comment.rating }}</h5></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col"><h5>{{ comment.idProf }}</h5></div>
+                                    </div>
+
+                                </div>
+                                <div class="col col-10">
+                                    <div class="row ">
+                                        <span>{{ comment.text }}</span>
+                                    </div>
+                                    <div class="row ">
+                                        <div class="col">
+                                            <hr class="text-dark bg-dark" style="border: none; height: 2px;">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col col-8">
+                                        </div>
+                                        <div class="col col-2">
+                                            {{ comment.created|date:"d M Y" }}
+                                        </div>
+                                        <div class="col col-2">
+                                            {{ comment.idUser }}
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+                        <div class="row ">
+                            <div class="col">
+                                <hr class="text-dark bg-dark" style="border: none; height: 2px;">
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class = "col">
+
+                                {% if user.is_active %}
+                                    <form action="" method="post">
+                                        {% csrf_token %}
+
+                                        <div class="form-group">
+                                            <div class="row"  style="padding-top: 5px">
+                                                <div class="col">
+                                                    {{  commentForm.text.errors  }}
+                                                    <h5>Новый комментарий:</h5>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col col-4">
+                                                    <select required class=" custom-select" name="{{ commentForm.rating.name }}" id="id_{{ commentForm.rating.name }}">
+                                                        <option value="" style="display:none">Оценка</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col col-8">
+                                                    <select required class=" custom-select" name="{{ commentForm.idProf.name }}" id="id_{{ commentForm.idProf.name }}">
+                                                        <option value="" style="display:none">Работа</option>
+                                                        {% for prof in worker.proflist %}
+                                                            <option value="{{ prof.id }}">{{ prof.name }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row"  style="padding-top: 5px">
+                                                <div class="col">
+                                                    <textarea required name="{{ commentForm.text.name }}" class="form-control" rows="5" placeholder="Ваш комментарий..." id="id_{{ commentForm.text.name }}"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col col-10"></div>
+                                                <div class="col col-2">
+                                                    <button type="submit" class="btn btn-danger container-fluid">Сохранить</button>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+
+                                    </form>
+                                {% endif %}
+
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <p></p>
+
+{% endblock %}

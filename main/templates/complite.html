@@ -1,0 +1,13 @@
+{% extends "wrapper_small.html" %}
+{% load home_extras %}
+{% block content%}
+
+    <div class="container" style="width: 300px;">
+
+        <h5 align="center">Изменения успешно сохранены</h5>
+
+        <a href="{% get_attribute 'HOME_PAGE' %}" class="btn btn-danger btn-block text-light" role="button">Вернуться на главную</a>
+
+    </div>
+
+{% endblock %}

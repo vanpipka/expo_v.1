@@ -1,0 +1,167 @@
+            {% for elem in Workers %}
+
+                <div class="row" >
+
+                    <div class="col col-9">
+
+                        <div class="row" >
+                            <div class="col">
+                                <div class="product">
+                                    <div class="product-img">
+                                        {% if elem.fotourl %}
+                                            <a href="{{ elem.url }}"><img src="{{ elem.fotourl }}" height="150px" alt=""></a>
+                                        {% else %}
+                                            <a href="/worker/{{ elem.id }}"><img src="/static/main/img/Foto.jpg" height="150px" alt=""></a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col col-6">
+
+                                <p class="product-title">
+                                    <h3><a href="{{ elem.url }}" class="text-dark">{{ elem.name }} {{ elem.surname }}</a></h3>
+                                </p>
+                                <p class="text-dark">
+
+                                    {% for prof in elem.proflist %}
+                                        {{ prof.name }},
+                                    {% endfor %}
+
+                                </p>
+                                {% if elem.isonline %}
+                                    <p><h5 class="text-success">Онлайн</h5></p>
+                                {% endif %}
+
+                                <p class="text-dark"></p>
+
+                            </div>
+
+                        </div>
+                        <p>
+                            <h5 class="text-dark">Услуги и цены</h5>
+                        </p>
+                        <div class="row" >
+                            <div class="col">
+                                <table class="table table-sm">
+                                  <tbody>
+                                    {% for service in elem.servicelist %}
+                                        <tr>
+                                          <td>{{ service.service }}</td>
+                                          <td>{{ service.price }}р.</td>
+                                        </tr>
+                                    {% endfor %}
+                                  </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                        <p>
+                            <h5 class="text-dark">О себе:</h5>
+                        </p>
+                        <div class="row">
+                            <div class="col">
+                                {{ elem.description }}</div>
+                        </div>
+                    </div>
+
+                    <div class="col col-3">
+
+                        <span class="input-group-btn">
+                            {% if user.is_active %}
+                                <button type="submit" class="btn btn-danger">Написать сообщение</button>
+                            {% else %}
+                                <button type="submit" class="btn btn-secondary">Написать сообщение</button>
+                            {% endif %}
+                        </span>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="text-danger">
+                                    <H2>{{ elem.rating }}</H2>
+                                </div>
+                                <div class="text-dark">
+                                    Рейтинг
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="text-danger">
+                                    <H2>{{elem.commentscount}}</H2>
+                                </div>
+                                <div class="text-dark">
+                                    Отзывов
+                                </div>
+                            </div>
+                        </div>
+                        <p></p>
+                        <div class="row">
+                            <div class="col">
+                                <table class="table table-sm">
+                                  <tbody>
+                                    <tr>
+                                      <td>Опыт работы</td>
+                                      <td> {{ elem.experiencewith }}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Город</td>
+                                      <td>{{ elem.city }}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Данные проверены</td>
+                                      <td>
+                                          {% if elem.datacheck %}
+                                            <H2 class="text-success">+</H2>
+                                          {% else %}
+                                            <H2 class="text-danger">-</H2>
+                                          {% endif %}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Наличие ИП</td>
+                                      <td>
+                                        {% if elem.haveip %}
+                                            <H2 class="text-success">+</H2>
+                                          {% else %}
+                                            <H2 class="text-danger">-</H2>
+                                          {% endif %}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Проверка ФСО</td>
+                                      <td>
+                                          {% if elem.fsocheck %}
+                                            <H2 class="text-success">+</H2>
+                                          {% else %}
+                                            <H2 class="text-danger">-</H2>
+                                          {% endif %}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Разрешение на работу</td>
+                                      <td>
+                                          {% if elem.workpermit %}
+                                            <H2 class="text-success">+</H2>
+                                          {% else %}
+                                            <H2 class="text-danger">-</H2>
+                                          {% endif %}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Аттестация СРО СВЗ</td>
+                                      <td> <H2 class="text-success">+</H2> </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row ">
+                    <div class="col">
+                        <hr class="text-dark bg-dark" style="border: none; height: 2px;">
+                    </div>
+                </div>
+
+            {% endfor %}

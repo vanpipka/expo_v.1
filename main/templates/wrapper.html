@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8" >
+    <title>EXPO</title>
+    {% load staticfiles %}
+    {% load home_extras %}
+
+    {% include "includes/Links.html" %}
+
+</head>
+<body>
+    {% include "includes/navbar.html" %}
+
+    {% block content %}
+    {% endblock %}
+
+
+
+    {% include "includes/footer.html" %}
+</body>
+</html>

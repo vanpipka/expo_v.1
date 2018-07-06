@@ -1,0 +1,45 @@
+{% extends "wrapper.html" %}
+
+{% block content%}
+
+    {% include "includes/Search.html" %}
+    <div class="container">
+        <div class="row">
+            {% for elem in all_workGroups %}
+
+                <div class="col-md-4">
+
+                    <div class="card border-dark">
+
+                        <div class="card-header bg-dark text-white">
+                            {{ elem.name }}
+                        </div>
+
+                        <div class="card-body">
+
+                            {% for elem_p in elem.professions %}
+
+                                <p >
+                                    <a href="{{elem_p.url}}" class="text-dark">{{elem_p.name }}</a>
+                                </p>
+
+                            {% endfor %}
+
+                            <p>
+                                <a href="" class="text-dark">Показать всех</a>
+                            </p>
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+        {% endfor %}
+                    </div>
+
+    </div>
+    <p></p>
+
+{% endblock %}

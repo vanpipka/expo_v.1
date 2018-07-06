@@ -1,0 +1,29 @@
+{% extends "wrapper_small.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block content %}
+
+   <div class="card text-center col-sm-6 container">
+      <div class="card-header">
+            <h1>{% trans "Зарегистрироваться" %}</h1>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">
+            <p>{% blocktrans %}Если у вас уже есть учетная запись? Тогда пожалуйста <a href="{{ login_url }}">Войдите</a>.{% endblocktrans %}</p>
+        </h5>
+
+        <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+          {% csrf_token %}
+          {{ form.as_p }}
+          {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+          {% endif %}
+          <button type="submit" class="btn btn-danger">{% trans "Зарегистрироваться" %}</button>
+        </form>
+      </div>
+   </div>
+
+{% endblock %}

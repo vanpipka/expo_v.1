@@ -1,0 +1,347 @@
+{% extends "wrapper.html" %}
+{% load home_extras %}
+{% block content%}
+<style>
+    .hover-danger:hover{ background-color: #d53141}
+
+</style>
+<p></p>
+
+        <div class="container">
+            <div class="row">
+                <div class="col col-4" style="">
+                    <form method="post" action="{% get_attribute 'HOME_PAGE' %}worker/search/" >
+                        {% csrf_token %}
+
+                        <div class="card">
+                            <div class="card-block card-header bg-dark text-white">
+                                <span class="card-title">Поиск по критериям</span>
+                            </div>
+                            <div class="card-block">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item" style="border: 0px">
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <label for="inputProfession" class="">Профессия:</label>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <input type="text" class=" form-control" id="Profession" name="Profession" placeholder="Монтажник" value="{{ searchProperty.Profession }}">
+                                            </div>
+                                            {% include "includes/Prof_Search_Script.html" %}
+                                        </div>
+                                    </li>
+
+                                    <li class="list-group-item"  style="border: 0px">
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <label for="inputCity" class="">Город</label>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <input type="Text" class="form-control" id="inputCity" name="City" placeholder="Москва" value="{{ searchProperty.City }}">
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                    <li class="list-group-item"  style="border: 0px">
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <label for="Sex" class="">Пол:</label>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <select type="text" name = "Sex" class="form-control"  id="Sex" placeholder="">
+                                                    <option>Не имеет значения</option>
+                                                    <option {% if searchProperty.Sex == 'M' %}selected{% endif %} value="M">Мужчины</option>
+                                                    <option {% if searchProperty.Sex == 'W' %}selected{% endif %} value="W">Женщины</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="card-footer text-xs-right">
+                                <button type="submit" class="btn btn-danger container-fluid" >Подобрать</button>
+                            </div>
+                        </div>
+
+                        <p></p>
+
+                            <div class="card border" >
+
+                                <div class="card-header">
+                                    Основные
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-check hover-danger">
+                                        <input class="form-check-input" type="checkbox" name="HaveIp" id="HaveIp" value="True" {% if searchProperty.HaveIp == True %}checked{% endif %}>
+                                        <label class="form-check-label" for="HaveIp">
+                                            Индивидуальный предприниматель
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check hover-danger">
+                                        <input class="form-check-input" type="checkbox" name="HaveShengen" id="HaveShengen" value="True" {% if searchProperty.HaveShengen == True %}checked{% endif %}>
+                                        <label class="form-check-label" for="HaveShengen">
+                                            Шенгенская виза
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check hover-danger">
+                                        <input class="form-check-input" type="checkbox" name="HaveIntPass" id="HaveIntPass" value="True" {% if searchProperty.HaveIntPass == True %}checked{% endif %}>
+                                        <label class="form-check-label" for="HaveIntPass">
+                                            Загранпаспорт
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check hover-danger">
+                                        <input class="form-check-input" type="checkbox" name="HaveInstrument" id="HaveInstrument" value="True" {% if searchProperty.HaveInstrument == True %}checked{% endif %}>
+                                        <label class="form-check-label" for="HaveInstrument">
+                                            Свой инструмент
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="card-header">
+                                    Проверки
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-check hover-danger">
+                                        <input class="form-check-input" type="checkbox" name="FsoCheck" id="FsoCheck" value="True" {% if searchProperty.FsoCheck == True %}checked{% endif %}>
+                                        <label class="form-check-label" for="FsoCheck">
+                                            Проверено ФСО
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check hover-danger">
+                                        <input class="form-check-input" type="checkbox" name="DataCheck" id="DataCheck" value="True" {% if searchProperty.DataCheck == True %}checked{% endif %}>
+                                        <label class="form-check-label" for="DataCheck">
+                                            Данные проверены
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="card-header">
+                                    Вид работы
+                                </div>
+
+                                <div class="card-body">
+                                    <script type="text/javascript">
+
+                                        function SelectWorkType(){
+
+                                            var projectwork  = document.getElementById('projectwork');
+                                            var fulltimework = document.getElementById('fulltimework');
+
+                                            var index = this.options[this.selectedIndex].value;
+                                            if (index == "1"){
+                                                projectwork.style.display = 'none';
+                                                fulltimework.style.display = 'block';
+                                            }
+                                            else if (index == "2"){
+                                                projectwork.style.display = 'block';
+                                                fulltimework.style.display = 'none';
+                                            }
+                                            else{
+                                                projectwork.style.display = 'none';
+                                                fulltimework.style.display = 'none';
+                                            }
+                                        }
+
+                                    </script>
+
+                                    <div class="row">
+                                            <div class="col-sm-4">
+                                                <label for="inputProfession" class="">Тип работы:</label>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <select type="text" name = "Sex" class="form-control"  id="Sex" placeholder="" onchange = SelectWorkType.call(this)>
+                                                    <option></option>
+                                                    <option value="1">Постояная работа</option>
+                                                    <option value="2">Проектная работа</option>
+                                                    <option value="3">Фриланс</option>
+                                                </select>
+                                            </div>
+                                    </div>
+
+                                    <div class="form-check" id="projectwork"  style="display: none">
+                                        <div class="row" style="padding-top: 10px">
+                                            <div class="col-sm-4">
+                                                <label class="form-label" for="HaveInstrument">Подготовка:</label>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <input class="form-control" type="number" name="HaveInstrument" id="HaveInstrument">
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 10px">
+                                            <div class="col-sm-4">
+                                                <label class="form-label" for="HaveInstrument">Монтаж:</label>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <input class="form-control" type="number" name="HaveInstrument" id="HaveInstrument">
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 10px">
+                                            <div class="col-sm-4">
+                                                <label class="form-label" for="HaveInstrument">Переработка:</label>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <input class="form-control" type="number" name="HaveInstrument" id="HaveInstrument">
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 10px">
+                                            <div class="col-sm-4">
+                                                <label class="form-label" for="HaveInstrument">Ночная смена:</label>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <input class="form-control" type="number" name="HaveInstrument" id="HaveInstrument">
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 10px">
+                                            <div class="col-sm-4">
+                                                <label class="form-label" for="HaveInstrument">Командировка:</label>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <input class="form-control" type="number" name="HaveInstrument" id="HaveInstrument">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-check" id="fulltimework"   style="display: none">
+                                        <div class="form-check hover-danger">
+                                            <input class="form-check-input" type="radio" name="WorkExperience" id="WorkExperience0" value="" checked>
+                                            <label class="form-check-label" for="WorkExperience0">
+                                                Не имеет значения
+                                            </label>
+                                        </div>
+                                        <div class="form-check hover-danger">
+                                            <input class="form-check-input" type="radio" name="WorkExperience" id="WorkExperience0" value="" checked>
+                                            <label class="form-check-label" for="WorkExperience0">
+                                                до 50т.р.
+                                            </label>
+                                        </div>
+                                        <div class="form-check hover-danger">
+                                            <input class="form-check-input" type="radio" name="WorkExperience" id="WorkExperience0" value="" checked>
+                                            <label class="form-check-label" for="WorkExperience0">
+                                                50-100т.р.
+                                            </label>
+                                        </div>
+                                        <div class="form-check hover-danger">
+                                            <input class="form-check-input" type="radio" name="WorkExperience" id="WorkExperience0" value="" checked>
+                                            <label class="form-check-label" for="WorkExperience0">
+                                                100-150т.р.
+                                            </label>
+                                        </div>
+                                        <div class="form-check hover-danger">
+                                            <input class="form-check-input" type="radio" name="WorkExperience" id="WorkExperience0" value="" checked>
+                                            <label class="form-check-label" for="WorkExperience0">
+                                                более 150т.р.
+                                            </label>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                                <div class="card-header">
+                                    Стаж работы
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-check hover-danger">
+                                        {% if searchProperty.WorkExperience == "WorkExperience0" %}
+                                            <input class="form-check-input" type="radio" name="WorkExperience" id="WorkExperience0" value="" checked>
+                                        {% else %}
+                                            <input class="form-check-input" type="radio" name="WorkExperience" id="WorkExperience0" value="">
+                                        {% endif %}
+                                        <label class="form-check-label" for="WorkExperience0">
+                                            Не имеет значения
+                                        </label>
+                                    </div>
+                                    <div class="form-check hover-danger">
+                                        {% if searchProperty.WorkExperience == "WorkExperience1" %}
+                                            <input class="form-check-input" type="radio" name="WorkExperience" id="WorkExperience1" value="1" checked>
+                                        {% else %}
+                                            <input class="form-check-input" type="radio" name="WorkExperience" id="WorkExperience1" value="1">
+                                        {% endif %}
+                                        <label class="form-check-label" for="WorkExperience1">
+                                            до 1 года
+                                        </label>
+                                    </div>
+                                    <div class="form-check hover-danger">
+                                        {% if searchProperty.WorkExperience == "WorkExperience2" %}
+                                            <input class="form-check-input" type="radio" name="WorkExperience" id="WorkExperience2" value="2" checked>
+                                        {% else %}
+                                            <input class="form-check-input" type="radio" name="WorkExperience" id="WorkExperience2" value="2">
+                                        {% endif %}
+                                        <label class="form-check-label" for="WorkExperience2">
+                                            1-3 года
+                                        </label>
+                                    </div>
+                                    <div class="form-check hover-danger">
+                                        {% if searchProperty.WorkExperience == "WorkExperience3" %}
+                                            <input class="form-check-input" type="radio" name="WorkExperience" id="WorkExperience3" value="3" checked>
+                                        {% else %}
+                                            <input class="form-check-input" type="radio" name="WorkExperience" id="WorkExperience3" value="3">
+                                        {% endif %}
+                                        <label class="form-check-label" for="WorkExperience3">
+                                            3-7 лет
+                                        </label>
+                                    </div>
+                                    <div class="form-check hover-danger">
+                                        {% if searchProperty.WorkExperience == "WorkExperience4" %}
+                                            <input class="form-check-input" type="radio" name="WorkExperience" id="WorkExperience4" value="4" checked>
+                                        {% else %}
+                                            <input class="form-check-input" type="radio" name="WorkExperience" id="WorkExperience4" value="4">
+                                        {% endif %}
+                                        <label class="form-check-label" for="WorkExperience4">
+                                            более 7 лет
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="card-header">
+                                    Исключения
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-check hover-danger">
+                                        <input class="form-check-input" type="checkbox" name="OnlyFoto" id="OnlyFoto" value="True" {% if searchProperty.OnlyFoto == True %}checked{% endif %}>
+                                        <label class="form-check-label" for="OnlyFoto">
+                                            Только с фото
+                                        </label>
+                                    </div>
+                                    <div class="form-check hover-danger">
+                                        <input class="form-check-input" type="checkbox" name="OnlyComments" id="OnlyComments" value="True" {% if searchProperty.OnlyComments == True %}checked{% endif %}>
+                                        <label class="form-check-label" for="OnlyComments">
+                                            Только с отзывами
+                                        </label>
+                                    </div>
+                                    <div class="form-group row" style="padding-top: 10px">
+                                        <label for="InputRating" class="col-sm-6 col-form-label">Рейтинг более:</label>
+                                        <div class="col-sm-6">
+                                            <select type="text" name = "InputRating" class="form-control" id="InputRating" placeholder="">
+                                                <option></option>
+                                                <option {% if searchProperty.InputRating == '1' %}selected{% endif %}>1</option>
+                                                <option {% if searchProperty.InputRating == '2' %}selected{% endif %}>2</option>
+                                                <option {% if searchProperty.InputRating == '3' %}selected{% endif %}>3</option>
+                                                <option {% if searchProperty.InputRating == '4' %}selected{% endif %}>4</option>
+                                                <option {% if searchProperty.InputRating == '5' %}selected{% endif %}>5</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <button type="submit"  class="btn btn-danger container-fluid">Подобрать</button>
+                                </div>
+                            </div>
+                    </form>
+                </div>
+
+                <div class="col col-8" >
+
+                    {% include "includes/WorkerList.html" %}
+
+                </div>
+            </div>
+        </div>
+
+<p></p>
+
+{% endblock %}

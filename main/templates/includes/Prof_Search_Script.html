@@ -1,0 +1,31 @@
+<script>
+    var prof_tags = [];
+    $( "#Profession" ).autocomplete({
+        source: function( request, response ) {
+            if (prof_tags.length == 0) {
+
+                $.ajax({
+                    url: "http://py.itoe.ru:56503/m/serviceslist/",
+                    dataType: "json",
+                      // параметры запроса, передаваемые на сервер (последний - подстрока для поиска):
+                    data:{
+                        featureClass: "P",
+                        style: "full",
+                        maxRows: 12,
+                        name_startsWith: request.term
+                },
+                success: function(data){
+                    $.map(data.professionList, function(item){
+                        prof_tags.push(item.name)
+                    });
+                  }
+                });
+            }
+            var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
+            response( $.grep(prof_tags, function( item ){
+                return matcher.test( item );
+            }) );
+        minLength: 2
+        }
+    });
+</script>
