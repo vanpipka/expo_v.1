@@ -1,6 +1,38 @@
 {% extends "wrapper.html" %}
 
 {% block content%}
+    <style>
+
+        .file-upload {
+             position: relative; /* Даем возможность делать позиционирование, внутри данного элемента */
+             overflow: hidden; /* Все что выходит за пределы - скрываем */
+             /*width: 20%; /* Задаем ширину кнопки выбора файла */
+             height: 40px; /* Задаем высоту кнопки выбора файла */
+             /*background: #6da047;*/
+             border-radius: 3px;
+             padding: 8px 4px;
+             /*color: #fff;*/
+             text-align: center;
+        }
+
+        .file-upload input[type="file"]{
+            display: none; /* Обязательно скрываем настоящий Input File */
+        }
+        .file-upload label {
+             /* Растягиваем label на всю возможную площадь блока .file-upload */
+             display: block;
+             position: absolute;
+             top: 0;
+             left: 0;
+             width: 100%;
+             height: 100%;
+             cursor: pointer;
+        }
+        .file-upload span {
+             line-height: 36px; /* Делаем вертикальное выравнивание текста, который написан на кнопке */
+        }
+
+    </style>
     <p></p>
     <div class="container pb-3">
         
@@ -9,97 +41,118 @@
 		  <div class="form-group pb-3">
 
 		    <div class="row">
-			    <div class="col col-2">
+			    <!--ФОТО------------------------------------------------------------------------------------------>
+                <div class="col col-2">
                     <div class="row">
                         <div class="col">
                             <div class="product-img">
-                                        {% if worker.fotoUrl %}
-                                            <a href="#"><img src="{{ worker.fotoUrl }}" height="150px" alt=""></a>
-                                        {% else %}
-                                            <a href="#"><img src="/static/main/img/Foto.jpg" height="150px" alt=""></a>
-                                        {% endif %}
+                                {% if worker.fotoUrl %}
+                                    <img id ="fotourl" style="border-radius: 5px; margin-left: auto; margin-right: auto; display: block;" src="{{ worker.fotoUrl }}" height="150px" alt="">
+                                {% else %}
+                                    <img id ="fotourl" style="border-radius: 5px; margin-left: auto; margin-right: auto; display: block;" src="/static/main/img/Foto.jpg" height="150px" alt="">
+                                {% endif %}
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row pt-3">
                         <div class="col">
-                            <input type="file" name="foto" id="id_foto"/>
+                            <div class="file-upload container-fluid btn btn-danger">
+                                <label>
+                                    <script>
+                                        function setlocalfoto()
+                                            {
+                                                var input = document.getElementById("finput");
+                                                var fReader = new FileReader();
+                                                fReader.readAsDataURL(input.files[0]);
+                                                fReader.onloadend = function(event){
+                                                    var img = document.getElementById("fotourl");
+                                                    img.src = event.target.result;
+                                                }
+                                            }
+                                    </script>
+                                    <input id = "finput" type="file" name="file" onchange="setlocalfoto()">
+                                    <span>Сменить фото</span>
+                                </label>
+                            </div>
+
                         </div>
                     </div>
                 </div>
-                <div class="col">
+                <!--ФИО КОНТАКТЫ------------------------------------------------------------------------------------------>
+                <div class="col col-8">
                     <div class="row pb-3">
-
-                        <div class="col col-1">
-                            <label for="id_surname" class="col-xs-2 control-label"><strong>Фамилия:</strong></label>
-                        </div>
-
-                        <div class="col">
-                            <input type="text" name="surname" class="form-control" id="id_surname" placeholder="Введите фамилию" value="{{worker.surname}}">
-                        </div>
-
-                    </div>
-                    <div class="row pb-3">
-                        <div class="col col-1">
-                            <label for="id_name" class="col-xs-2 control-label"><strong>Имя:</strong></label>
+                        <div class="col col-sm-2">
+                            ФИО:
                         </div>
                         <div class="col">
-                            <input type="text" name = "name" class="form-control" id="id_name" placeholder="Введите имя" value="{{worker.name}}">
+                            <input type="text" name="surname" class="form-control" id="id_surname" placeholder="Фамилия" value="{{worker.surname}}">
+                        </div>
+                        <div class="col">
+                            <input type="text" name = "name" class="form-control" id="id_name" placeholder="Имя" value="{{worker.name}}">
+                        </div>
+                        <div class="col">
+                            <input type="text" name = "lastname" class="form-control" id="id_lastname" placeholder="Отчество" value="{{worker.lastname}}">
                         </div>
                     </div>
                     <div class="row pb-3">
-                        <div class="col col-1">
-                            <label for="id_lastname" class="col-xs-2 control-label"><strong>Отчество:</strong></label>
+                        <div class="col col-sm-2">
+                            Телефон:
                         </div>
                         <div class="col">
-                            <input type="text" name = "lastname" class="form-control" id="id_lastname" placeholder="Введите отчество" value="{{worker.lastname}}">
+                            <input type="text" name="phonenumber" class="form-control" id="id_phonenumber"  placeholder="Номер телефона" value="{{worker.phonenumber}}" required>
+                        </div>
+                    </div>
+                    <div class="row pb-3">
+                        <div class="col col-sm-2">
+                            Электронная почта:
+                        </div>
+                        <div class="col">
+                            <input type="text" name="emailaddress" class="form-control" id="id_emailaddress"  placeholder="Адрес электронной почты" value="{{worker.emailaddress}}" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-sm-2">
+                            Город:
+                        </div>
+                        <div class="col">
+                            <select name="idCity" required id="id_idCity" class="form-control" >
+                            {% for c in city %}
+                                {% if c.id == worker.cityid%}
+                                    <option value="{{ c.id }}" selected>{{ c.name }}</option>
+                                {% else %}
+                                    <option value="{{ c.id }}">{{ c.name }}</option>
+                                {% endif %}
+                            {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!--РЕЙТИНГ ОТЗЫВЫ------------------------------------------------------------------------------------------>
+                <div class="col col-2 pl-3">
+                    <div class="form-control">
+                        <div class="row">
+                                <div class="col col-sm-6">
+                                    <div class="text-danger text-center">
+                                        <H2>{{ worker.rating }}</H2>
+                                    </div>
+                                    <hr class="text-dark bg-secondary" style="border: none; height: 1px;">
+                                    <div class="text-dark text-center">
+                                        Рейтинг
+                                    </div>
+                                </div>
+                                <div class="col col-sm-6">
+                                    <div class="text-danger text-center">
+                                        <H2>{{worker.commentscount}}</H2>
+                                    </div>
+                                    <hr class="text-dark bg-secondary" style="border: none; height: 1px;">
+                                    <div class="text-dark text-center">
+                                        Отзывы
+                                    </div>
+                                </div>
                         </div>
                     </div>
                 </div>
 		    </div>
-		  </div>
-
-          <div class="form-group">
-		    <div class="row">
-                <div class="col">
-                    <label for="id_phonenumber" class="col-xs-2 control-label"><strong>Телефон:</strong></label>
-                </div>
-			    <div class="col">
-                    <input type="text" name="phonenumber" class="form-control" id="id_phonenumber"  placeholder="Номер телефона" value="{{worker.phonenumber}}" required>
-
-			    </div>
-            </div>
-              <p></p>
-              <div class="row">
-                <div class="col">
-                    <label for="id_emailaddress" class="col-xs-2 control-label"><strong>Электронная почта:</strong></label>
-                </div>
-			    <div class="col">
-                    <input type="text" name="emailaddress" class="form-control" id="id_emailaddress"  placeholder="Адрес электронной почты" value="{{worker.emailaddress}}" required>
-
-			    </div>
-            </div>
-              <p></p>
-		    <div class="row">
-                <div class="col">
-                    <label for="id_idCity" class="col-xs-2 control-label"><strong>Город:</strong></label>
-                </div>
-			    <div class="col">
-
-                    <select name="idCity" required id="id_idCity" class="form-control" >
-                    {% for c in city %}
-
-                        {% if c.id == worker.cityid%}
-                            <option value="{{ c.id }}" selected>{{ c.name }}</option>
-                        {% else %}
-                            <option value="{{ c.id }}">{{ c.name }}</option>
-                        {% endif %}
-
-                    {% endfor %}
-                    </select>
-
-			    </div>
-            </div>
 		  </div>
 
           <div class="form-group">
@@ -323,3 +376,4 @@
     <p></p>
 
 {% endblock %}
+
