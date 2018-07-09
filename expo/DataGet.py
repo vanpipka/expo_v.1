@@ -45,15 +45,17 @@ def getProfessionListWithGroup(count = None, selectedList=[]):
         for p in Professions.objects.all().filter(idWorkGroup=e.id):
             selected = False
 
-            if selectedList.count(p.id) != 0:
-                selected = True
+            for s in selectedList:
+                if p.id == s['id']:
+                    selected = True
+
             prof.append({"id": p.id, "name": p.name, "selected": selected})
 
         context[e.name] = prof
 
     return context
 
-def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False):
+def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, user_id = None):
 
     nowDate  = datetime.datetime.now(timezone.utc)
     WorkList = []
@@ -71,6 +73,9 @@ def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False):
     if idWorker != None:
         querySet = querySet.filter(id__in=idWorker)
 
+    if user_id != None:
+        querySet = querySet.filter(user_id=user_id)
+
     for e in querySet:
 
         ratingInfo = getWorkerRating(e)
@@ -86,6 +91,7 @@ def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False):
                         "datacheck": e.datacheck,
                         "city": e.idCity.name,
                         "experiencewith": datetime.datetime.now().year - e.Experiencewith.year, # Переделать на разность дат
+                        "experiencedate": e.Experiencewith,
                         "rating": ratingInfo["rating"],
                         "commentscount": ratingInfo["commentsCount"],
                         "lastonline": e.lastOnline,
@@ -124,51 +130,6 @@ def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False):
         WorkList.append(WorkerInfo)
 
     return WorkList
-
-def getWorkerInfo(user_id, userAauthorized=False):
-
-    WorkerInfo = None
-    querySet = Worker.objects.all().filter(user_id = user_id)
-    for e in querySet:
-
-        ratingInfo = getWorkerRating(e)
-
-        WorkerInfo = {"id": e.id,
-                                "description": e.Description,
-                                "name": e.name,
-                                "surname": e.surname,
-                                "lastname": e.lastname,
-                                "haveIP": e.haveIP,
-                                "fsocheck": e.fsocheck,
-                                "workpermit": e.workpermit,
-                                "Experiencewith": e.Experiencewith,
-                                "fotoUrl": '/static/main/media/' + str(e.foto),
-                                "cityid": e.idCity_id,
-                                "rating": ratingInfo["rating"],
-                                "commentsCount": ratingInfo["commentsCount"],
-                                "experience": e.experience,
-                                "education": e.education}
-
-        if userAauthorized:
-            WorkerInfo["phonenumber"] = e.phonenumber
-            WorkerInfo["emailaddress"] = user_id.email if e.emailaddress == "" else e.emailaddress
-        else:
-            WorkerInfo["phonenumber"] = ""
-            WorkerInfo["emailaddress"] = ""
-
-        profList    = []
-        priceList   = []
-
-        for prof in e.professions.all():
-            profList.append(prof.id)
-
-        for prof in CostOfService.objects.all().filter(idWorker=e):
-            priceList.append({"idservice":prof.idService_id, "service": prof.idService, "price": prof.price})
-
-        WorkerInfo["serviceList"]   = priceList
-        WorkerInfo["profession"]    = profList
-
-    return WorkerInfo
 
 def getWorker(id):
 

@@ -79,7 +79,7 @@
                     </div>
                 </div>
                 <!--ФИО КОНТАКТЫ------------------------------------------------------------------------------------------>
-                <div class="col col-8">
+                <div class="col col-7">
                     <div class="row pb-3">
                         <div class="col col-sm-2">
                             ФИО:
@@ -128,7 +128,7 @@
                     </div>
                 </div>
                 <!--РЕЙТИНГ ОТЗЫВЫ------------------------------------------------------------------------------------------>
-                <div class="col col-2 pl-3">
+                <div class="col col-3 pl-3">
                     <div class="form-control">
                         <div class="row">
                                 <div class="col col-sm-6">
@@ -149,6 +149,35 @@
                                         Отзывы
                                     </div>
                                 </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <hr class="text-dark bg-secondary" style="border: none; height: 1px;">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col col-10">
+                                Данные проверены
+                            </div>
+                            <div class="col col-2">
+                                {% if elem.datacheck %}
+                                    <H2 class="text-success">+</H2>
+                                {% else %}
+                                    <H2 class="text-danger">-</H2>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col col-10">
+                                Проверка ФСО
+                            </div>
+                            <div class="col col-2">
+                                {% if elem.fsocheck %}
+                                    <H2 class="text-success">+</H2>
+                                {% else %}
+                                    <H2 class="text-danger">-</H2>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -220,7 +249,7 @@
                     <label for="id_Experiencewith" class="col-xs-2 control-label"><strong>Стаж с (2014-07-08):</strong></label>
                 </div>
                 <div class="col">
-                    <input type="text" name="Experiencewith" class="form-control" id="id_Experiencewith"  placeholder="Дата" value="{{worker.Experiencewith|date:"Y.m.d"}}" required>
+                    <input type="text" name="Experiencewith" class="form-control" id="id_Experiencewith"  placeholder="Дата" value="{{worker.experiencedate|date:"Y.m.d"}}" required>
 
                     <!--<input type="date" name="Experiencewith" class="form-control" id="id_Experiencewith" placeholder="Дата" required >
                     <input type="text" name="Experiencewith" class="form-control" id="id_Experiencewith" value="{{worker.Experiencewith|date:"Y.m.d"}}"/>
@@ -335,7 +364,7 @@
 			    <div class="col">
 			      <table name="Services" class="table" placeholder="Услуги и цены">
                     <tbody id="id_Services">
-                      {% for service in worker.serviceList %}
+                      {% for service in worker.servicelist %}
 
                           <tr id = "tr{{ service.idservice }}">
                             <td>

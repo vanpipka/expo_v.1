@@ -2,7 +2,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from main.models import Comments, Worker
 from main.forms import CommentForm
-from expo.DataGet import getWorkerInfo, getCityList, getProfessionListWithGroup, getServiceList, gerWorkList, searchWorker
+from expo.DataGet import getCityList, getProfessionListWithGroup, getServiceList, gerWorkList, searchWorker
 from expo.DataSet import setWorker, refreshLastOnline
 from django.views.decorators.csrf import csrf_exempt
 
@@ -36,13 +36,14 @@ def showSettings(request):
 
         else:
 
-            worker          = getWorkerInfo(user_id=request.user, userAauthorized=request.user.is_authenticated)
+            worker          = gerWorkList(user_id=request.user, userAauthorized=request.user.is_authenticated)
             selectedList    = []
 
             if worker != None:
-                selectedList = worker.get('profession')
+                selectedList = worker[0].get('proflist')
+                print(selectedList)
 
-            context = {'worker': worker,
+            context = {'worker': worker[0],
                        'city': getCityList(),
                        'serviceList': getServiceList(),
                        'professionList': getProfessionListWithGroup(selectedList=selectedList)}

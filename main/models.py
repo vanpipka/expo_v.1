@@ -46,6 +46,12 @@ class Service(models.Model):
     def __str__(self):
         return self.name
 
+class WorkerAttachment(models.Model):
+
+    id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    file        = models.FileField(null=True, blank=True, upload_to="media/attach/", verbose_name='Изображение')
+    Description = models.CharField(max_length=200)
+
 class Worker(models.Model):
 
     id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -73,7 +79,7 @@ class Worker(models.Model):
     professions    = models.ManyToManyField(Professions)
     phonenumber    = models.CharField(max_length=100)
     emailaddress   = models.CharField(max_length=100)
-
+    WorkerAttachment = models.ManyToManyField(WorkerAttachment)
 
     def __str__(self):
         return self.name
