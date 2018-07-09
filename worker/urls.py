@@ -19,6 +19,7 @@ from . import views
 urlpatterns = [
 
     path('settings/', views.showSettings),
+    path('m/settings/', views.showSettingsJson),
     path('search/', views.showSearch),
     path('info/', views.showWorker),
     path('m/info/', views.showWorkersJson),

@@ -89,21 +89,33 @@ def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, 
                         "fsocheck": e.fsocheck,
                         "workpermit": e.workpermit,
                         "datacheck": e.datacheck,
-                        "city": e.idCity.name,
-                        "experiencewith": datetime.datetime.now().year - e.Experiencewith.year, # Переделать на разность дат
                         "experiencedate": e.Experiencewith,
                         "rating": ratingInfo["rating"],
                         "commentscount": ratingInfo["commentsCount"],
                         "lastonline": e.lastOnline,
                         "url_json": '/worker/m/info?id='+str(e.id),
                         "url": '/worker/info?id='+str(e.id),
-                        "fotourl": '/static/main/media/' + str(e.foto),
                         "education": e.education,
                         "experience": e.experience,
                         "isonline": True if (nowDate-e.lastOnline).seconds/60 < 5 else False}
         #print(str((nowDate-e.lastOnline).seconds/60< 5))
         #print("Количество секунд:" + str(nowDate) + " - " +str(e.lastOnline) +" = "+ str((nowDate - e.lastOnline).seconds))
         #print("Пользователь онлайн: "+str(WorkerInfo['isonline']))
+
+        if e.idCity:
+            WorkerInfo["city"] = e.idCity.name
+        else:
+            WorkerInfo["city"] = ""
+
+        if e.foto:
+            WorkerInfo["fotourl"] = '/static/main/media/' + str(e.foto)
+        else:
+            WorkerInfo["fotourl"]: ''
+
+        if e.Experiencewith != None:
+            WorkerInfo["experiencewith"] = datetime.datetime.now().year - e.Experiencewith.year  # Переделать на разность дат
+        else:
+            WorkerInfo["experiencewith"] = 0
 
         if userAauthorized:
             WorkerInfo["phonenumber"] = e.phonenumber

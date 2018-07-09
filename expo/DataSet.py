@@ -16,31 +16,39 @@ def setWorker(id, data, foto=''):
 
     print("Юзер:" + worker.name)
 
-    worker.name             = data.__getitem__('name')
-    worker.surname          = data.__getitem__('surname')
-    worker.lastname         = data.__getitem__('lastname')
-    worker.Description      = data.__getitem__('Description')
-    worker.education        = data.__getitem__('education')
-    worker.experience       = data.__getitem__('experience')
-    worker.phonenumber      = data.__getitem__('phonenumber')
-    worker.emailaddress     = data.__getitem__('emailaddress')
-    worker.haveIP           = False
-    worker.workpermit       = False
-    worker.idCity           = City.objects.get(id=data.__getitem__('idCity'))
+    if data.__contains__('name'):
+        worker.name             = data.__getitem__('name')
+    if data.__contains__('surname'):
+        worker.surname          = data.__getitem__('surname')
+    if data.__contains__('lastname'):
+        worker.lastname         = data.__getitem__('lastname')
+    if data.__contains__('Description'):
+       worker.Description      = data.__getitem__('Description')
+    if data.__contains__('education'):
+        worker.education        = data.__getitem__('education')
+    if data.__contains__('experience'):
+        worker.experience       = data.__getitem__('experience')
+    if data.__contains__('phonenumber'):
+        worker.phonenumber      = data.__getitem__('phonenumber')
+    if data.__contains__('emailaddress'):
+        worker.emailaddress     = data.__getitem__('emailaddress')
+    if data.__contains__('idCity'):
+        worker.idCity           = City.objects.get(id=data.__getitem__('idCity'))
 
     if foto != '':
         worker.foto         = foto
 
     #обработаем переданную дату начала работы
-    experiencewith = data.__getitem__('Experiencewith')
-    if experiencewith == '':
-        worker.Experiencewith = datetime.datetime.now()
-    else:
-        try:
-            experiencewith = datetime.datetime.strptime(experiencewith, "%Y-%m-%d")
-            worker.Experiencewith   = experiencewith
-        except:
-            print('ошибка при сохранении даты: ' + str(worker) + '/' + str(experiencewith))
+    if data.__contains__('Experiencewith'):
+        experiencewith = data.__getitem__('Experiencewith')
+        if experiencewith == '':
+            worker.Experiencewith = datetime.datetime.now()
+        else:
+            try:
+                experiencewith = datetime.datetime.strptime(experiencewith, "%Y-%m-%d")
+                worker.Experiencewith   = experiencewith
+            except:
+                print('ошибка при сохранении даты: ' + str(worker) + '/' + str(experiencewith))
 
     # Обработаем наличие ИП
     if data.__contains__('haveIP'):

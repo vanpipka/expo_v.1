@@ -18,7 +18,7 @@
                             <div class="col">
                                 <div class="product">
                                     <div class="product-img" >
-                                        {% if worker.fotourl %}
+                                        {% if worker.fotourl == "" %}
                                             <a href="#"><img src="{{  STATIC_URL }}{{ worker.fotourl }}" height="150px" alt=""></a>
                                         {% else %}
                                             <a href="#"><img src="{{  STATIC_URL }}/static/main/img/Foto.jpg" height="150px" alt=""></a>

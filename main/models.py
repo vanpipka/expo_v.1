@@ -70,7 +70,7 @@ class Worker(models.Model):
     datacheck   = models.BooleanField(default=False)
     sex         = models.BooleanField(default=True)
     Description = models.TextField()
-    idCity      = models.ForeignKey(City, on_delete=models.CASCADE)
+    idCity      = models.ForeignKey(City, on_delete=models.CASCADE, null=True)
     birthday    = models.DateField(datetime.date, default=None, null=True)
     Experiencewith = models.DateField(datetime.date, null=True)
     experience     = models.TextField()

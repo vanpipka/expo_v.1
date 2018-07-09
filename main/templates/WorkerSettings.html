@@ -33,171 +33,225 @@
         }
 
     </style>
+    <script>
+        function setlocalfoto(e)
+        {
+            var input = document.getElementById(e.id);
+            var fReader = new FileReader();
+            fReader.readAsDataURL(input.files[0]);
+            fReader.onloadend = function(event){
+                if(e.id=="finput_foto"){
+                    var img = document.getElementById("fotourl");
+                }
+                else{
+                    var portfolio_list = document.getElementById("portfolio_list");
+                    var portfolio_card = document.getElementById("hidden_portfolio_card").cloneNode(true);
+                    var img = portfolio_card.getElementsByTagName('img')[0];
+                    portfolio_card.getElementsByTagName('input')[0].name = "portfolio_description";
+                    portfolio_card.hidden = false;
+                    portfolio_list.insertBefore(portfolio_card, portfolio_list.children[1]);
+
+                }
+                img.src = event.target.result;
+            }
+        }
+
+        function formsave() {
+
+            alert("отправляем запрос");
+            var formData = new FormData(document.forms.workersettings);
+
+            // добавить к пересылке ещё пару ключ - значение
+            formData.append("patronym", "Робертович");
+
+            // отослать
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/url");
+            xhr.send(formData);
+        }
+    </script>
     <p></p>
     <div class="container pb-3">
         
-        <form enctype="multipart/form-data" class="form-horizontal" action="" method="post">
-          {% csrf_token %}
-		  <div class="form-group pb-3">
-
-		    <div class="row">
-			    <!--ФОТО------------------------------------------------------------------------------------------>
-                <div class="col col-2">
-                    <div class="row">
-                        <div class="col">
-                            <div class="product-img">
-                                {% if worker.fotoUrl %}
-                                    <img id ="fotourl" style="border-radius: 5px; margin-left: auto; margin-right: auto; display: block;" src="{{ worker.fotoUrl }}" height="150px" alt="">
-                                {% else %}
-                                    <img id ="fotourl" style="border-radius: 5px; margin-left: auto; margin-right: auto; display: block;" src="/static/main/img/Foto.jpg" height="150px" alt="">
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row pt-3">
-                        <div class="col">
-                            <div class="file-upload container-fluid btn btn-danger">
-                                <label>
-                                    <script>
-                                        function setlocalfoto()
-                                            {
-                                                var input = document.getElementById("finput");
-                                                var fReader = new FileReader();
-                                                fReader.readAsDataURL(input.files[0]);
-                                                fReader.onloadend = function(event){
-                                                    var img = document.getElementById("fotourl");
-                                                    img.src = event.target.result;
-                                                }
-                                            }
-                                    </script>
-                                    <input id = "finput" type="file" name="file" onchange="setlocalfoto()">
-                                    <span>Сменить фото</span>
-                                </label>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <!--ФИО КОНТАКТЫ------------------------------------------------------------------------------------------>
-                <div class="col col-7">
-                    <div class="row pb-3">
-                        <div class="col col-sm-2">
-                            ФИО:
-                        </div>
-                        <div class="col">
-                            <input type="text" name="surname" class="form-control" id="id_surname" placeholder="Фамилия" value="{{worker.surname}}">
-                        </div>
-                        <div class="col">
-                            <input type="text" name = "name" class="form-control" id="id_name" placeholder="Имя" value="{{worker.name}}">
-                        </div>
-                        <div class="col">
-                            <input type="text" name = "lastname" class="form-control" id="id_lastname" placeholder="Отчество" value="{{worker.lastname}}">
-                        </div>
-                    </div>
-                    <div class="row pb-3">
-                        <div class="col col-sm-2">
-                            Телефон:
-                        </div>
-                        <div class="col">
-                            <input type="text" name="phonenumber" class="form-control" id="id_phonenumber"  placeholder="Номер телефона" value="{{worker.phonenumber}}" required>
-                        </div>
-                    </div>
-                    <div class="row pb-3">
-                        <div class="col col-sm-2">
-                            Электронная почта:
-                        </div>
-                        <div class="col">
-                            <input type="text" name="emailaddress" class="form-control" id="id_emailaddress"  placeholder="Адрес электронной почты" value="{{worker.emailaddress}}" required>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col col-sm-2">
-                            Город:
-                        </div>
-                        <div class="col">
-                            <select name="idCity" required id="id_idCity" class="form-control" >
-                            {% for c in city %}
-                                {% if c.id == worker.cityid%}
-                                    <option value="{{ c.id }}" selected>{{ c.name }}</option>
-                                {% else %}
-                                    <option value="{{ c.id }}">{{ c.name }}</option>
-                                {% endif %}
-                            {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <!--РЕЙТИНГ ОТЗЫВЫ------------------------------------------------------------------------------------------>
-                <div class="col col-3 pl-3">
-                    <div class="form-control">
-                        <div class="row">
-                                <div class="col col-sm-6">
-                                    <div class="text-danger text-center">
-                                        <H2>{{ worker.rating }}</H2>
-                                    </div>
-                                    <hr class="text-dark bg-secondary" style="border: none; height: 1px;">
-                                    <div class="text-dark text-center">
-                                        Рейтинг
-                                    </div>
-                                </div>
-                                <div class="col col-sm-6">
-                                    <div class="text-danger text-center">
-                                        <H2>{{worker.commentscount}}</H2>
-                                    </div>
-                                    <hr class="text-dark bg-secondary" style="border: none; height: 1px;">
-                                    <div class="text-dark text-center">
-                                        Отзывы
-                                    </div>
-                                </div>
-                        </div>
+        <form id="workersettings" enctype="multipart/form-data" class="form-horizontal" action="" method="post" onsubmit="formsave()">
+            {% csrf_token %}
+            <!--БАЗОВАЯ ИНФОРМАЦИЯ------------------------------------------------------------------------------------------>
+		    <div class="form-group pb-3">
+                <div class="row">
+                    <!--ФОТО------------------------------------------------------------------------------------------>
+                    <div class="col col-2">
                         <div class="row">
                             <div class="col">
-                                <hr class="text-dark bg-secondary" style="border: none; height: 1px;">
+                                <div class="product-img" style="height: 150px">
+                                    {% if worker.fotourl %}
+                                        <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:150px" src="{{ worker.fotourl }}" alt="">
+                                    {% else %}
+                                        <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:150px" src="/static/main/img/Foto.jpg" alt="">
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row pt-3">
+                            <div class="col">
+                                <div class="file-upload container-fluid btn btn-danger">
+                                    <label>
+                                        <input id = "finput_foto" type="file" name="file" onchange="setlocalfoto(this)">
+                                        <span>Сменить фото</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--ФИО КОНТАКТЫ------------------------------------------------------------------------------------------>
+                    <div class="col col-7">
+                        <div class="row pb-3">
+                            <div class="col col-sm-2">
+                                ФИО:
+                            </div>
+                            <div class="col">
+                                <input type="text" name="surname" class="form-control" id="id_surname" placeholder="Фамилия" value="{{worker.surname}}">
+                            </div>
+                            <div class="col">
+                                <input type="text" name = "name" class="form-control" id="id_name" placeholder="Имя" value="{{worker.name}}">
+                            </div>
+                            <div class="col">
+                                <input type="text" name = "lastname" class="form-control" id="id_lastname" placeholder="Отчество" value="{{worker.lastname}}">
+                            </div>
+                        </div>
+                        <div class="row pb-3">
+                            <div class="col col-sm-2">
+                                Телефон:
+                            </div>
+                            <div class="col">
+                                <input type="text" name="phonenumber" class="form-control" id="id_phonenumber"  placeholder="Номер телефона" value="{{worker.phonenumber}}" required>
+                            </div>
+                        </div>
+                        <div class="row pb-3">
+                            <div class="col col-sm-2">
+                                Электронная почта:
+                            </div>
+                            <div class="col">
+                                <input type="text" name="emailaddress" class="form-control" id="id_emailaddress"  placeholder="Адрес электронной почты" value="{{worker.emailaddress}}" required>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col col-10">
-                                Данные проверены
+                            <div class="col col-sm-2">
+                                Город:
                             </div>
-                            <div class="col col-2">
-                                {% if elem.datacheck %}
-                                    <H2 class="text-success">+</H2>
-                                {% else %}
-                                    <H2 class="text-danger">-</H2>
-                                {% endif %}
+                            <div class="col">
+                                <select name="idCity" required id="id_idCity" class="form-control" >
+                                {% for c in city %}
+                                    {% if c.id == worker.cityid%}
+                                        <option value="{{ c.id }}" selected>{{ c.name }}</option>
+                                    {% else %}
+                                        <option value="{{ c.id }}">{{ c.name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                                </select>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col col-10">
-                                Проверка ФСО
+                    </div>
+                    <!--РЕЙТИНГ ОТЗЫВЫ------------------------------------------------------------------------------------------>
+                    <div class="col col-3 pl-3">
+                        <div class="form-control">
+                            <div class="row">
+                                    <div class="col col-sm-6">
+                                        <div class="text-danger text-center">
+                                            <H2>{{ worker.rating }}</H2>
+                                        </div>
+                                        <hr class="text-dark bg-secondary" style="border: none; height: 1px;">
+                                        <div class="text-dark text-center">
+                                            Рейтинг
+                                        </div>
+                                    </div>
+                                    <div class="col col-sm-6">
+                                        <div class="text-danger text-center">
+                                            <H2>{{worker.commentscount}}</H2>
+                                        </div>
+                                        <hr class="text-dark bg-secondary" style="border: none; height: 1px;">
+                                        <div class="text-dark text-center">
+                                            Отзывы
+                                        </div>
+                                    </div>
                             </div>
-                            <div class="col col-2">
-                                {% if elem.fsocheck %}
-                                    <H2 class="text-success">+</H2>
-                                {% else %}
-                                    <H2 class="text-danger">-</H2>
-                                {% endif %}
+                            <div class="row">
+                                <div class="col">
+                                    <hr class="text-dark bg-secondary" style="border: none; height: 1px;">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-10">
+                                    Данные проверены
+                                </div>
+                                <div class="col col-2">
+                                    {% if elem.datacheck %}
+                                        <H2 class="text-success">+</H2>
+                                    {% else %}
+                                        <H2 class="text-danger">-</H2>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-10">
+                                    Проверка ФСО
+                                </div>
+                                <div class="col col-2">
+                                    {% if elem.fsocheck %}
+                                        <H2 class="text-success">+</H2>
+                                    {% else %}
+                                        <H2 class="text-danger">-</H2>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 		    </div>
-		  </div>
-
-          <div class="form-group">
-              <script type="text/javascript">
-                    $(document).ready(function() {
-                        $('#example-enableCollapsibleOptGroups-enableClickableOptGroups').multiselect({
+            <!--ИП------------------------------------------------------------------------------------------>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label for="id_haveIP" class="col-xs-2 control-label"><strong>Есть ИП:</strong></label>
+                    </div>
+                    <div class="col">
+                        {% if worker.haveIP %}
+                            <input class="" id="id_haveIP" value="True" type="checkbox" name="haveIP" checked>
+                        {% else %}
+                            <input class="" id="id_haveIP" value="True" type="checkbox" name="haveIP">
+                        {% endif %}
+                    </div>
+                </div>
+		    </div>
+            <!--РАЗРЕШЕНИЕ НА РАБОТУ------------------------------------------------------------------------------------------>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label for="id_workpermit" class="col-xs-2 control-label"><strong>Есть разрешение на работу:</strong></label>
+                    </div>
+                    <div class="col">
+                        {% if worker.workpermit %}
+                            <input class="" id="id_workpermit" value="True" type="checkbox" name="workpermit" checked>
+                        {% else %}
+                            <input class="" id="id_workpermit" value="True" type="checkbox" name="workpermit">
+                        {% endif %}
+                    </div>
+                </div>
+		    </div>
+            <!--ПРОФЕССИИ------------------------------------------------------------------------------------------>
+            <div class="form-group">
+                <script type="text/javascript">
+                    $(document).ready(function()
+                        {$('#example-enableCollapsibleOptGroups-enableClickableOptGroups').multiselect({
                             enableClickableOptGroups: true,
                             enableCollapsibleOptGroups: true
                         });
                     });
-              </script>
-            <div class="row">
-                <div class="col">
-                  <label for="id_Professions" class="col-xs-2 control-label"><strong>Профессии:</strong></label>
-                </div>
-                <div class="col">
+                </script>
+                <div class="row">
+                    <div class="col">
+                        <label for="id_Professions" class="col-xs-2 control-label"><strong>Профессии:</strong></label>
+                    </div>
+                    <div class="col">
                         <select name = "Professions" id="example-enableCollapsibleOptGroups-enableClickableOptGroups" style="width: 100%" multiple >
                             {% for key, value in professionList.items %}
                                 <optgroup label="{{ key }}">
@@ -212,90 +266,57 @@
                                 </optgroup>
                             {% endfor %}
                         </select>
+                    </div>
                 </div>
             </div>
-          </div>
-
-        <div class="form-group">
-		    <label for="id_Description" class="col-xs-2 control-label"><strong>О себе:</strong></label>
-		    <div class="row">
-			    <div class="col">
-			      <textarea name="Description" class="form-control" rows="5" placeholder="Кратко о себе" id="id_Description">{{worker.description}}</textarea>
-			    </div>
+            <!--О СЕБЕ------------------------------------------------------------------------------------------>
+            <div class="form-group">
+                <label for="id_Description" class="col-xs-2 control-label"><strong>О себе:</strong></label>
+                <div class="row">
+                    <div class="col">
+                        <textarea name="Description" class="form-control" rows="5" placeholder="Кратко о себе" id="id_Description">{{worker.description}}</textarea>
+                    </div>
+                </div>
             </div>
-		  </div>
-        <div class="form-group">
-		    <label for="id_education" class="col-xs-2 control-label"><strong>Образование:</strong></label>
-		    <div class="row">
-			    <div class="col">
-			      <textarea name="education" class="form-control" rows="5" placeholder="Образование" id="id_education">{{worker.education}}</textarea>
-			    </div>
+            <!--ОБРАЗОВАНИЕ------------------------------------------------------------------------------------------>
+            <div class="form-group">
+                <label for="id_education" class="col-xs-2 control-label"><strong>Образование:</strong></label>
+                <div class="row">
+                    <div class="col">
+                        <textarea name="education" class="form-control" rows="5" placeholder="Образование" id="id_education">{{worker.education}}</textarea>
+                    </div>
+                </div>
             </div>
-		  </div>
-
-          <div class="form-group">
-              <script>
-                $(function(){
-                    $('#id_Experiencewith').daterangepicker({
-                        singleDatePicker: true,
-                        locale: {
-                            format: 'YYYY-MM-DD'
-                        }
+            <!--ОПЫТ РАБОТЫ------------------------------------------------------------------------------------------>
+            <div class="form-group">
+                <script>
+                    $(function(){
+                        $('#id_Experiencewith').daterangepicker({
+                            singleDatePicker: true,
+                            locale: {
+                                format: 'YYYY-MM-DD'
+                            }
+                        });
                     });
-                });
-              </script>
-		    <div class="row">
-			    <div class="col">
-                    <label for="id_Experiencewith" class="col-xs-2 control-label"><strong>Стаж с (2014-07-08):</strong></label>
+                </script>
+                <div class="row">
+                    <div class="col">
+                        <label for="id_Experiencewith" class="col-xs-2 control-label"><strong>Стаж с (2014-07-08):</strong></label>
+                    </div>
+                    <div class="col">
+                        <input type="text" name="Experiencewith" class="form-control" id="id_Experiencewith"  placeholder="Дата" value="{{worker.experiencedate|date:"Y.m.d"}}">
+                    </div>
                 </div>
-                <div class="col">
-                    <input type="text" name="Experiencewith" class="form-control" id="id_Experiencewith"  placeholder="Дата" value="{{worker.experiencedate|date:"Y.m.d"}}" required>
-
-                    <!--<input type="date" name="Experiencewith" class="form-control" id="id_Experiencewith" placeholder="Дата" required >
-                    <input type="text" name="Experiencewith" class="form-control" id="id_Experiencewith" value="{{worker.Experiencewith|date:"Y.m.d"}}"/>
-                    -->
+                <p></p>
+                <div class="row">
+                    <div class="col">
+                        <textarea name="experience" class="form-control" rows="5" placeholder="Опыт работы" id="id_experience">{{worker.experience}}</textarea>
+                    </div>
                 </div>
             </div>
-              <p></p>
-              <div class="row">
-			    <div class="col">
-			      <textarea name="experience" class="form-control" rows="5" placeholder="Опыт работы" id="id_experience">{{worker.experience}}</textarea>
-			    </div>
-            </div>
-		  </div>
-
-
-          <div class="form-group">
-		    <div class="row">
-                <div class="col">
-                    <label for="id_haveIP" class="col-xs-2 control-label"><strong>Есть ИП:</strong></label>
-                </div>
-			    <div class="col">
-                    {% if worker.haveIP %}
-                        <input class="" id="id_haveIP" value="True" type="checkbox" name="haveIP" checked>
-                    {% else %}
-                        <input class="" id="id_haveIP" value="True" type="checkbox" name="haveIP">
-                    {% endif %}
-			    </div>
-            </div>
-		  </div>
-          <div class="form-group">
-		    <div class="row">
-                <div class="col">
-                    <label for="id_workpermit" class="col-xs-2 control-label"><strong>Есть разрешение на работу:</strong></label>
-                </div>
-			    <div class="col">
-                    {% if worker.workpermit %}
-                        <input class="" id="id_workpermit" value="True" type="checkbox" name="workpermit" checked>
-                    {% else %}
-                        <input class="" id="id_workpermit" value="True" type="checkbox" name="workpermit">
-                    {% endif %}
-			    </div>
-            </div>
-		  </div>
-
-          <div class="form-group form-control">
-               <div class="row">
+            <!--УСЛУГИ И ЦЕНЫ------------------------------------------------------------------------------------------>
+            <div class="form-group form-control">
+                <div class="row">
                     <div class="col col-2">
                         <label for="id_Services" class="col-xs-2 control-label"><strong>Услуги и цены:</strong></label>
                     </div>
@@ -304,38 +325,37 @@
                             var currentCount = 1000;
                             function addService() {
 
-                                    currentCount = currentCount+1
+                                currentCount = currentCount+1
 
-                                    var selectservices  = document.getElementById('id_selectServices');
-                                    var inputservices   = document.getElementById('id_inputServices');
-                                    var delservices     = document.getElementById('del_services');
+                                var selectservices  = document.getElementById('id_selectServices');
+                                var inputservices   = document.getElementById('id_inputServices');
+                                var delservices     = document.getElementById('del_services');
 
-                                    var newSelect   = selectservices.cloneNode(true);
-                                    var newInput    = inputservices.cloneNode(true);
-                                    var newDel      = delservices.cloneNode(true);
+                                var newSelect   = selectservices.cloneNode(true);
+                                var newInput    = inputservices.cloneNode(true);
+                                var newDel      = delservices.cloneNode(true);
 
-                                    newDel.id = 'x'+currentCount;
+                                newDel.id = 'x'+currentCount;
 
-                                    var table = document.getElementById('id_Services');
+                                var table = document.getElementById('id_Services');
 
-                                    var tr31 = document.createElement('tr'); //создаем еще строку
+                                var tr31 = document.createElement('tr'); //создаем еще строку
 
-                                    tr31.id = 'trx'+currentCount;
+                                tr31.id = 'trx'+currentCount;
 
-                                    var td31 = document.createElement('td');  //создаем столбец
-                                    var td32 = document.createElement('td');
-                                    var td33 = document.createElement('td');
+                                var td31 = document.createElement('td');  //создаем столбец
+                                var td32 = document.createElement('td');
+                                var td33 = document.createElement('td');
 
-                                    td31.appendChild(newSelect);
-                                    td32.appendChild(newInput);
-                                    td33.appendChild(newDel);
+                                td31.appendChild(newSelect);
+                                td32.appendChild(newInput);
+                                td33.appendChild(newDel);
+                                //tr11.appendChild(td31); так можно добавить в первую строку столбец
+                                tr31.appendChild(td31); //кладем в новосозданную строку первый новосозданный столбец
+                                tr31.appendChild(td32); //кладем в новосозданную строку второй новосозданный столбец
+                                tr31.appendChild(td33);
 
-                                    //tr11.appendChild(td31); так можно добавить в первую строку столбец
-                                    tr31.appendChild(td31); //кладем в новосозданную строку первый новосозданный столбец
-                                    tr31.appendChild(td32); //кладем в новосозданную строку второй новосозданный столбец
-                                    tr31.appendChild(td33);
-
-                                    table.appendChild(tr31); //кладем в таблицу новосозданную строку (последней)
+                                table.appendChild(tr31); //кладем в таблицу новосозданную строку (последней)
                             }
 
                             function delService(id) {
@@ -348,55 +368,88 @@
                         </script>
                         <input class="btn btn-success" id="add_services" value="+" onclick="addService()" type="button">
                     </div>
-               </div>
-		    <div class="row ">
-                <div style="visibility:hidden; position:absolute" id="defuult">
-
-                    <select id="id_selectServices" class="form-control" name="selectServices" required>
+                </div>
+                <div class="row ">
+                    <div style="visibility:hidden; position:absolute" id="defuult">
+                        <select id="id_selectServices" class="form-control" name="selectServices" required>
                             {% for s in serviceList %}
                                 <option value="{{ s.id }}">{{s.name}}</option>
                             {% endfor %}
-                    </select>
-                    <input id="id_inputServices" name = "inputServices" type="number" value="" class="form-control"></input>
-                    <input class="btn btn-danger" id="del_services" value="-" onclick="delService(this.id)" type="button">
+                        </select>
+                        <input id="id_inputServices" name = "inputServices" type="number" value="" class="form-control">
+                        <input class="btn btn-danger" id="del_services" value="-" onclick="delService(this.id)" type="button">
+                    </div>
+                    <div class="col">
+                        <table name="Services" class="table" placeholder="Услуги и цены">
+                            <tbody id="id_Services">
+                            {% for service in worker.servicelist %}
 
+                                <tr id = "tr{{ service.idservice }}">
+                                    <td>
+                                        <select id="id_selectServices" class="form-control" name="selectServices" required>
+                                            {% for s in serviceList %}
+                                                {% if s.id == service.idservice %}
+                                                    <option value="{{ s.id }}" selected>{{s.name}}</option>
+                                                {% else %}
+                                                    <option value="{{ s.id }}">{{s.name}}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input id="id_inputServices" name = "inputServices" type="number" value="{{ service.price }}" class="form-control"></input>
+                                    </td>
+                                    <td>
+                                        <input class="btn btn-danger" id = "{{ service.idservice }}" value="-" onclick="delService(this.id)" type="button">
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
                 </div>
-			    <div class="col">
-			      <table name="Services" class="table" placeholder="Услуги и цены">
-                    <tbody id="id_Services">
-                      {% for service in worker.servicelist %}
-
-                          <tr id = "tr{{ service.idservice }}">
-                            <td>
-                                <select id="id_selectServices" class="form-control" name="selectServices" required>
-                                    {% for s in serviceList %}
-                                        {% if s.id == service.idservice %}
-                                            <option value="{{ s.id }}" selected>{{s.name}}</option>
-                                        {% else %}
-                                            <option value="{{ s.id }}">{{s.name}}</option>
-                                        {% endif %}
-                                    {% endfor %}
-                                </select>
-                            </td>
-                            <td>
-                                <input id="id_inputServices" name = "inputServices" type="number" value="{{ service.price }}" class="form-control"></input>
-                            </td>
-                            <td>
-                                <input class="btn btn-danger" id = "{{ service.idservice }}" value="-" onclick="delService(this.id)" type="button">
-                            </td>
-                          </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
-			    </div>
-            </div>
-		  </div>
-          <p></p>
-		  <div class="form-group">
-		    <div class="col-xs-offset-2 col-xs-10">
-		      <button type="submit" class="btn btn-danger">Сохранить</button>
 		    </div>
-		  </div>
+            <!--ПОРТФОЛИО------------------------------------------------------------------------------------------>
+            <div class="form-group form-control">
+                <label for="id_portfolio" class="col-xs-2 control-label"><strong>Портфолио:</strong></label>
+                <div class="container-fluid">
+                    <div class="d-flex flex-row" style="overflow-x: scroll;" id="portfolio_list">
+                        <div class="col-4">
+                             <div class="card card-body" >
+                                 <div class="border-secondary " style="border: dashed">
+                                     <div class="file-upload btn pb-3" style="height: 199px; margin-left: auto; margin-right: auto; width: 100%" >
+                                         <label>
+                                             <input id = "finput_portfolio" type="file" name="file" onchange="setlocalfoto(this)">
+                                             <span>Добавить файл</span>
+                                         </label>
+                                     </div>
+                                 </div>
+                                 <!--<p></p>
+
+                                 <input class="form-control" id="filedescription" placeholder="Введите описание">-->
+                             </div>
+                        </div>
+
+                        <div class="col-4" id="hidden_portfolio_card" hidden>
+                            <div class="card card-body">
+                                <div class="product-img" style="height: 150px">
+                                    <img id ="portfolio_url" style="max-height:150px; max-width: 100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block;" src="/static/main/img/Foto.jpg" alt="">
+                                </div>
+                                <p></p>
+                                <input name = "" class="form-control" id="filedescription" placeholder="Введите описание">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <p></p>
+		    <div class="form-group">
+		        <div class="col-xs-offset-2 col-xs-10">
+		            <button type="submit" class="btn btn-danger">Сохранить</button>
+		        </div>
+		    </div>
 
         </form>
 

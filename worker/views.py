@@ -5,6 +5,7 @@ from main.forms import CommentForm
 from expo.DataGet import getCityList, getProfessionListWithGroup, getServiceList, gerWorkList, searchWorker
 from expo.DataSet import setWorker, refreshLastOnline
 from django.views.decorators.csrf import csrf_exempt
+from django.middleware import csrf
 
 # Create your views here.
 def show(request):
@@ -22,9 +23,14 @@ def showSettings(request):
     if request.user.is_authenticated:
         if request.method == "POST":
 
-            #print(request.FILES)
+            print("СОХРАНЯЕМ НАСТРОЙКИ================================================================================")
+            print(request.FILES)
+            print(request.POST)
+            print("================================================================================")
             foto = ''
             for f in request.FILES:
+                print(request.FILES.get(f))
+
                 foto = handle_uploaded_file(request.FILES.get(f), request.user.pk)
 
             print(request.user.pk)
@@ -39,11 +45,13 @@ def showSettings(request):
             worker          = gerWorkList(user_id=request.user, userAauthorized=request.user.is_authenticated)
             selectedList    = []
 
-            if worker != None:
-                selectedList = worker[0].get('proflist')
-                print(selectedList)
+            if worker != None and len(worker) > 0:
+                worker          = worker[0]
+                selectedList    = worker.get('proflist')
+            else:
+                worker          = {}
 
-            context = {'worker': worker[0],
+            context = {'worker': worker,
                        'city': getCityList(),
                        'serviceList': getServiceList(),
                        'professionList': getProfessionListWithGroup(selectedList=selectedList)}
@@ -53,6 +61,53 @@ def showSettings(request):
             return render(request, 'WorkerSettings.html', context)
     else:
         return HttpResponse('403: Доступ запрещен')
+
+def showSettingsJson(request):
+
+    if request.user.is_authenticated:
+        refreshLastOnline(request.user)
+
+    context = {}
+
+    if request.user.is_authenticated:
+
+        token = csrf.get_token(request)
+        print(token)
+
+        if request.method == "POST":
+            #print(request.FILES)
+            #foto = ''
+            #for f in request.FILES:
+            #    foto = handle_uploaded_file(request.FILES.get(f), request.user.pk)
+
+            print(request.POST)
+            setWorker(request.user, request.POST)
+            #return HttpResponse('Work Settings')
+            context["message"] = 'success'
+
+        else:
+            worker          = gerWorkList(user_id=request.user, userAauthorized=request.user.is_authenticated)
+            selectedList    = []
+
+            if worker != None and len(worker) > 0:
+                worker          = worker[0]
+                selectedList    = worker.get('proflist')
+            else:
+                worker          = {"name": "", "surname": "", "lastname":""}
+
+            context = {'worker': worker,
+                       'city': getCityList(),
+                       'serviceList': getServiceList(),
+                       'professionList': getProfessionListWithGroup(selectedList=selectedList),
+                       'csrfmiddlewaretoken': token}
+            print("Ответ:")
+            print(worker)
+
+            #return render(request, 'WorkerSettings.html', context)
+    else:
+        context["message"] = '403: Доступ запрещен'
+
+    return JsonResponse(context)
 
 def showWorker(request):
 
