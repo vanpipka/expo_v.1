@@ -85,6 +85,7 @@ def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, 
                         "name": e.name,
                         "surname": e.surname,
                         "lastname": e.lastname,
+                        "haveinstrument": e.haveInstrument,
                         "haveip": e.haveIP,
                         "fsocheck": e.fsocheck,
                         "workpermit": e.workpermit,
@@ -127,15 +128,20 @@ def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, 
         workerid    = e.id
         profList    = []
         priceList   = []
+        attachments = []
 
         #Профессии
         for prof in e.professions.all():
             profList.append({"id": prof.id, "name": prof.name})
         WorkerInfo["proflist"] = profList
 
+        for attachment in e.WorkerAttachment.all():
+            attachments.append({"url": '/static/main/media/' + str(attachment.file), "description": attachment.Description})
+        WorkerInfo["attachments"] = attachments
+
         #Цены на услуги
         for prof in CostOfService.objects.all().filter(idWorker=workerid).select_related('idService'):
-            priceList.append({"service": prof.idService.name, "price": prof.price})
+            priceList.append({"id": prof.idService.id, "service": prof.idService.name, "price": prof.price})
         WorkerInfo["servicelist"] = priceList
 
         #Добавим информацию о сотруднике в список

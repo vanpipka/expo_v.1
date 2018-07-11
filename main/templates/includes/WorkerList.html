@@ -1,4 +1,4 @@
-            {% for elem in Workers %}
+            {% for worker in Workers %}
 
                 <div class="row" >
 
@@ -8,10 +8,10 @@
                             <div class="col">
                                 <div class="product">
                                     <div class="product-img">
-                                        {% if elem.fotourl %}
-                                            <a href="{{ elem.url }}"><img src="{{ elem.fotourl }}" height="150px" alt=""></a>
+                                        {% if worker.fotourl %}
+                                            <a href="{{ worker.url }}"><img src="{{ worker.fotourl }}" height="150px" alt=""></a>
                                         {% else %}
-                                            <a href="/worker/{{ elem.id }}"><img src="/static/main/img/Foto.jpg" height="150px" alt=""></a>
+                                            <a href="/worker/{{ worker.id }}"><img src="/static/main/img/Foto.jpg" height="150px" alt=""></a>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -19,16 +19,16 @@
                             <div class="col col-6">
 
                                 <p class="product-title">
-                                    <h3><a href="{{ elem.url }}" class="text-dark">{{ elem.name }} {{ elem.surname }}</a></h3>
+                                    <h3><a href="{{ worker.url }}" class="text-dark">{{ worker.name }} {{ worker.surname }}</a></h3>
                                 </p>
                                 <p class="text-dark">
 
-                                    {% for prof in elem.proflist %}
+                                    {% for prof in worker.proflist %}
                                         {{ prof.name }},
                                     {% endfor %}
 
                                 </p>
-                                {% if elem.isonline %}
+                                {% if worker.isonline %}
                                     <p><h5 class="text-success">Онлайн</h5></p>
                                 {% endif %}
 
@@ -37,31 +37,37 @@
                             </div>
 
                         </div>
-                        <p>
-                            <h5 class="text-dark">Услуги и цены</h5>
-                        </p>
-                        <div class="row" >
-                            <div class="col">
-                                <table class="table table-sm">
-                                  <tbody>
-                                    {% for service in elem.servicelist %}
-                                        <tr>
-                                          <td>{{ service.service }}</td>
-                                          <td>{{ service.price }}р.</td>
-                                        </tr>
-                                    {% endfor %}
-                                  </tbody>
-                                </table>
+                        {% include "includes/portfolio.html" %}
 
+                        {% if worker.servicelist %}
+                            <p>
+                                <h5 class="text-dark">Услуги и цены:</h5>
+                            </p>
+                            <div class="row" >
+                                <div class="col">
+                                    <table class="table table-sm">
+                                      <tbody>
+                                        {% for service in worker.servicelist %}
+                                            <tr>
+                                              <td>{{ service.service }}</td>
+                                              <td>{{ service.price }}р.</td>
+                                            </tr>
+                                        {% endfor %}
+                                      </tbody>
+                                    </table>
+
+                                </div>
                             </div>
-                        </div>
-                        <p>
-                            <h5 class="text-dark">О себе:</h5>
-                        </p>
-                        <div class="row">
-                            <div class="col">
-                                {{ elem.description }}</div>
-                        </div>
+                        {% endif %}
+                        {% if worker.description %}
+                            <p>
+                                <h5 class="text-dark">О себе:</h5>
+                            </p>
+                            <div class="row">
+                                <div class="col">
+                                    {{ worker.description }}</div>
+                            </div>
+                        {% endif %}
                     </div>
 
                     <div class="col col-3">
@@ -77,7 +83,7 @@
                         <div class="row">
                             <div class="col">
                                 <div class="text-danger">
-                                    <H2>{{ elem.rating }}</H2>
+                                    <H2>{{ worker.rating }}</H2>
                                 </div>
                                 <div class="text-dark">
                                     Рейтинг
@@ -85,7 +91,7 @@
                             </div>
                             <div class="col">
                                 <div class="text-danger">
-                                    <H2>{{elem.commentscount}}</H2>
+                                    <H2>{{worker.commentscount}}</H2>
                                 </div>
                                 <div class="text-dark">
                                     Отзывов
@@ -99,16 +105,16 @@
                                   <tbody>
                                     <tr>
                                       <td>Опыт работы</td>
-                                      <td> {{ elem.experiencewith }}</td>
+                                      <td> {{ worker.experiencewith }}</td>
                                     </tr>
                                     <tr>
                                       <td>Город</td>
-                                      <td>{{ elem.city }}</td>
+                                      <td>{{ worker.city }}</td>
                                     </tr>
                                     <tr>
                                       <td>Данные проверены</td>
                                       <td>
-                                          {% if elem.datacheck %}
+                                          {% if worker.datacheck %}
                                             <H2 class="text-success">+</H2>
                                           {% else %}
                                             <H2 class="text-danger">-</H2>
@@ -118,7 +124,7 @@
                                     <tr>
                                       <td>Наличие ИП</td>
                                       <td>
-                                        {% if elem.haveip %}
+                                        {% if worker.haveip %}
                                             <H2 class="text-success">+</H2>
                                           {% else %}
                                             <H2 class="text-danger">-</H2>
@@ -128,7 +134,7 @@
                                     <tr>
                                       <td>Проверка ФСО</td>
                                       <td>
-                                          {% if elem.fsocheck %}
+                                          {% if worker.fsocheck %}
                                             <H2 class="text-success">+</H2>
                                           {% else %}
                                             <H2 class="text-danger">-</H2>
@@ -138,7 +144,7 @@
                                     <tr>
                                       <td>Разрешение на работу</td>
                                       <td>
-                                          {% if elem.workpermit %}
+                                          {% if worker.workpermit %}
                                             <H2 class="text-success">+</H2>
                                           {% else %}
                                             <H2 class="text-danger">-</H2>

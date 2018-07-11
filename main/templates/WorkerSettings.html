@@ -34,46 +34,115 @@
 
     </style>
     <script>
+
+        var newfiles = [];
+
         function setlocalfoto(e)
         {
+
             var input = document.getElementById(e.id);
             var fReader = new FileReader();
             fReader.readAsDataURL(input.files[0]);
             fReader.onloadend = function(event){
+
                 if(e.id=="finput_foto"){
                     var img = document.getElementById("fotourl");
+                    img.src = event.target.result;
                 }
+
                 else{
+
+                    var description = document.getElementById("filedescription");
                     var portfolio_list = document.getElementById("portfolio_list");
                     var portfolio_card = document.getElementById("hidden_portfolio_card").cloneNode(true);
                     var img = portfolio_card.getElementsByTagName('img')[0];
-                    portfolio_card.getElementsByTagName('input')[0].name = "portfolio_description";
+
+                    img.src = event.target.result;
+
+                    portfolio_card.getElementsByTagName('span')[0].innerText = description.value;
                     portfolio_card.hidden = false;
                     portfolio_list.insertBefore(portfolio_card, portfolio_list.children[1]);
 
+                    newfiles.push({"name": input.files[0].name, "description": description.value, "src": img.src});//
+
+                    description.value = "";
                 }
-                img.src = event.target.result;
             }
         }
 
         function formsave() {
 
-            alert("отправляем запрос");
-            var formData = new FormData(document.forms.workersettings);
+            var formData = new FormData();
+
+            //Собираем список профессий
+            var ProfList = document.getElementById("ProfessionsGroup").getElementsByTagName('option');
+            var SelectedProf = [];
+            for (i=0; i < ProfList.length; i++) {
+                if (ProfList[i].selected) {
+                    SelectedProf.push(ProfList[i].value);
+                }
+            }
+            //Собираем список услуг
+            var ServiceList = document.getElementById("id_Services").getElementsByTagName('tr');
+
+            var SelectedService = [];
+
+            for (i=0; i < ServiceList.length; i++) {
+                var tr = ServiceList[i];
+
+                SelectedService.push({"id": tr.getElementsByTagName('select')[0].value, "price": tr.getElementsByTagName('input')[0].value});
+
+            }
+
+            //Собираем конечный JSON
+
+            var json = JSON.stringify({
+                name: document.getElementById("id_name").value,
+                surname: document.getElementById("id_surname").value,
+                lastname: document.getElementById("id_lastname").value,
+                emailaddress: document.getElementById("id_emailaddress").value,
+                phonenumber: document.getElementById("id_phonenumber").value,
+                city: document.getElementById("id_idCity").value,
+                haveip: document.getElementById("id_haveIP").checked,
+                workpermit: document.getElementById("id_workpermit").checked,
+                description: document.getElementById("id_Description").value,
+                education: document.getElementById("id_education").value,
+                experiencewith: document.getElementById("id_Experiencewith").value,
+                experience: document.getElementById("id_experience").value,
+                haveinstrument: document.getElementById("id_haveinstrument").checked,
+                foto: document.getElementById("fotourl").src,
+                files: newfiles,
+                professions: SelectedProf,
+                servicelist: SelectedService
+            });
 
             // добавить к пересылке ещё пару ключ - значение
-            formData.append("patronym", "Робертович");
+            formData.append("data", json);
+            formData.append("csrfmiddlewaretoken", document.getElementsByName("csrfmiddlewaretoken")[0].value);
 
             // отослать
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/url");
+
+            xhr.onreadystatechange = function() { // (3)
+                if (xhr.readyState != 4) return;
+
+
+                if (xhr.status != 200) {
+                    alert(xhr.status + ': ' + xhr.statusText);
+                } else {
+                    alert("Данные сохранены");
+                    location.href = (xhr.responseText);
+                }
+            }
+
+            xhr.open("POST", "save/", true);
             xhr.send(formData);
         }
     </script>
     <p></p>
     <div class="container pb-3">
         
-        <form id="workersettings" enctype="multipart/form-data" class="form-horizontal" action="" method="post" onsubmit="formsave()">
+        <form id="workersettings" enctype="multipart/form-data" class="form-horizontal" action="" method="post" onsubmit="event.preventDefault()">
             {% csrf_token %}
             <!--БАЗОВАЯ ИНФОРМАЦИЯ------------------------------------------------------------------------------------------>
 		    <div class="form-group pb-3">
@@ -95,7 +164,7 @@
                             <div class="col">
                                 <div class="file-upload container-fluid btn btn-danger">
                                     <label>
-                                        <input id = "finput_foto" type="file" name="file" onchange="setlocalfoto(this)">
+                                        <input id = "finput_foto" type="file" name="file" onchange="setlocalfoto(this)" accept="image/jpg,image/jpeg,image/png">
                                         <span>Сменить фото</span>
                                     </label>
                                 </div>
@@ -139,9 +208,10 @@
                                 Город:
                             </div>
                             <div class="col">
+
                                 <select name="idCity" required id="id_idCity" class="form-control" >
                                 {% for c in city %}
-                                    {% if c.id == worker.cityid%}
+                                    {% if c.name == worker.city %}
                                         <option value="{{ c.id }}" selected>{{ c.name }}</option>
                                     {% else %}
                                         <option value="{{ c.id }}">{{ c.name }}</option>
@@ -184,7 +254,7 @@
                                     Данные проверены
                                 </div>
                                 <div class="col col-2">
-                                    {% if elem.datacheck %}
+                                    {% if worker.datacheck %}
                                         <H2 class="text-success">+</H2>
                                     {% else %}
                                         <H2 class="text-danger">-</H2>
@@ -196,7 +266,7 @@
                                     Проверка ФСО
                                 </div>
                                 <div class="col col-2">
-                                    {% if elem.fsocheck %}
+                                    {% if worker.fsocheck %}
                                         <H2 class="text-success">+</H2>
                                     {% else %}
                                         <H2 class="text-danger">-</H2>
@@ -214,7 +284,7 @@
                         <label for="id_haveIP" class="col-xs-2 control-label"><strong>Есть ИП:</strong></label>
                     </div>
                     <div class="col">
-                        {% if worker.haveIP %}
+                        {% if worker.haveip %}
                             <input class="" id="id_haveIP" value="True" type="checkbox" name="haveIP" checked>
                         {% else %}
                             <input class="" id="id_haveIP" value="True" type="checkbox" name="haveIP">
@@ -237,11 +307,26 @@
                     </div>
                 </div>
 		    </div>
+            <!--ЕСТЬ ИНСТРУМЕНТ------------------------------------------------------------------------------>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label for="id_haveinstrument" class="col-xs-2 control-label"><strong>Свой инструмент:</strong></label>
+                    </div>
+                    <div class="col">
+                        {% if worker.haveinstrument %}
+                            <input class="" id="id_haveinstrument" value="True" type="checkbox" name="haveinstrument" checked>
+                        {% else %}
+                            <input class="" id="id_haveinstrument" value="True" type="checkbox" name="haveinstrument">
+                        {% endif %}
+                    </div>
+                </div>
+		    </div>
             <!--ПРОФЕССИИ------------------------------------------------------------------------------------------>
             <div class="form-group">
                 <script type="text/javascript">
                     $(document).ready(function()
-                        {$('#example-enableCollapsibleOptGroups-enableClickableOptGroups').multiselect({
+                        {$('#ProfessionsGroup').multiselect({
                             enableClickableOptGroups: true,
                             enableCollapsibleOptGroups: true
                         });
@@ -252,7 +337,7 @@
                         <label for="id_Professions" class="col-xs-2 control-label"><strong>Профессии:</strong></label>
                     </div>
                     <div class="col">
-                        <select name = "Professions" id="example-enableCollapsibleOptGroups-enableClickableOptGroups" style="width: 100%" multiple >
+                        <select name = "Professions" id="ProfessionsGroup" style="width: 100%" multiple >
                             {% for key, value in professionList.items %}
                                 <optgroup label="{{ key }}">
                                     {% for elem in value %}
@@ -341,7 +426,8 @@
 
                                 var tr31 = document.createElement('tr'); //создаем еще строку
 
-                                tr31.id = 'trx'+currentCount;
+                                tr31.id     = 'trx'+currentCount;
+                                tr31.name   = 'trx'
 
                                 var td31 = document.createElement('td');  //создаем столбец
                                 var td32 = document.createElement('td');
@@ -388,7 +474,7 @@
                                     <td>
                                         <select id="id_selectServices" class="form-control" name="selectServices" required>
                                             {% for s in serviceList %}
-                                                {% if s.id == service.idservice %}
+                                                {% if s.id == service.id %}
                                                     <option value="{{ s.id }}" selected>{{s.name}}</option>
                                                 {% else %}
                                                     <option value="{{ s.id }}">{{s.name}}</option>
@@ -404,8 +490,8 @@
                                     </td>
                                 </tr>
                             {% endfor %}
-                        </tbody>
-                      </table>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 		    </div>
@@ -417,26 +503,37 @@
                         <div class="col-4">
                              <div class="card card-body" >
                                  <div class="border-secondary " style="border: dashed">
-                                     <div class="file-upload btn pb-3" style="height: 199px; margin-left: auto; margin-right: auto; width: 100%" >
+                                     <div class="file-upload btn pb-3" style="height:145px; margin-left: auto; margin-right: auto; width: 100%" >
                                          <label>
                                              <input id = "finput_portfolio" type="file" name="file" onchange="setlocalfoto(this)">
                                              <span>Добавить файл</span>
                                          </label>
                                      </div>
                                  </div>
-                                 <!--<p></p>
-
-                                 <input class="form-control" id="filedescription" placeholder="Введите описание">-->
+                                 <p></p>
+                                 <input name = "" class="form-control" id="filedescription" placeholder="Введите описание">
                              </div>
                         </div>
+
+                        {% for s in worker.attachments %}
+                            <div class="col-4" id="portfolio_card">
+                                <div class="card card-body">
+                                    <div class="product-img" style="height: 150px">
+                                        <img id ="portfolio_url" style="max-height:150px; max-width: 100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block;" src="{{ s.url }}" alt="">
+                                    </div>
+                                    <p></p>
+                                    <span name = "" class="text-sm-center" id="filedescriptionspan">{{s.description}}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
 
                         <div class="col-4" id="hidden_portfolio_card" hidden>
                             <div class="card card-body">
                                 <div class="product-img" style="height: 150px">
-                                    <img id ="portfolio_url" style="max-height:150px; max-width: 100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block;" src="/static/main/img/Foto.jpg" alt="">
+                                    <img id ="portfolio_url" style="max-height:150px; max-width: 100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block;" src="" alt="">
                                 </div>
                                 <p></p>
-                                <input name = "" class="form-control" id="filedescription" placeholder="Введите описание">
+                                <span name = "" class="text-sm-center" id="filedescriptionspan"></span>
                             </div>
                         </div>
 
@@ -447,7 +544,7 @@
             <p></p>
 		    <div class="form-group">
 		        <div class="col-xs-offset-2 col-xs-10">
-		            <button type="submit" class="btn btn-danger">Сохранить</button>
+		            <button type="button" class="btn btn-danger" onclick="formsave()">Сохранить</button>
 		        </div>
 		    </div>
 

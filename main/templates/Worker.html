@@ -18,7 +18,7 @@
                             <div class="col">
                                 <div class="product">
                                     <div class="product-img" >
-                                        {% if worker.fotourl == "" %}
+                                        {% if worker.fotourl %}
                                             <a href="#"><img src="{{  STATIC_URL }}{{ worker.fotourl }}" height="150px" alt=""></a>
                                         {% else %}
                                             <a href="#"><img src="{{  STATIC_URL }}/static/main/img/Foto.jpg" height="150px" alt=""></a>
@@ -47,13 +47,7 @@
                                                 <span class="text-dark"><strong>Был на сайте: </strong>{{ worker.lastonline }}</span>
                                             {% endif %}
                                         </p>
-                                        <p class="text-dark">
 
-                                            {% for prof in worker.profList %}
-                                                {{ prof.name }},
-                                            {% endfor %}
-
-                                        </p>
                                         <p>
                                             <span class="text-danger"><strong>Рейтинг: </strong>{{ worker.rating }}</span>
                                         </p>
@@ -72,6 +66,21 @@
                             </div>
                         </div>
 
+                        {% include "includes/portfolio.html" %}
+
+                        {% if worker.proflist %}
+                            <p></p>
+                            <div class="row">
+                                <div class="col">
+                                    <p>
+                                        <strong>Профессии: </strong>
+                                        {% for prof in worker.proflist %}
+                                            {{ prof.name }},
+                                        {% endfor %}
+                                    </p>
+                                </div>
+                            </div>
+                        {% endif %}
                         {% if worker.description %}
                             <p></p>
                             <div class="row">
@@ -184,6 +193,16 @@
                                     <tr>
                                       <td>Аттестация СРО СВЗ</td>
                                       <td> <H2 class="text-success">+</H2> </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Свой инструмент</td>
+                                      <td>
+                                          {% if worker.haveinstrument %}
+                                              <H2 class="text-success">+</H2>
+                                          {% else %}
+                                              <H2 class="text-danger">-</H2>
+                                          {% endif %}
+                                      </td>
                                     </tr>
                                   </tbody>
                                 </table>

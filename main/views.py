@@ -8,6 +8,8 @@ def show(request):
 
     if request.user.is_authenticated:
         refreshLastOnline(request.user)
+    print("Куки сновной страницы")
+    print(print('coocies: ' + str(request.COOKIES)))
 
     context = getAllProfessionsAndGroups(count=5)
     return render(request, 'index.html', context)

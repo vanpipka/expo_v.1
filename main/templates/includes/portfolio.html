@@ -1,0 +1,12 @@
+
+{% if worker.attachments %}
+    <div class="container-fluid border">
+        <div class="d-flex flex-row" style="overflow-x: scroll;" id="portfolio_list">
+            {% for s in worker.attachments %}
+                <div class="product-img col-2" id="portfolio_card" style="height: 120px" align="center">
+                    <img name ="portfolio_url" style=" max-height:100px; max-width: 100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block;" src="{{ s.url }}" alt="">
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}

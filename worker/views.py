@@ -6,6 +6,8 @@ from expo.DataGet import getCityList, getProfessionListWithGroup, getServiceList
 from expo.DataSet import setWorker, refreshLastOnline
 from django.views.decorators.csrf import csrf_exempt
 from django.middleware import csrf
+import json
+
 
 # Create your views here.
 def show(request):
@@ -15,7 +17,7 @@ def show(request):
 
     return HttpResponse('Work Settings')
 
-def showSettings(request):
+def saveSettings(request):
 
     if request.user.is_authenticated:
         refreshLastOnline(request.user)
@@ -23,42 +25,55 @@ def showSettings(request):
     if request.user.is_authenticated:
         if request.method == "POST":
 
-            print("СОХРАНЯЕМ НАСТРОЙКИ================================================================================")
+            print("СОХРАНЯЕМ НАСТРОЙКИ SAVE================================================================================")
+            print(request.read())
             print(request.FILES)
             print(request.POST)
+
             print("================================================================================")
-            foto = ''
-            for f in request.FILES:
-                print(request.FILES.get(f))
 
-                foto = handle_uploaded_file(request.FILES.get(f), request.user.pk)
+            if request.POST.__contains__('data'):
+                data = dict(json.loads(request.POST.__getitem__('data')))
 
-            print(request.user.pk)
+                setWorker(request.user, data)
 
-            setWorker(request.user, request.POST, foto)
-
-            #return HttpResponse('Work Settings')
-            return render(request, 'complite.html')
+            return HttpResponse('http://py.itoe.ru:56503/worker/settings/')
+            #print("Сохранили настройки=====================================================================")
+            #return redirect('complite.html')
+            #return render(request, 'complite.html')
 
         else:
 
-            worker          = gerWorkList(user_id=request.user, userAauthorized=request.user.is_authenticated)
-            selectedList    = []
+            return HttpResponse('404: Страница не найдена')
+    else:
+        return HttpResponse('403: Доступ запрещен')
 
-            if worker != None and len(worker) > 0:
-                worker          = worker[0]
-                selectedList    = worker.get('proflist')
-            else:
-                worker          = {}
+def showSettings(request):
 
-            context = {'worker': worker,
-                       'city': getCityList(),
-                       'serviceList': getServiceList(),
-                       'professionList': getProfessionListWithGroup(selectedList=selectedList)}
-            print("Ответ:")
-            print(worker)
+    #Эта страница используется только для отображения настроек сохранение через settings/save/
 
-            return render(request, 'WorkerSettings.html', context)
+    if request.user.is_authenticated:
+        refreshLastOnline(request.user)
+
+    if request.user.is_authenticated:
+
+        worker          = gerWorkList(user_id=request.user, userAauthorized=request.user.is_authenticated)
+        selectedList    = []
+
+        if worker != None and len(worker) > 0:
+            worker          = worker[0]
+            selectedList    = worker.get('proflist')
+        else:
+            worker          = {}
+
+        context = {'worker': worker,
+                   'city': getCityList(),
+                   'serviceList': getServiceList(),
+                   'professionList': getProfessionListWithGroup(selectedList=selectedList)}
+        print("Ответ:")
+        print(worker)
+
+        return render(request, 'WorkerSettings.html', context)
     else:
         return HttpResponse('403: Доступ запрещен')
 
@@ -72,38 +87,23 @@ def showSettingsJson(request):
     if request.user.is_authenticated:
 
         token = csrf.get_token(request)
-        print(token)
 
-        if request.method == "POST":
-            #print(request.FILES)
-            #foto = ''
-            #for f in request.FILES:
-            #    foto = handle_uploaded_file(request.FILES.get(f), request.user.pk)
+        worker          = gerWorkList(user_id=request.user, userAauthorized=request.user.is_authenticated)
+        selectedList    = []
 
-            print(request.POST)
-            setWorker(request.user, request.POST)
-            #return HttpResponse('Work Settings')
-            context["message"] = 'success'
-
+        if worker != None and len(worker) > 0:
+            worker          = worker[0]
+            selectedList    = worker.get('proflist')
         else:
-            worker          = gerWorkList(user_id=request.user, userAauthorized=request.user.is_authenticated)
-            selectedList    = []
+            worker          = {"name": "", "surname": "", "lastname":""}
 
-            if worker != None and len(worker) > 0:
-                worker          = worker[0]
-                selectedList    = worker.get('proflist')
-            else:
-                worker          = {"name": "", "surname": "", "lastname":""}
-
-            context = {'worker': worker,
+        context = {'worker': worker,
                        'city': getCityList(),
                        'serviceList': getServiceList(),
                        'professionList': getProfessionListWithGroup(selectedList=selectedList),
                        'csrfmiddlewaretoken': token}
-            print("Ответ:")
-            print(worker)
 
-            #return render(request, 'WorkerSettings.html', context)
+        #return render(request, 'WorkerSettings.html', context)
     else:
         context["message"] = '403: Доступ запрещен'
 
@@ -131,7 +131,7 @@ def showWorker(request):
             form.idWorker   = get_object_or_404(Worker, id=id)
             form.save()
 
-        return redirect(showWorker)
+        return redirect("/worker/info/?id="+str(id))
 
     else:
         commentForm = CommentForm()
@@ -196,9 +196,10 @@ def my_view(request):
     context = {}
 
     if request.method == "POST":
-        print('Запрос: '+str(request.POST))
+        print("test csrf=====================================")
+        print('Запрос: ' + str(request.POST))
         print('Тело: ' + str(request.body))
-        print('Куки: '+ str(request.COOKIES))
+        print('Куки: ' + str(request.COOKIES))
         dictPost = dict(request.POST)
         context = searchWorker(dictPost)
 
@@ -213,7 +214,9 @@ def my_view(request):
 def handle_uploaded_file(f, id):
 
     directory = 'C:/djangoprojects/main/static/main/media/'
-    name      = 'foto/'+str(id)+'_'+f.name
+    name      = 'foto/'+str(id)+'_'+'fff.png'
+
+    #file = load(file)
 
     print(name)
 

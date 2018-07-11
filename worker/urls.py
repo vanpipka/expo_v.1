@@ -17,7 +17,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-
+    path('settings/save/', views.saveSettings),
     path('settings/', views.showSettings),
     path('m/settings/', views.showSettingsJson),
     path('search/', views.showSearch),
