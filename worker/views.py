@@ -2,7 +2,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from main.models import Comments, Worker
 from main.forms import CommentForm
-from expo.DataGet import getCityList, getProfessionListWithGroup, getServiceList, gerWorkList, searchWorker
+from expo.DataGet import getCityList, getProfessionListWithGroup, getServiceList, gerWorkList, searchWorker, getCityList, getCityListFull
 from expo.DataSet import setWorker, refreshLastOnline
 from django.views.decorators.csrf import csrf_exempt
 from django.middleware import csrf
@@ -57,7 +57,7 @@ def showSettings(request):
 
     if request.user.is_authenticated:
 
-        worker          = gerWorkList(user_id=request.user, userAauthorized=request.user.is_authenticated)
+        worker          = gerWorkList(user_id=request.user, userAauthorized=request.user.is_authenticated, itsSettings=True)
         selectedList    = []
 
         if worker != None and len(worker) > 0:
@@ -88,7 +88,7 @@ def showSettingsJson(request):
 
         token = csrf.get_token(request)
 
-        worker          = gerWorkList(user_id=request.user, userAauthorized=request.user.is_authenticated)
+        worker          = gerWorkList(user_id=request.user, userAauthorized=request.user.is_authenticated, itsSettings=True)
         selectedList    = []
 
         if worker != None and len(worker) > 0:
@@ -98,8 +98,8 @@ def showSettingsJson(request):
             worker          = {"name": "", "surname": "", "lastname":""}
 
         context = {'worker': worker,
-                       'city': getCityList(),
-                       'serviceList': getServiceList(),
+                       #'city': getCityList(),
+                       #'serviceList': getServiceList(),
                        'professionList': getProfessionListWithGroup(selectedList=selectedList),
                        'csrfmiddlewaretoken': token}
 
@@ -183,7 +183,9 @@ def showSearch(request):
 
         category = request.GET.get("profession", "")
 
-        context = searchWorker(searchList={'Profession': [category]}, userAauthorized = request.user.is_authenticated)
+        context = searchWorker(searchList={'Profession': [category]}, userAauthorized=request.user.is_authenticated)
+
+    context['citylist'] = getCityListFull()
 
     return render(request, 'SearchWorker.html', context)
 

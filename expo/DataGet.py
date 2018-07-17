@@ -18,7 +18,8 @@ def getAllProfessionsAndGroups(count = None):
             all_professions.append({"id": p.id,
                                     "name": p.name,
                                     "url_json": '/worker/m/info?profession='+str(p.id),
-                                    "url": '/worker/search?profession='+p.name})
+                                    "url": '/worker/search?profession='+p.name,
+                                    "workercount": p.workerСount})
 
         all_workGroups.append({"name": e.name, "id": e.id, "professions": all_professions})
 
@@ -32,7 +33,7 @@ def getProfessionList():
 
     context = []
     for p in Professions.objects.all():
-        context.append({"id": p.id, "name": p.name})
+        context.append({"id": p.id, "name": p.name, "workercount": p.workerСount})
 
     return context
 
@@ -55,7 +56,7 @@ def getProfessionListWithGroup(count = None, selectedList=[]):
 
     return context
 
-def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, user_id = None):
+def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, user_id = None, itsSettings = False):
 
     nowDate  = datetime.datetime.now(timezone.utc)
     WorkList = []
@@ -75,6 +76,9 @@ def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, 
 
     if user_id != None:
         querySet = querySet.filter(user_id=user_id)
+
+    if itsSettings != True:
+        querySet = querySet.filter(publishdata=True)
 
     for e in querySet:
 
@@ -97,7 +101,9 @@ def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, 
                         "url_json": '/worker/m/info?id='+str(e.id),
                         "url": '/worker/info?id='+str(e.id),
                         "education": e.education,
+                        "publishdata": e.publishdata,
                         "experience": e.experience,
+                        "personaldataisallowed": e.personaldataisallowed,
                         "isonline": True if (nowDate-e.lastOnline).seconds/60 < 5 else False}
         #print(str((nowDate-e.lastOnline).seconds/60< 5))
         #print("Количество секунд:" + str(nowDate) + " - " +str(e.lastOnline) +" = "+ str((nowDate - e.lastOnline).seconds))
@@ -179,9 +185,31 @@ def getCityList():
 
   for e in querySet:
 
-      cityList.append({'id': e.id, 'name': e.name})
+      cityList.append({'id': e.id, 'name': e.name, 'region': str(e.region), 'country': str(e.country)})
 
   return cityList
+
+def getCityListFull():
+
+    cityList = {}
+    querySet = City.objects.all().filter()
+
+    for e in querySet:
+
+        region = str(e.region)
+
+        elem = cityList.get(region)
+        if elem == None:
+            cityList[region] = []
+            elem = cityList.get(region)
+
+        #print(elem)
+
+        elem.append({'id': e.id, 'name': e.name, 'region': region, 'country': str(e.country)})
+
+    #print(cityList)
+
+    return cityList
 
 def searchWorker(searchList, userAauthorized=False):
 

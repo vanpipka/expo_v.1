@@ -21,6 +21,7 @@ from . import views
 urlpatterns = [
     path('', views.show),
     path('m/serviceslist/', views.jsonServicesList),
+    path('m/citylist/', views.jsonCityList),
     path('m/servicesandgroups/', views.showJson),
 
 ]

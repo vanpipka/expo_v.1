@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    #'channels',
     #'allauth.socialaccount.providers.vk',
     #'allauth.socialaccount.providers.odnoklassniki',
     #'allauth.socialaccount.providers.auth0',
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
+    'chat',
 ]
 
 MIDDLEWARE = [
@@ -101,6 +103,17 @@ LOGOUT_URL = "/accounts/login/"
 
 WSGI_APPLICATION = 'expo.wsgi.application'
 
+#CHANNELS
+ASGI_APPLICATION = 'expo.routing.application'
+
+#CHANNEL_LAYERS = {
+    #'default': {
+     #   #'BACKEND': 'asgiref.inmemory.ChannelLayer',
+      #  'CONFIG': {
+       #     "hosts": [('py.itoe.ru', 56503)],
+        #},
+    #},
+#}
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases

@@ -3,32 +3,65 @@
 {% block content%}
 
     {% include "includes/Search.html" %}
+    <script>
+        function toggler(divId) {
+            $("#" + divId).toggle();
+        }
+    </script>
     <div class="container">
         <div class="row">
             {% for elem in all_workGroups %}
 
-                <div class="col-md-4">
+                <div class="col-4">
 
-                    <div class="card border-dark">
+                    <div class="card alert-dark">
 
-                        <div class="card-header bg-dark text-white">
+                        <div class="card-header alert-dark text-dark">
                             {{ elem.name }}
                         </div>
 
-                        <div class="card-body">
-
+                        <div class="card-body bg-light">
                             {% for elem_p in elem.professions %}
-
-                                <p >
-                                    <a href="{{elem_p.url}}" class="text-dark">{{elem_p.name }}</a>
-                                </p>
-
+                                {% if forloop.counter < 5 %}
+                                    <div class="row">
+                                        <div class="col text-left">
+                                            <a href="{{elem_p.url}}" class="text-dark">{{elem_p.name }}</a>
+                                        </div>
+                                        <div class="col text-right">
+                                            <span class="badge badge-secondary text-right">{{ elem_p.workercount }}</span>
+                                        </div>
+                                    </div>
+                                {% endif %}
                             {% endfor %}
 
-                            <p>
-                                <a href="" class="text-dark">Показать всех</a>
-                            </p>
+                            {% if elem.professions|length >= 5 %}
+                                <div id="{{ elem.id }}" style="display:none;">
+                                {% for elem_p in elem.professions %}
+                                    {% if forloop.counter >= 5 %}
+                                        <div class="row">
+                                            <div class="col text-left">
+                                                <a href="{{elem_p.url}}" class="text-dark">{{elem_p.name }}</a>
+                                            </div>
+                                            <div class="col text-right">
+                                                <span class="badge badge-secondary text-right">{{ elem_p.workercount }}</span>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                                </div>
 
+                            {% endif %}
+
+                            <div class="row ">
+                                <div class="col">
+                                    <hr class="text-dark bg-dark" style="border: none; height: 2px;">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col text-left">
+                                    <a href="#" class="text-dark" onclick="toggler('{{ elem.id }}');">Показать всех</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

@@ -64,6 +64,22 @@ def setWorker(id, data):
         else:
             worker.haveInstrument = False
 
+    # Обработаем подтверждение на обработку персоальных данных
+    if data.__contains__('personaldataisallowed'):
+        personaldataisallowed = data.__getitem__('personaldataisallowed')
+        if personaldataisallowed == True:
+            worker.personaldataisallowed = True
+        else:
+            worker.personaldataisallowed = False
+
+    # Обработаем разрешение на публикацию анкеты
+    if data.__contains__('publishdata'):
+        publishdata = data.__getitem__('publishdata')
+        if publishdata == True:
+            worker.publishdata = True
+        else:
+            worker.publishdata = False
+
     # Обработаем разрешение на работу
     if data.__contains__('workpermit'):
         workpermit = data.__getitem__('workpermit')
@@ -80,6 +96,19 @@ def setWorker(id, data):
         if fileurl:
             worker.foto = fileurl
 
+    #Сохраним
+    worker.save()
+
+    # Обработаем выбранные профессии
+    worker.professions.clear()
+
+    if data.__contains__('professions'):
+        professions = list(data.__getitem__('professions'))
+
+        for id_prof in professions:
+            worker.professions.add(Professions.objects.get(id=id_prof))
+
+    # Обработаем файлы
     if data.__contains__('files'):
         print("Обработка файлов=======================================")
         files = list(data.__getitem__('files'))
@@ -97,18 +126,6 @@ def setWorker(id, data):
                 attach.save()
 
                 worker.WorkerAttachment.add(attach)
-
-    #Сохраним
-    worker.save()
-
-    # Обработаем выбранные профессии
-    worker.professions.clear()
-
-    if data.__contains__('professions'):
-        professions = list(data.__getitem__('professions'))
-
-        for id_prof in professions:
-            worker.professions.add(Professions.objects.get(id=id_prof))
 
     #обработаем указанные цены
     CostOfService.objects.filter(idWorker=worker).delete()

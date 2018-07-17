@@ -110,6 +110,8 @@
                 experiencewith: document.getElementById("id_Experiencewith").value,
                 experience: document.getElementById("id_experience").value,
                 haveinstrument: document.getElementById("id_haveinstrument").checked,
+                personaldataisallowed: document.getElementById("id_personaldataisallowed").checked,
+                publishdata: document.getElementById("id_publishdata").checked,
                 foto: document.getElementById("fotourl").src,
                 files: newfiles,
                 professions: SelectedProf,
@@ -541,6 +543,35 @@
                 </div>
             </div>
 
+            <p></p>
+
+            <div class="form-group container-fluid">
+                <div class="row  border-danger" style="border: dashed; background-color: #f5c6cb">
+                    <div class="col col-1">
+                        {% if worker.personaldataisallowed %}
+                            <input class="" id="id_personaldataisallowed" value="True" type="checkbox" name="personaldataisallowed" checked>
+                        {% else %}
+                            <input class="" id="id_personaldataisallowed" value="True" type="checkbox" name="personaldataisallowed">
+                        {% endif %}
+                    </div>
+                    <div class="col col-11">
+                        <span>Даю согласие на обработку перcональных данных...</span>
+                    </div>
+                </div>
+
+                <div class="row border-success mt-3" style="border: dashed; background-color: #71dd8a">
+                    <div class="col col-1">
+                        {% if worker.publishdata %}
+                            <input class="" id="id_publishdata" value="True" type="checkbox" name="publishdata" checked>
+                        {% else %}
+                            <input class="" id="id_publishdata" value="True" type="checkbox" name="publishdata">
+                        {% endif %}
+                    </div>
+                    <div class="col col-11">
+                        <span>Опубликовать анкету в общий доступ</span>
+                    </div>
+                </div>
+            </div>
             <p></p>
 		    <div class="form-group">
 		        <div class="col-xs-offset-2 col-xs-10">

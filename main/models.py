@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.db import connection
+from django.db.models.signals import m2m_changed
 import datetime
 import uuid
 
@@ -18,25 +19,24 @@ class Professions(models.Model):
     name        = models.CharField(max_length=100)
     idWorkGroup = models.ForeignKey(WorkGroup, on_delete=models.CASCADE)
     indexName   = models.CharField(max_length=100)
-    def __str__(self):
-        return self.name
-
-    def save(self, *args, **kwargs):
-        self.indexName = self.name.upper()
-        super(Professions, self).save(*args, **kwargs)  # Call the "real" save() method.
-
-class City(models.Model):
-
-    id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name        = models.CharField(max_length=100)
-    indexName   = models.CharField(max_length=100)
+    workerСount = models.DecimalField("Количество рабочих", max_digits=10, decimal_places=0, default=0)
 
     def __str__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
-        self.indexName = self.name.upper()
-        super(City, self).save(*args, **kwargs)  # Call the "real" save() method.
+    def setWorkerCount(self):
+
+        print("Сохраняем количество по профессиям")
+        cursor = connection.cursor()
+
+        cursor.execute("SELECT main_professions.id, COUNT(main_worker_professions.worker_id) FROM main_professions LEFT JOIN main_worker_professions ON main_professions.id = main_worker_professions.professions_id GROUP BY main_professions.id")
+
+        row = cursor.fetchall()
+
+        for e in row:
+            prof = Professions.objects.get(id=e[0])
+            prof.workerСount = e[1]
+            prof.save()
 
 class Service(models.Model):
 
@@ -45,6 +45,38 @@ class Service(models.Model):
 
     def __str__(self):
         return self.name
+
+class Country(models.Model):
+
+    id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name        = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+class Region(models.Model):
+
+    id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name        = models.CharField(max_length=100)
+    country     = models.ForeignKey(Country, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+class City(models.Model):
+
+    id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name        = models.CharField(max_length=100)
+    indexName   = models.CharField(max_length=100)
+    country     = models.ForeignKey(Country, on_delete=models.CASCADE, default='00000000000000000000000000000000')
+    region      = models.ForeignKey(Region, on_delete=models.CASCADE, default='00000000000000000000000000000000')
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        self.indexName = self.name.upper()
+        super(City, self).save(*args, **kwargs)  # Call the "real" save() method.
 
 class WorkerAttachment(models.Model):
 
@@ -69,6 +101,8 @@ class Worker(models.Model):
     workpermit  = models.BooleanField(default=False)
     datacheck   = models.BooleanField(default=False)
     sex         = models.BooleanField(default=True)
+    personaldataisallowed = models.BooleanField(default=False)
+    publishdata = models.BooleanField(default=False)
     Description = models.TextField()
     idCity      = models.ForeignKey(City, on_delete=models.CASCADE, null=True)
     birthday    = models.DateField(datetime.date, default=None, null=True)
@@ -120,7 +154,6 @@ class Comments(models.Model):
 
         #print("Количество:" +str(commentCount)+ " среднее:" + str(rating))
 
-
 class WorkerRating(models.Model):
 
     id              = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -139,3 +172,11 @@ class WorkerRating(models.Model):
         workerRating.commentsCount  = rating['id__count']
 
         workerRating.save()
+
+def professions_changed(sender, **kwargs):
+    # Do something
+    print("Действие с мэни ту мэни")
+    if kwargs['action'] == "post_clear" or kwargs['action'] == "post_add":
+        Professions.setWorkerCount(sender)
+
+m2m_changed.connect(professions_changed, sender=Worker.professions.through)

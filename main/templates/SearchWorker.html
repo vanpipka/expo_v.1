@@ -37,7 +37,12 @@
                                                 <label for="inputCity" class="">Город</label>
                                             </div>
                                             <div class="col-sm-8">
-                                                <input type="Text" class="form-control" id="inputCity" name="City" placeholder="Москва" value="{{ searchProperty.City }}">
+                                                <div class="input-group mb-3">
+                                                    <input type="Text" class="form-control" id="inputCity" name="City" placeholder="Москва" value="{{ searchProperty.City }}">
+                                                    <div class="input-group-append">
+                                                        <button class="btn" type="button" data-toggle="modal" data-target="#myModal">Подбор</button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </li>
@@ -339,9 +344,10 @@
                     {% include "includes/WorkerList.html" %}
 
                 </div>
+
             </div>
         </div>
-
+        {% include "includes/citySearch.html" %}
 <p></p>
 
 {% endblock %}
