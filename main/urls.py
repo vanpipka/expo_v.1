@@ -20,8 +20,10 @@ from . import views
 
 urlpatterns = [
     path('', views.show),
-    path('m/serviceslist/', views.jsonServicesList),
+    path('m/servicelist/', views.jsonServicesList),
+    path('m/selectionparameters/', views.jsonSelectionParameters),
     path('m/citylist/', views.jsonCityList),
-    path('m/servicesandgroups/', views.showJson),
+    path('m/professionlist/', views.jsonProfessionList),
+    path('m/professionandgroups/', views.showJson),
 
 ]

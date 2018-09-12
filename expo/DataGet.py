@@ -1,5 +1,6 @@
 from datetime import *
 from main.models import *
+from django.core.exceptions import ObjectDoesNotExist
 
 def getAllProfessionsAndGroups(count = None):
 
@@ -8,7 +9,7 @@ def getAllProfessionsAndGroups(count = None):
     for e in WorkGroup.objects.all():
 
         all_professions = []
-        AllProfessions = Professions.objects.all().filter(idWorkGroup=e.id)
+        AllProfessions  = Professions.objects.all().filter(idWorkGroup=e.id)
 
         if (count != None):
             AllProfessions = AllProfessions[:count]
@@ -24,16 +25,22 @@ def getAllProfessionsAndGroups(count = None):
         all_workGroups.append({"name": e.name, "id": e.id, "professions": all_professions})
 
     #context = all_workGroups
-    context = {"all_workGroups": all_workGroups}
+    #context = {"dataset": all_workGroups}
     #           "all_professions": all_professions}
 
-    return context
+    return all_workGroups
 
 def getProfessionList():
 
     context = []
-    for p in Professions.objects.all():
-        context.append({"id": p.id, "name": p.name, "workercount": p.workerСount})
+    for p in Professions.objects.all().order_by("-workerСount"):
+        context.append({
+                    "id": p.id,
+                    "name": p.name,
+                    "workercount": p.workerСount,
+                    "url_json": '/worker/m/info?profession=' + str(p.id),
+                    "url": '/worker/search?profession=' + p.name
+                });
 
     return context
 
@@ -56,29 +63,32 @@ def getProfessionListWithGroup(count = None, selectedList=[]):
 
     return context
 
-def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, user_id = None, itsSettings = False):
+def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, user_id = None, itsSettings = False, groupAttribute = False):
 
     nowDate  = datetime.datetime.now(timezone.utc)
     WorkList = []
-    querySet = None
-
-    if idGroup == None:
-        querySet = Worker.objects.all()
-
-    else:
-        querySet = Worker.objects.all().filter(professions__id = idGroup)
-
-    if count != None:
-        querySet = querySet[:count]
-
-    if idWorker != None:
-        querySet = querySet.filter(id__in=idWorker)
 
     if user_id != None:
-        querySet = querySet.filter(user_id=user_id)
+        querySet = Worker.getWorkerQueryByUser(user=user_id)
+
+    elif idWorker != None:
+        querySet = Worker.objects.all().filter(id__in=idWorker)
+
+    else:
+
+        querySet = Worker.objects.all()
+
+        if idGroup != None:
+
+            querySet = querySet.filter(professions__id = idGroup)
+
+        if count != None:
+            querySet = querySet[:count]
 
     if itsSettings != True:
         querySet = querySet.filter(publishdata=True)
+
+    querySet = querySet.select_related('idCity').select_related('nationality')
 
     for e in querySet:
 
@@ -89,12 +99,8 @@ def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, 
                         "name": e.name,
                         "surname": e.surname,
                         "lastname": e.lastname,
-                        "haveinstrument": e.haveInstrument,
-                        "haveip": e.haveIP,
-                        "fsocheck": e.fsocheck,
-                        "workpermit": e.workpermit,
-                        "datacheck": e.datacheck,
-                        "experiencedate": e.Experiencewith,
+                        "experiencedate": nowDate.year if e.Experiencewith == None else e.Experiencewith.year,
+                        "experienceyear": 0 if e.Experiencewith == None else calculate_age(e.Experiencewith),
                         "rating": ratingInfo["rating"],
                         "commentscount": ratingInfo["commentsCount"],
                         "lastonline": e.lastOnline,
@@ -102,25 +108,57 @@ def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, 
                         "url": '/worker/info?id='+str(e.id),
                         "education": e.education,
                         "publishdata": e.publishdata,
+                        "birthday": e.birthday,
+                        "age": calculate_age(e.birthday),
                         "experience": e.experience,
+                        "sex": e.sex,
                         "personaldataisallowed": e.personaldataisallowed,
+                        "city": {"id": e.idCity.id, "name": e.idCity.name},
+                        "nationality": {"id": e.nationality.id, "name": e.nationality.name},
                         "isonline": True if (nowDate-e.lastOnline).seconds/60 < 5 else False}
         #print(str((nowDate-e.lastOnline).seconds/60< 5))
         #print("Количество секунд:" + str(nowDate) + " - " +str(e.lastOnline) +" = "+ str((nowDate - e.lastOnline).seconds))
         #print("Пользователь онлайн: "+str(WorkerInfo['isonline']))
 
-        if e.idCity:
-            WorkerInfo["city"] = e.idCity.name
+        #if e.idCity:
+        #    WorkerInfo["city"] = e.idCity.name
+        #else:
+        #    WorkerInfo["city"] = ""
+
+        if groupAttribute:
+
+            attributeArray = []
+            attributeArray.append({"name": "haveip", "label": "Зарегистрирован как ИП", "value": e.haveIP})
+            attributeArray.append({"name": "fsocheck", "label": "Проверка ФСО", "value": e.fsocheck})
+            attributeArray.append({"name": "haveinstrument", "label": "Есть инструмент", "value": e.haveInstrument})
+            attributeArray.append({"name": "workpermit", "label": "Есть разрешение на работу", "value": e.workpermit})
+            attributeArray.append({"name": "datacheck", "label": "Данные проверены", "value": e.datacheck})
+            attributeArray.append({"name": "haveshengen", "label": "Есть шенгенская виза", "value": e.haveShengen})
+            attributeArray.append({"name": "haveintpass", "label": "Есть загранпаспорт", "value": e.haveIntPass})
+            attributeArray.append({"name": "readytotravel", "label": "Готов к командировкам", "value": e.readytotravel})
+
+            WorkerInfo["attributes"] = attributeArray
+
         else:
-            WorkerInfo["city"] = ""
+            WorkerInfo["haveip"] = e.haveIP
+            WorkerInfo["fsocheck"] = e.fsocheck
+            WorkerInfo["haveinstrument"] = e.haveInstrument
+            WorkerInfo["workpermit"] = e.workpermit
+            WorkerInfo["datacheck"] = e.datacheck
+            WorkerInfo["haveshengen"] = e.haveShengen
+            WorkerInfo["haveintpass"] = e.haveIntPass
+            WorkerInfo["readytotravel"] = e.readytotravel
 
         if e.foto:
             WorkerInfo["fotourl"] = '/static/main/media/' + str(e.foto)
+            WorkerInfo["resizefotourl"] = '/static/main/media/resize' + str(e.foto)
         else:
-            WorkerInfo["fotourl"]: ''
+
+            WorkerInfo["fotourl"] = '/static/main/img/add-photo.png'
+            WorkerInfo["resizefotourl"] = '/static/main/img/add-photo.png'
 
         if e.Experiencewith != None:
-            WorkerInfo["experiencewith"] = datetime.datetime.now().year - e.Experiencewith.year  # Переделать на разность дат
+            WorkerInfo["experiencewith"] = calculate_age(e.Experiencewith) # Переделать на разность дат
         else:
             WorkerInfo["experiencewith"] = 0
 
@@ -142,24 +180,58 @@ def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, 
         WorkerInfo["proflist"] = profList
 
         for attachment in e.WorkerAttachment.all():
-            attachments.append({"url": '/static/main/media/' + str(attachment.file), "description": attachment.Description})
+            attachments.append({"id": attachment.id, "url": '/static/main/media/' + str(attachment.file), "resizeurl": '/static/main/media/resize' + str(attachment.file),  "description": attachment.Description})
         WorkerInfo["attachments"] = attachments
 
         #Цены на услуги
         for prof in CostOfService.objects.all().filter(idWorker=workerid).select_related('idService'):
             priceList.append({"id": prof.idService.id, "service": prof.idService.name, "price": prof.price})
+
+        works = {'salary': e.salary, 'servicelist': priceList}
+        WorkerInfo['works'] = works
+
         WorkerInfo["servicelist"] = priceList
+
+
 
         #Добавим информацию о сотруднике в список
         WorkList.append(WorkerInfo)
 
     return WorkList
 
+def getMinWorkerList():
+
+    workerlist = []
+    querySet = Worker.objects.filter(publishdata=True)
+
+    for e in querySet:
+        workerlist.append({"id": e.id, "name": e.name, "resizefotourl": '/static/main/media/resize' + str(e.foto)})
+        
+    return workerlist
+
+def getComments(idUser):
+
+    commentsList = []
+    query = Comments.objects.filter(idWorker=idUser).order_by("-created").select_related('idUser').select_related('idWorker').select_related('idProf')
+
+    for e in query:
+        commentsList.append({
+            "user": {"id": e.idUser.id, "name": e.idUser.name, "fotourl": '/static/main/media/resize' + str(e.idUser.foto)},
+            "worker": {"id": e.idWorker.id, "name": e.idWorker.name, "fotourl": '/static/main/media/resize' + str(e.idWorker.foto)},
+            "profession": {"id": e.idProf.id, "name": e.idProf.name},
+            "text": e.text,
+            "created": e.created,
+            "moderation": e.moderation,
+            "rating": e.rating,
+        })
+
+    return commentsList
+
 def getWorker(id):
 
     try:
         worker = Worker.objects.get(id=id)
-    except:
+    except ObjectDoesNotExist:
         worker = Worker(id=id)
 
     return worker
@@ -189,53 +261,117 @@ def getCityList():
 
   return cityList
 
-def getCityListFull():
+def getServiceList():
 
-    cityList = {}
-    querySet = City.objects.all().filter()
+    cityList = []
+    querySet = Service.objects.all().filter()
 
     for e in querySet:
-
-        region = str(e.region)
-
-        elem = cityList.get(region)
-        if elem == None:
-            cityList[region] = []
-            elem = cityList.get(region)
-
-        #print(elem)
-
-        elem.append({'id': e.id, 'name': e.name, 'region': region, 'country': str(e.country)})
-
-    #print(cityList)
+        cityList.append({'id': e.id, 'name': e.name})
 
     return cityList
 
-def searchWorker(searchList, userAauthorized=False):
+def getCountryList():
+
+    countryList = []
+    querySet = Country.objects.all().filter()
+
+    for e in querySet:
+        countryList.append({'id': e.id, 'name': e.name})
+
+    return countryList
+
+def getCityListFull():
+
+    cityList = []
+    fullList = []
+    cityQuerySet    = City.objects.all().filter().select_related('region').select_related('country')
+    regionQuerySet  = Region.objects.all().filter()
+
+    for e in cityQuerySet:
+        cityList.append({'id': e.id, 'name': e.name, 'region': e.region.id, 'country': e.country.name})
+
+    for e in regionQuerySet:
+
+        m = []
+
+        for city in cityList:
+
+            if city['region'] == e.id:
+
+                city['region'] == e.name
+
+                m.append(city)
+
+        fullList.append({'name': e.name, 'id': e.id, 'citys': m})
+
+
+
+
+
+    #for e in querySet:
+
+
+
+
+
+    #    region = str(e.region)
+
+     #   elem = cityList.get(region)
+     #   if elem == None:
+     #       cityList[region] = []
+     #       elem = cityList.get(region)
+
+        #print(elem)
+
+     #   elem.append()
+
+    #print(cityList)
+
+    return fullList
+
+def searchWorker(searchList, userAauthorized=False, returnCount = False, groupAttribute=False):
 
     print(searchList)
 
     context         = {}
     searchProperty  = {'WorkExperience': 'WorkExperience0'}
-    profession      = searchList.get('Profession')
-    city            = searchList.get('City')
-    workExperience  = searchList.get('WorkExperience')
-    onlyFoto        = searchList.get('OnlyFoto')
-    onlyComments    = searchList.get('OnlyComments')
-    rating          = searchList.get('InputRating')
-    fsocheck        = searchList.get('FsoCheck')
-    dataCheck       = searchList.get('DataCheck')
-    sex             = searchList.get('Sex')
-    haveIp          = searchList.get('HaveIp')
-    haveShengen     = searchList.get('HaveShengen')
-    haveIntPass     = searchList.get('HaveIntPass')
-    haveInstrument  = searchList.get('HaveInstrument')
+    profession      = searchList.get('profession')
+    city            = searchList.get('city')
+    workexperience  = searchList.get('workexperience')
+    onlyfoto        = searchList.get('onlyfoto')
+    onlycomments    = searchList.get('onlycomments')
+    rating          = searchList.get('inputrating')
+    fsocheck        = searchList.get('fsocheck')
+    datacheck       = searchList.get('datacheck')
+    sex             = searchList.get('sex')
+    haveip          = searchList.get('haveip')
+    haveshengen     = searchList.get('haveshengen')
+    haveintpass     = searchList.get('haveintpass')
+    haveinstrument  = searchList.get('haveinstrument')
+    positionfrom    = searchList.get('positionfrom')
+    positionto      = searchList.get('positionto')
+    workpermit      = searchList.get('workpermit')
+    age_from        = searchList.get('age_from')
+    age_to          = searchList.get('age_to')
+    readytotravel   = searchList.get('readytotravel')
+    price           = searchList.get('salary')
+    projectwork     = searchList.get('projectwork')
+
+    if positionfrom == None:
+        positionfrom = 0
+    else:
+        positionfrom = int(positionfrom)
+
+    if positionto == None:
+        positionto = positionfrom + 5
+
     searchquery     = Worker.objects.all()
 
     # Отбор по таблице рейтинг отдельно, пока не умею делать левое соединение
 
-    isOnlyComments  = onlyComments != None and len(onlyComments) > 0 and onlyComments[0] == 'True'
-    isRating        = rating != None and len(rating) > 0 and rating[0] != ''
+    isOnlyComments  = onlycomments != None and onlycomments == True
+    isRating        = rating != None and rating != ''
 
     if isOnlyComments or isRating:
         ratingList  = []
@@ -244,104 +380,199 @@ def searchWorker(searchList, userAauthorized=False):
         if isOnlyComments:
 
             print("Только с комментариями: Истина")
-            searchProperty["OnlyComments"] = True
-            queryRating = WorkerRating.objects.all()
+            searchProperty["onlycomments"] = True
+            queryRating = WorkerRating.objects.all().values('idWorker').distinct()
 
         if isRating:
-            print("Рейтинг более: "+str(rating[0]))
-            searchProperty["InputRating"] = rating[0]
+            print("Рейтинг более: "+str(rating))
+            searchProperty["inputrating"] = rating
             if queryRating == None:
                 queryRating = WorkerRating.objects.all()
 
-            queryRating = queryRating.filter(rating__gte=rating[0])
+            queryRating = queryRating.filter(rating__gte=rating).values('idWorker').distinct()
 
         for elem in queryRating:
             print('----------------------')
-            ratingList.append(elem.idWorker_id)
+            ratingList.append(elem.get('idWorker'))
 
         searchquery = searchquery.filter(id__in = ratingList)
 
-    if fsocheck != None and len(fsocheck) > 0 and fsocheck[0] == 'True':
-        print("Проверка ФСО:" + str(fsocheck[0]))
-        searchProperty["FsoCheck"] = True
+    if projectwork != None and projectwork != '':
+
+        projectsearchList = []
+        projectsearch = CostOfService.objects.all()
+
+        for i in projectwork:
+
+            print('j: '+str(i))
+            projectsearch = projectsearch.filter(price__lte=int(i.get('price'))).filter(idService=i.get('id')).values('idWorker').distinct()
+
+            for elem in projectsearch:
+                id = elem.get('idWorker')
+
+                try:
+                    k = projectsearchList.index(id)
+                except ValueError:
+                    k = None
+
+                if k == None:
+                    projectsearchList.append(elem.get('idWorker'))
+
+        searchquery = searchquery.filter(id__in=projectsearchList)
+
+    if fsocheck != None and fsocheck == True:
+        print("Проверка ФСО:" + str(fsocheck))
+        searchProperty["fsocheck"] = True
         searchquery     = searchquery.filter(fsocheck=True)
 
-    if haveShengen != None and len(haveShengen) > 0 and haveShengen[0] == 'True':
-        print("Есть шенген:" + str(haveShengen[0]))
-        searchProperty["HaveShengen"] = True
+    if readytotravel != None and readytotravel == True:
+        print("Готов к командировкам:" + str(readytotravel))
+        searchProperty["readytotravel"] = True
+        searchquery = searchquery.filter(readytotravel=True)
+
+    if workpermit != None and workpermit == True:
+        print("Есть разрешение на работу:" + str(workpermit))
+        searchProperty["workpermit"] = True
+        searchquery     = searchquery.filter(workpermit=True)
+
+    if haveshengen != None and haveshengen == True:
+        print("Есть шенген:" + str(haveshengen))
+        searchProperty["haveshengen"] = True
         searchquery     = searchquery.filter(haveShengen=True)
 
-    if haveInstrument != None and len(haveInstrument) > 0 and haveInstrument[0] == 'True':
-        print("Есть инструмент:" + str(haveInstrument[0]))
-        searchProperty["HaveInstrument"] = True
+    if haveinstrument != None and haveinstrument == True:
+        print("Есть инструмент:" + str(haveinstrument))
+        searchProperty["haveinstrument"] = True
         searchquery     = searchquery.filter(haveInstrument=True)
 
-    if haveIntPass != None and len(haveIntPass) > 0 and haveIntPass[0] == 'True':
-        print("Есть загранпаспорт:" + str(haveIntPass[0]))
-        searchProperty["HaveIntPass"] = True
+    if haveintpass != None and haveintpass == True:
+        print("Есть загранпаспорт:" + str(haveintpass))
+        searchProperty["haveintpass"] = True
         searchquery     = searchquery.filter(haveIntPass=True)
 
-    if haveIp != None and len(haveIp) > 0 and haveIp[0] == 'True':
-        print("Есть ИП:" + str(haveIp[0]))
-        searchProperty["HaveIp"] = True
+    if haveip != None and haveip == True:
+        print("Есть ИП:" + str(haveip))
+        searchProperty["haveip"] = True
         searchquery     = searchquery.filter(haveIP=True)
 
-    if sex != None and len(sex) > 0 and sex[0] != '':
-        print("Пол:" + str(sex[0]))
-        searchProperty["Sex"] = sex[0]
+    if sex != None and sex != '':
+        print("Пол:" + str(sex))
+        searchProperty["sex"] = sex
 
-        if sex[0] == 'M':
+        if sex == 'M':
             searchquery     = searchquery.filter(sex=True)
-        elif sex[0] == 'W':
+        elif sex == 'W':
             searchquery     = searchquery.filter(sex=False)
+    else:
+        searchProperty["sex"] = ''
 
-    if dataCheck != None and len(dataCheck) > 0 and dataCheck[0] == 'True':
-        print("Данные проверены:" + str(dataCheck[0]))
-        searchProperty["DataCheck"] = True
+    if datacheck != None and datacheck == True:
+        print("Данные проверены:" + str(datacheck))
+        searchProperty["datacheck"] = True
         searchquery     = searchquery.filter(datacheck=True)
 
-    if profession != None and len(profession) > 0 and profession[0] != '':
-        print("Профессия:" + str(profession[0]))
-        searchProperty["Profession"] = profession[0]
-        searchquery     = searchquery.filter(professions__indexName__contains=profession[0].upper())
+    if profession != None and profession != '':
+        print("Профессия:" + str(profession))
+        searchProperty["profession"] = profession
+        searchquery     = searchquery.filter(professions__indexName__contains=profession.upper())
 
-    if city != None and len(city) > 0 and city[0] != '':
-        print("Город:" + str(city[0]))
-        searchProperty["City"] = city[0]
-        searchquery = searchquery.filter(idCity__indexName__contains=city[0].upper())
+    if price != None and price != '':
+        print("Цена:" + str(price))
+        searchProperty["salary"] = price
 
-    if workExperience != None and len(workExperience) > 0 and workExperience[0] != '':
+        if price == '1':
+            searchquery = searchquery.filter(salary__lte=50000)
+        elif price == '2':
+            searchquery = searchquery.filter(salary__gte=50000).filter(salary__lte=100000)
+        elif price == '3':
+            searchquery = searchquery.filter(salary__gte=100000).filter(salary__lte=150000)
+        elif price == '4':
+            searchquery = searchquery.filter(salary__gte=150000)
 
-        workExperience = workExperience[0]
-        searchProperty["WorkExperience"] = "WorkExperience"+str(workExperience)
-        if workExperience == '1':
+    if city != None and city != '':
+        print("Город:" + str(city))
+        searchProperty["city"] = city
+        searchquery = searchquery.filter(idCity__indexName__contains=city.upper())
+
+    if workexperience != None  and workexperience != '0':
+
+        workexperience = workexperience
+        searchProperty["workexperience"] = "workexperience"+str(workexperience)
+        if workexperience == '1':
             searchquery = searchquery.filter(Experiencewith__year__gte = datetime.datetime.now().year)
-        elif workExperience == '2':
+        elif workexperience == '2':
             searchquery = searchquery.filter(Experiencewith__year__gte = datetime.datetime.now().year-3).exclude(Experiencewith__year__gte = datetime.datetime.now().year)
-        elif workExperience == '3':
+        elif workexperience == '3':
             searchquery = searchquery.filter(Experiencewith__year__gte = datetime.datetime.now().year-7).exclude(Experiencewith__year__gte = datetime.datetime.now().year-3)
-        elif workExperience == '4':
+        elif workexperience == '4':
             searchquery = searchquery.exclude(Experiencewith__year__gte = datetime.datetime.now().year-7)
 
-        print("Опыт работы:" + str(workExperience))
+        print("Опыт работы:" + str(workexperience))
 
-    if onlyFoto != None and len(onlyFoto) > 0 and onlyFoto[0] == 'True':
+    if age_from != None and age_from != '' and age_from != '18':
+
+        print('Возраст от: '+str(age_from))
+
+        datefrom = datetime.date(datetime.datetime.now().year - int(age_from), datetime.datetime.now().month, datetime.datetime.now().day)
+
+        searchquery = searchquery.exclude(birthday__gte=datefrom)
+
+    if age_to != None and age_to != '' and age_to != '70':
+
+        print('Возраст до: '+str(age_to))
+
+        datefrom = datetime.date(datetime.datetime.now().year - int(age_to) - 1, datetime.datetime.now().month, datetime.datetime.now().day)
+
+        searchquery = searchquery.filter(birthday__gte=datefrom)
+
+    if onlyfoto != None and onlyfoto == True:
         print("Только с фото: Истина")
-        searchProperty["OnlyFoto"] = True
+        searchProperty["onlyfoto"] = True
         searchquery = searchquery.exclude(foto='')
 
     if searchquery != None:
-        workerid = []
 
-        for elem in searchquery:
-            workerid.append(elem.id)
+        if positionfrom != None and positionto!=None and returnCount!=True:
+            searchquery = searchquery[positionfrom:positionto]
 
-        workerList = gerWorkList(idWorker=workerid, userAauthorized=userAauthorized)
+        if returnCount:
 
-    context["Workers"] = workerList
-    context["searchProperty"] = searchProperty
+            searchquery = searchquery.filter(publishdata=True)
+
+            context["count"] = len(searchquery)
+
+        else:
+            workerid = []
+
+            for elem in searchquery:
+                workerid.append(elem.id)
+
+            workerList = gerWorkList(idWorker=workerid, userAauthorized=userAauthorized, groupAttribute=groupAttribute)
+
+            context["dataset"] = workerList
+            context["searchproperty"] = searchProperty
+
+    context["nextposition"] = positionto
 
     return context
+
+def getWorkerChatRoom(worker):
+
+    chatRoomList = []
+
+    for e in worker.chatRoom.all():
+
+        consigneeList   = []
+        name            = ''
+        consignee       = list(Worker.objects.filter(chatRoom=e).values('id', 'name').distinct())
+
+        for consid in consignee:
+            consigneeList.append(consid['id'])
+            name = name + str(consid['name']) + ' '
+
+        chatRoomList.append({"id": e.id, "name": name})
+
+    return chatRoomList
 
 def getServiceList(searchLine = None):
 
@@ -355,3 +586,15 @@ def getServiceList(searchLine = None):
         serviceList.append({'id': e.id, 'name': e.name})
 
     return serviceList
+
+def calculate_age(born):
+
+    print('дата рождения' + str(born))
+
+    try:
+        today = datetime.datetime.today()
+        age = today.year - born.year - ((today.month, today.day) < (born.month, born.day))
+    except:
+        age = 0
+
+    return 0 if age > 65 else age

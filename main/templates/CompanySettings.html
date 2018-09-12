@@ -1,0 +1,228 @@
+{% extends "wrapper.html" %}
+{% load home_extras %}
+{% block content%}
+    <style>
+
+        .file-upload {
+             position: relative; /* Даем возможность делать позиционирование, внутри данного элемента */
+             overflow: hidden; /* Все что выходит за пределы - скрываем */
+             /*width: 20%; /* Задаем ширину кнопки выбора файла */
+             height: 40px; /* Задаем высоту кнопки выбора файла */
+             /*background: #6da047;*/
+             border-radius: 3px;
+             padding: 8px 4px;
+             /*color: #fff;*/
+             text-align: center;
+        }
+
+        .file-upload input[type="file"]{
+            display: none; /* Обязательно скрываем настоящий Input File */
+        }
+        .file-upload label {
+             /* Растягиваем label на всю возможную площадь блока .file-upload */
+             display: block;
+             position: absolute;
+             top: 0;
+             left: 0;
+             width: 100%;
+             height: 100%;
+             cursor: pointer;
+        }
+        .file-upload span {
+             line-height: 36px; /* Делаем вертикальное выравнивание текста, который написан на кнопке */
+        }
+
+    </style>
+
+    <div class="container pt-3">
+
+        <form name="settingsform" id="settingsform">
+
+            {% csrf_token %}
+
+            <!-- ЛОГОТИП -->
+            <div>
+                <label class="article">Логотип</label>
+
+                <div class="row">
+
+                    <div class="col col-3">
+
+                        {% if company.resizefotourl %}
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <div class="product-img" style="height: 150px;">
+                                        <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:150px" src="{{  company.resizefotourl }}" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        {% elif company.fotourl %}
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <div class="product-img" style="height: 150px;">
+                                        <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:150px" src="{{ company.fotourl }}" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <div class="product-img border-secondary" style="height: 150px; border: dashed; border-radius: 5px ">
+                                        <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:150px" src="/static/main/img/add-photo.png" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="file-upload container-fluid btn btn-primary">
+                                    <label>
+                                        <input id = "finput_foto" type="file" name="file" onchange="setlocalfoto(this)" accept="image/jpg,image/jpeg,image/png">
+                                        <span style="color: white">Сменить логотип</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ЛИЧНЫЕ ДАННЫЕ -->
+            <div class="mt-3">
+                <label class="article">Данные о компании</label>
+
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_name" class="col-xs-2 control-label input-medium">Название компании*</label>
+                    </div>
+                    <div class="col col-3">
+                        <input type="text" name = "name" class="form-control" id="id_name" placeholder="Название компании" value="{{company.name}}" required>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_vatnumber" class="col-xs-2 control-label input-medium">ИНН</label>
+                    </div>
+                    <div class="col col-3">
+                        <input type="text" name="vatnumber" class="form-control" id="id_vatnumber" placeholder="ИНН" value="{{company.vatnumber}}" required>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_emailaddress" class="col-xs-2 control-label input-medium">Электронная почта</label>
+                    </div>
+                    <div class="col col-3">
+                        <input type="text" name = "emailaddress" class="form-control" id="id_emailaddress" placeholder="Электронная почта" value="{{company.emailaddress}}">
+                    </div>
+                    <div class="col col-6 mt-1">
+                        <span class="badge badge-success" style="font-family: sans-serif;">Подтверждена</span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_phonenumber" class="col-xs-2 control-label input-medium">Телефон</label>
+                    </div>
+                    <div class="col col-3">
+                        <input type="text" name = "phonenumber" class="form-control" id="id_phonenumber" placeholder="Номер телефона" value="{{company.phonenumber}}">
+                    </div>
+                    <div class="col col-6 mt-1">
+                        <span class="badge badge-success" style="font-family: sans-serif;">Подтвержден</span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_workpermit" class="col-xs-2 control-label input-medium">Мой город, населенный пункт</label>
+                    </div>
+                    <div class="col col-3 input-group">
+
+                        <select name="City" required id="City" class="form-control" disabled>
+                            <option value="{{ company.city.id }}" selected>{{ company.city.name }}</option>
+                        </select>
+
+                        <div class="input-group-append">
+                            <button style="z-index: auto" class="btn bg-dark text-light fa fa-align-justify" type="button" data-toggle="modal" data-target="#myModal"></button>
+                        </div>
+                        {% include "includes/citySearch.html" %}
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="pb-3">
+                <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+            </div>
+        </form>
+    </div>
+
+<script>
+
+    function setlocalfoto(e) {
+        console.log(e.id)
+        var input = document.getElementById(e.id);
+        var fReader = new FileReader();
+        fReader.readAsDataURL(input.files[0]);
+        fReader.onloadend = function(event){
+
+            if(e.id=="finput_foto"){
+                var img = document.getElementById("fotourl");
+                img.src = event.target.result;
+            }
+
+        }
+    }
+
+    $('#settingsform').validate({
+
+        submitHandler: function(form) {
+            formsave();
+            }
+        }
+    );
+
+    function formsave() {
+
+        var formData = new FormData();
+
+        //Собираем конечный JSON
+
+        var json = JSON.stringify({
+            name: document.getElementById("id_name").value,
+            vatnumber: document.getElementById("id_vatnumber").value,
+            emailaddress: document.getElementById("id_emailaddress").value,
+            phonenumber: document.getElementById("id_phonenumber").value,
+            fotourl: document.getElementById("fotourl").src,
+            city: document.getElementById("City").value,
+        });
+
+        // добавить к пересылке ещё пару ключ - значение
+        formData.append("data", json);
+        formData.append("csrfmiddlewaretoken", document.getElementsByName("csrfmiddlewaretoken")[0].value);
+
+        // отослать
+        var xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = function() { // (3)
+            if (xhr.readyState != 4) return;
+
+            if (xhr.status != 200) {
+                alert(xhr.status + ': ' + xhr.statusText);
+            } else {
+                alert("Данные сохранены");
+                location.href = (xhr.responseText);
+            }
+        }
+
+        xhr.open("POST", "save/", true);
+        xhr.send(formData);
+    }
+
+</script>
+{% endblock %}
+

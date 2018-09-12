@@ -2,77 +2,81 @@
 
 {% block content%}
 
-    {% include "includes/Search.html" %}
-    <script>
-        function toggler(divId) {
-            $("#" + divId).toggle();
-        }
-    </script>
-    <div class="container">
+    {% if user.is_active %}
+
+    {% else %}
         <div class="row">
-            {% for elem in all_workGroups %}
+            <div class="col col-8">
 
-                <div class="col-4">
+            </div>
 
-                    <div class="card alert-dark">
+            <div class="col col-4">
 
-                        <div class="card-header alert-dark text-dark">
-                            {{ elem.name }}
-                        </div>
+                <div class="card mt-3 mb-3">
 
-                        <div class="card-body bg-light">
-                            {% for elem_p in elem.professions %}
-                                {% if forloop.counter < 5 %}
-                                    <div class="row">
-                                        <div class="col text-left">
-                                            <a href="{{elem_p.url}}" class="text-dark">{{elem_p.name }}</a>
-                                        </div>
-                                        <div class="col text-right">
-                                            <span class="badge badge-secondary text-right">{{ elem_p.workercount }}</span>
-                                        </div>
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
-
-                            {% if elem.professions|length >= 5 %}
-                                <div id="{{ elem.id }}" style="display:none;">
-                                {% for elem_p in elem.professions %}
-                                    {% if forloop.counter >= 5 %}
-                                        <div class="row">
-                                            <div class="col text-left">
-                                                <a href="{{elem_p.url}}" class="text-dark">{{elem_p.name }}</a>
-                                            </div>
-                                            <div class="col text-right">
-                                                <span class="badge badge-secondary text-right">{{ elem_p.workercount }}</span>
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
-                                </div>
-
-                            {% endif %}
-
-                            <div class="row ">
-                                <div class="col">
-                                    <hr class="text-dark bg-dark" style="border: none; height: 2px;">
-                                </div>
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Вход</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Регистрация</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="mb-3 mt-3 ml-3 mr-3">
+                                {% include "accounts/login_form.html" %}
                             </div>
-                            <div class="row">
-                                <div class="col text-left">
-                                    <a href="#" class="text-dark" onclick="toggler('{{ elem.id }}');">Показать всех</a>
+                        </div>
+                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                            <div class="mb-3 mt-3 ml-3 mr-3">
+                                <div class="row">
+                                    <div class="col col-12">
+                                        <a class="btn btn-primary container-fluid" href="/accounts/signup">Для соискателей</a>
+                                    </div>
+                                    <div class="col col-12 mt-3">
+                                        <a class="btn btn-primary container-fluid" href="/accounts/signup_company">Для работодателей</a>
+                                    </div>
                                 </div>
+
+
                             </div>
                         </div>
                     </div>
-
                 </div>
 
+            </div>
 
+        </div>
+    {% endif %}
 
-        {% endfor %}
+    {% include "includes/Search.html" %}
+
+    <div class="mt-3">
+        <h3 class="text-dark">Все специалисты:</h3>
+        <div class="row">
+            <div class="col">
+                <hr class="text-dark bg-dark" style="border: none; height: 2px;">
+            </div>
+        </div>
+        <div class="row">
+            {% for group in all_profession %}
+                <div class="col-sm-4">
+                    <div class="card-body">
+                        {% for elem_p in group.professions %}
+                            <div class="row">
+                                <div class="col text-left">
+                                       <a href="{{elem_p.url}}" class="text-dark">{{elem_p.name}}</a>
+                                </div>
+                                <div class="col text-right">
+                                    <span class="badge badge-secondary text-right">{{elem_p.workercount}}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
                     </div>
-
+                </div>
+            {% endfor %}
+        </div>
     </div>
-    <p></p>
 
 {% endblock %}

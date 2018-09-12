@@ -21,7 +21,12 @@ urlpatterns = [
     path('settings/', views.showSettings),
     path('m/settings/', views.showSettingsJson),
     path('search/', views.showSearch),
+    path('searchnext/', views.showWorkersList),
     path('info/', views.showWorker),
     path('m/info/', views.showWorkersJson),
+    path('m/search/', views.showSearchJson),
+    path('comments/save/', views.saveComments),
+    path('m/comments/', views.showCommentsJson),
     path('testcsrf/', views.my_view),
+    path('searchtest/', views.showSearchTest),
 ]

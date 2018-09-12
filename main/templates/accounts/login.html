@@ -1,0 +1,26 @@
+
+
+{% extends "wrapper.html" %}
+
+{% block content %}
+
+<div style="left: 50%; top: 50%; position: absolute; margin: -250px 0 0 -250px;">
+
+    <div class="card" style="width: 500px">
+        <div class="card-header text-center">
+            <span class="article">Вход</span>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title text-center">
+                <p>Если вы не зарегистрированы на сайте, пожалуйста
+                <a href="/accounts/signup/">Зарегистрируйтесь</a></p>
+            </h5>
+            {% include "accounts/login_form.html" %}
+        </div>
+    </div>
+
+</div>
+
+
+
+{% endblock %}

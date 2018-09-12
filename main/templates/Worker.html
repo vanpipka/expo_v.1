@@ -148,7 +148,7 @@
                                     </tr>
                                     <tr>
                                       <td>Город</td>
-                                      <td>{{ worker.city }}</td>
+                                      <td>{{ worker.city.name }}</td>
                                     </tr>
                                     <tr>
                                       <td>Данные проверены</td>
@@ -289,7 +289,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col col-4">
-                                                    <select required class=" custom-select" name="{{ commentForm.rating.name }}" id="id_{{ commentForm.rating.name }}">
+                                                    <select required class=" custom-select" name="{{ commentForm.rating.name }}" id="comment_rating">
                                                         <option value="" style="display:none">Оценка</option>
                                                         <option value="1">1</option>
                                                         <option value="2">2</option>
@@ -299,7 +299,7 @@
                                                     </select>
                                                 </div>
                                                 <div class="col col-8">
-                                                    <select required class=" custom-select" name="{{ commentForm.idProf.name }}" id="id_{{ commentForm.idProf.name }}">
+                                                    <select required class=" custom-select" name="{{ commentForm.idProf.name }}" id="comment_profession">
                                                         <option value="" style="display:none">Работа</option>
                                                         {% for prof in worker.proflist %}
                                                             <option value="{{ prof.id }}">{{ prof.name }}</option>
@@ -309,15 +309,57 @@
                                             </div>
                                             <div class="row"  style="padding-top: 5px">
                                                 <div class="col">
-                                                    <textarea required name="{{ commentForm.text.name }}" class="form-control" rows="5" placeholder="Ваш комментарий..." id="id_{{ commentForm.text.name }}"></textarea>
+                                                    <textarea required name="{{ commentForm.text.name }}" class="form-control" rows="5" placeholder="Ваш комментарий..." id="comment_text"></textarea>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="row">
+                                                <script>
+
+                                                    var workerid = "{{ worker.id }}";
+
+                                                    function saveComment() {
+
+                                                        var formData = new FormData();
+
+                                                        //Собираем конечный JSON
+
+                                                        var json = JSON.stringify({
+                                                            idworker: workerid,
+                                                            text: document.getElementById("comment_text").value,
+                                                            rating: document.getElementById("comment_rating").value,
+                                                            idprofession: document.getElementById("comment_profession").value
+
+                                                        });
+
+                                                        // добавить к пересылке ещё пару ключ - значение
+                                                        formData.append("data", json);
+                                                        formData.append("csrfmiddlewaretoken", document.getElementsByName("csrfmiddlewaretoken")[0].value);
+
+                                                        // отослать
+                                                        var xhr = new XMLHttpRequest();
+
+                                                        xhr.onreadystatechange = function() { // (3)
+                                                            if (xhr.readyState != 4) return;
+
+
+                                                            if (xhr.status != 200) {
+                                                                alert(xhr.status + ': ' + xhr.statusText);
+                                                            } else {
+                                                                alert("Данные сохранены");
+                                                                alert(xhr.responseText);
+                                                                location.href = (xhr.responseText);
+                                                            }
+                                                        }
+
+                                                        xhr.open("POST", "http://py.itoe.ru:56503/worker/comments/save/", true);
+                                                        xhr.send(formData);
+                                                    }
+                                                </script>
                                                 <div class="col col-10"></div>
                                                 <div class="col col-2">
-                                                    <button type="submit" class="btn btn-danger container-fluid">Сохранить</button>
+                                                    <button type="button" class="btn btn-danger container-fluid" onclick="saveComment()">Сохранить</button>
                                                 </div>
                                             </div>
 
@@ -329,9 +371,6 @@
 
                             </div>
                         </div>
-
-
-
 
                     </div>
 

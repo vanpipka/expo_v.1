@@ -1,11 +1,14 @@
 <script>
     var prof_tags = [];
-    $( "#Profession" ).autocomplete({
+    var city_tags = [];
+    //var city_Dict = {};
+
+    $( "#profession" ).autocomplete({
         source: function( request, response ) {
             if (prof_tags.length == 0) {
 
                 $.ajax({
-                    url: "http://py.itoe.ru:56503/m/serviceslist/",
+                    url: "http://py.itoe.ru:56503/m/professionlist/",
                     dataType: "json",
                       // параметры запроса, передаваемые на сервер (последний - подстрока для поиска):
                     data:{
@@ -15,7 +18,7 @@
                         name_startsWith: request.term
                 },
                 success: function(data){
-                    $.map(data.professionList, function(item){
+                    $.map(data.dataset, function(item){
                         prof_tags.push(item.name)
                     });
                   }
@@ -23,6 +26,35 @@
             }
             var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
             response( $.grep(prof_tags, function( item ){
+                return matcher.test( item );
+            }) );
+        minLength: 2
+        }
+    });
+    $( "#City" ).autocomplete({
+        source: function( request, response ) {
+            if (city_tags.length == 0) {
+
+                $.ajax({
+                    url: "http://py.itoe.ru:56503/m/citylist/",
+                    dataType: "json",
+                      // параметры запроса, передаваемые на сервер (последний - подстрока для поиска):
+                    data:{
+                        featureClass: "P",
+                        style: "full",
+                        maxRows: 12,
+                        name_startsWith: request.term
+                },
+                success: function(data){
+                    $.map(data.dataset, function(item){
+                        city_tags.push(item.name)
+                        //city_Dict[item.name] = item.id;
+                    });
+                  }
+                });
+            }
+            var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
+            response( $.grep(city_tags, function( item ){
                 return matcher.test( item );
             }) );
         minLength: 2

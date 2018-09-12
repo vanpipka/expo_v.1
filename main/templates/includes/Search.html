@@ -1,37 +1,48 @@
-<div class="alert alert-dark container mt-3">
-        <!-- HTML форма -->
-        <div class="row">
-            <div class="col">
-                <h3 class="text-dark">Найди подходящего специалиста</h3>
-            </div>
-        </div>
 
-        <div class="row">
-            <div class="col">
-                <form class="form-search" method="post" action="/worker/search/">
-                    {% csrf_token %}
-                    <div class="row form-search">
-                        <div class="col col-6">
-                            <input id="Profession" name = "Profession" type="text" data-toggle="dropdown" class="input-medium search-query form-control" placeholder="Введите профессию для поиска">
-                        </div>
-                        <div class="col col-4 input-group">
-                            <input id="inputCity" name = "inputCity" type="text" data-toggle="dropdown" class="input-medium search-query form-control" placeholder="Город">
-                            <div class="input-group-append">
-                                <button class="btn bg-dark text-light" type="button" data-toggle="modal" data-target="#myModal">Подбор</button>
-                            </div>
-                        </div>
-                        <div class="col col-2">
-                            <button type="submit" class="btn btn-danger container-fluid" >Найти</button>
+<div class="row">
+    <div class="col">
+        <div class="card bg-dark text-white mt-3" style="border: 0px; height: 200px">
+            <img class="card-img" src="/static/main/img/search.png" alt="Card image">
+            <div class="card-img-overlay">
+                <div class="alert alert-dark container mt-3  bg-light">
+                    <!-- HTML форма -->
+                    <div class="row">
+                        <div class="col" style="margin-bottom: -0.75rem">
+                            <h3 class="text-dark">Найди подходящего специалиста</h3>
                         </div>
                     </div>
-                    {% include "includes/Prof_Search_Script.html" %}
-                    {% include "includes/citySearch.html" %}
-                </form>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <a href="/worker/search/" class="text-dark">Расширенный поиск</a>
+
+                    <div class="row">
+                        <div class="col">
+                            <form class="form-search" method="GET" action="/worker/search/">
+
+                                <div class="row form-search">
+                                    <div class="col-sm-6 mt-3">
+                                        <input id="profession" name = "profession" type="text" data-toggle="dropdown" class="input-medium search-query form-control" placeholder="Введите профессию для поиска">
+                                    </div>
+                                    <div class="col-sm-4 input-group mt-3">
+                                        <input id="City" name = "city" type="text" data-toggle="dropdown" class="input-medium search-query form-control" placeholder="Город">
+                                        <div class="input-group-append">
+                                            <button class="btn bg-dark text-light fa fa-align-justify" type="button" data-toggle="modal" data-target="#myModal"></button>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2 mt-3">
+                                        <button type="submit" class="btn btn-danger container-fluid" >Найти</button>
+                                    </div>
+                                </div>
+                                {% include "includes/Prof_Search_Script.html" %}
+                                {% include "includes/citySearch.html" %}
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <a href="/worker/search/" class="text-dark">Расширенный поиск</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+</div>
+

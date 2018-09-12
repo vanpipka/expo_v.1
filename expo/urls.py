@@ -19,9 +19,14 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/', include('allauth.urls')),
+    path('accounts/', include('accounts.urls')),
+    #path('accounts/', include('django.contrib.auth.urls')),
+
     #path('chat/', include('chat.urls')),
     path('m/accounts/', views.show),
     path('', include('main.urls')),
     path('worker/', include('worker.urls')),
 ]
+from django.views.generic.edit import FormView
+from django.contrib.auth.forms import UserCreationForm
+

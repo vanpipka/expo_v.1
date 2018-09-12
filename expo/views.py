@@ -4,16 +4,6 @@ from expo.DataSet import refreshLastOnline
 from django.middleware import csrf
 from django.dispatch import receiver
 
-from allauth.account.signals import user_logged_in
-
-@receiver(user_logged_in)
-def my_callback(sender, **kwargs):
-
-    print(sender)
-    print(kwargs)
-
-    print("Cигнал принят!")
-
 # Create your views here.
 def show(request):
 

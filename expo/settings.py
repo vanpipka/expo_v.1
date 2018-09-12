@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 
+USE_I18N = True
+USE_L10N = False
+
+LANGUAGE_CODE = 'ru-RU'
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -32,9 +37,6 @@ ALLOWED_HOSTS = ['10.10.48.201', 'vpn2.contrail.ru', 'cs.itoe.ru', 'py.itoe.ru']
 
 INSTALLED_APPS = [
 
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
     #'channels',
     #'allauth.socialaccount.providers.vk',
     #'allauth.socialaccount.providers.odnoklassniki',
@@ -84,12 +86,13 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 
     # `allauth` specific authentication methods, such as login by e-mail
-    'allauth.account.auth_backends.AuthenticationBackend',
+    #'allauth.account.auth_backends.AuthenticationBackend',
 )
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+#ACCOUNT_AUTHENTICATION_METHOD = 'phonenumber'
+#ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
 SITE_ID = 3
 
@@ -101,18 +104,19 @@ LOGOUT_URL = "/accounts/login/"
 #SOCIALACCOUNT_QUERY_EMAIL = False
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackEnd'
 
-WSGI_APPLICATION = 'expo.wsgi.application'
+#WSGI_APPLICATION = 'expo.wsgi.application'
 
 #CHANNELS
-ASGI_APPLICATION = 'expo.routing.application'
+# Channels
+#ASGI_APPLICATION = 'expo.routing.application'
 
 #CHANNEL_LAYERS = {
-    #'default': {
-     #   #'BACKEND': 'asgiref.inmemory.ChannelLayer',
-      #  'CONFIG': {
-       #     "hosts": [('py.itoe.ru', 56503)],
-        #},
-    #},
+#    'default': {
+#       'BACKEND': 'channels_redis.core.RedisChannelLayer',
+#        'CONFIG': {
+#            "hosts": [('py.itoe.ru', 6379)],
+#        },
+#    },
 #}
 
 # Database
@@ -180,29 +184,3 @@ EMAIL_HOST_PASSWORD = 'ieh7w2k'
 DEFAULT_FROM_EMAIL = 'info@mmss.ltd'
 DEFAULT_TO_EMAIL = 'info@mmss.ltd'
 
-
-#LOGGING = {
-#    'version': 1,
- #   'disable_existing_loggers': True,
-  #  'formatters': {
-   #     'simple': {
-    #        'format': '[%(levelname)s:%(name)s:%(lineno)d] %(message)s'
-#        },
-#    },
-#    'handlers': {
-#        # ...
-#        'console': {
-#            'level': 'DEBUG',
-#            'class': 'logging.StreamHandler',
-#            'formatter': 'simple',
-#        },
-#    },
-#    'loggers': {
-#        # ...
-#        'django.db': {
-#            'handlers': ['console'],
-#            'level': 'DEBUG',  # <----<<<
-#            'propagate': False,
-#        }
-#    }
-#}

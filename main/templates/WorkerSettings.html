@@ -1,5 +1,5 @@
 {% extends "wrapper.html" %}
-
+{% load home_extras %}
 {% block content%}
     <style>
 
@@ -33,313 +33,275 @@
         }
 
     </style>
-    <script>
 
-        var newfiles = [];
+    <div class="container pt-3">
 
-        function setlocalfoto(e)
-        {
+        <form name="settingsform" id="settingsform">
 
-            var input = document.getElementById(e.id);
-            var fReader = new FileReader();
-            fReader.readAsDataURL(input.files[0]);
-            fReader.onloadend = function(event){
-
-                if(e.id=="finput_foto"){
-                    var img = document.getElementById("fotourl");
-                    img.src = event.target.result;
-                }
-
-                else{
-
-                    var description = document.getElementById("filedescription");
-                    var portfolio_list = document.getElementById("portfolio_list");
-                    var portfolio_card = document.getElementById("hidden_portfolio_card").cloneNode(true);
-                    var img = portfolio_card.getElementsByTagName('img')[0];
-
-                    img.src = event.target.result;
-
-                    portfolio_card.getElementsByTagName('span')[0].innerText = description.value;
-                    portfolio_card.hidden = false;
-                    portfolio_list.insertBefore(portfolio_card, portfolio_list.children[1]);
-
-                    newfiles.push({"name": input.files[0].name, "description": description.value, "src": img.src});//
-
-                    description.value = "";
-                }
-            }
-        }
-
-        function formsave() {
-
-            var formData = new FormData();
-
-            //Собираем список профессий
-            var ProfList = document.getElementById("ProfessionsGroup").getElementsByTagName('option');
-            var SelectedProf = [];
-            for (i=0; i < ProfList.length; i++) {
-                if (ProfList[i].selected) {
-                    SelectedProf.push(ProfList[i].value);
-                }
-            }
-            //Собираем список услуг
-            var ServiceList = document.getElementById("id_Services").getElementsByTagName('tr');
-
-            var SelectedService = [];
-
-            for (i=0; i < ServiceList.length; i++) {
-                var tr = ServiceList[i];
-
-                SelectedService.push({"id": tr.getElementsByTagName('select')[0].value, "price": tr.getElementsByTagName('input')[0].value});
-
-            }
-
-            //Собираем конечный JSON
-
-            var json = JSON.stringify({
-                name: document.getElementById("id_name").value,
-                surname: document.getElementById("id_surname").value,
-                lastname: document.getElementById("id_lastname").value,
-                emailaddress: document.getElementById("id_emailaddress").value,
-                phonenumber: document.getElementById("id_phonenumber").value,
-                city: document.getElementById("id_idCity").value,
-                haveip: document.getElementById("id_haveIP").checked,
-                workpermit: document.getElementById("id_workpermit").checked,
-                description: document.getElementById("id_Description").value,
-                education: document.getElementById("id_education").value,
-                experiencewith: document.getElementById("id_Experiencewith").value,
-                experience: document.getElementById("id_experience").value,
-                haveinstrument: document.getElementById("id_haveinstrument").checked,
-                personaldataisallowed: document.getElementById("id_personaldataisallowed").checked,
-                publishdata: document.getElementById("id_publishdata").checked,
-                foto: document.getElementById("fotourl").src,
-                files: newfiles,
-                professions: SelectedProf,
-                servicelist: SelectedService
-            });
-
-            // добавить к пересылке ещё пару ключ - значение
-            formData.append("data", json);
-            formData.append("csrfmiddlewaretoken", document.getElementsByName("csrfmiddlewaretoken")[0].value);
-
-            // отослать
-            var xhr = new XMLHttpRequest();
-
-            xhr.onreadystatechange = function() { // (3)
-                if (xhr.readyState != 4) return;
-
-
-                if (xhr.status != 200) {
-                    alert(xhr.status + ': ' + xhr.statusText);
-                } else {
-                    alert("Данные сохранены");
-                    location.href = (xhr.responseText);
-                }
-            }
-
-            xhr.open("POST", "save/", true);
-            xhr.send(formData);
-        }
-    </script>
-    <p></p>
-    <div class="container pb-3">
-        
-        <form id="workersettings" enctype="multipart/form-data" class="form-horizontal" action="" method="post" onsubmit="event.preventDefault()">
             {% csrf_token %}
-            <!--БАЗОВАЯ ИНФОРМАЦИЯ------------------------------------------------------------------------------------------>
-		    <div class="form-group pb-3">
+
+            <div class="alert alert-info">
+                Заполните анкету, чтобы работодатель мог вас найти
+            </div>
+
+            <!-- ФОТО -->
+            <div>
+                <label class="article">Фото</label>
+
                 <div class="row">
-                    <!--ФОТО------------------------------------------------------------------------------------------>
-                    <div class="col col-2">
-                        <div class="row">
-                            <div class="col">
-                                <div class="product-img" style="height: 150px">
-                                    {% if worker.fotourl %}
-                                        <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:150px" src="{{ worker.fotourl }}" alt="">
-                                    {% else %}
-                                        <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:150px" src="/static/main/img/Foto.jpg" alt="">
-                                    {% endif %}
+
+                    <div class="col col-3">
+
+                        {% if worker.resizefotourl %}
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <div class="product-img" style="height: 150px;">
+                                        <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:150px" src="{{  worker.resizefotourl }}" alt="">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row pt-3">
+                        {% elif worker.fotourl %}
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <div class="product-img" style="height: 150px;">
+                                        <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:150px" src="{{ worker.fotourl }}" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <div class="product-img border-secondary" style="height: 150px; border: dashed; border-radius: 5px ">
+                                        <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:150px" src="/static/main/img/add-photo.png" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="row">
                             <div class="col">
-                                <div class="file-upload container-fluid btn btn-danger">
+                                <div class="file-upload container-fluid btn btn-primary">
                                     <label>
                                         <input id = "finput_foto" type="file" name="file" onchange="setlocalfoto(this)" accept="image/jpg,image/jpeg,image/png">
-                                        <span>Сменить фото</span>
+                                        <span style="color: white">Сменить фото</span>
                                     </label>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <!--ФИО КОНТАКТЫ------------------------------------------------------------------------------------------>
-                    <div class="col col-7">
-                        <div class="row pb-3">
-                            <div class="col col-sm-2">
-                                ФИО:
-                            </div>
-                            <div class="col">
-                                <input type="text" name="surname" class="form-control" id="id_surname" placeholder="Фамилия" value="{{worker.surname}}">
-                            </div>
-                            <div class="col">
-                                <input type="text" name = "name" class="form-control" id="id_name" placeholder="Имя" value="{{worker.name}}">
-                            </div>
-                            <div class="col">
-                                <input type="text" name = "lastname" class="form-control" id="id_lastname" placeholder="Отчество" value="{{worker.lastname}}">
-                            </div>
-                        </div>
-                        <div class="row pb-3">
-                            <div class="col col-sm-2">
-                                Телефон:
-                            </div>
-                            <div class="col">
-                                <input type="text" name="phonenumber" class="form-control" id="id_phonenumber"  placeholder="Номер телефона" value="{{worker.phonenumber}}" required>
-                            </div>
-                        </div>
-                        <div class="row pb-3">
-                            <div class="col col-sm-2">
-                                Электронная почта:
-                            </div>
-                            <div class="col">
-                                <input type="text" name="emailaddress" class="form-control" id="id_emailaddress"  placeholder="Адрес электронной почты" value="{{worker.emailaddress}}" required>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col col-sm-2">
-                                Город:
-                            </div>
-                            <div class="col">
 
-                                <select name="idCity" required id="id_idCity" class="form-control" >
-                                {% for c in city %}
-                                    {% if c.name == worker.city %}
-                                        <option value="{{ c.id }}" selected>{{ c.name }}</option>
-                                    {% else %}
-                                        <option value="{{ c.id }}">{{ c.name }}</option>
-                                    {% endif %}
-                                {% endfor %}
-                                </select>
+                        <div class="row mt-2">
+
+                            <div class="col col-4" >
+                                <div class="bg-color-grey" style="height: 40px; width: 40px; border-radius: 4px;" align="center">
+                                    <span class="article article-sm">{{ worker.rating|floatformat:1}} </span>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <!--РЕЙТИНГ ОТЗЫВЫ------------------------------------------------------------------------------------------>
-                    <div class="col col-3 pl-3">
-                        <div class="form-control">
-                            <div class="row">
-                                    <div class="col col-sm-6">
-                                        <div class="text-danger text-center">
-                                            <H2>{{ worker.rating }}</H2>
-                                        </div>
-                                        <hr class="text-dark bg-secondary" style="border: none; height: 1px;">
-                                        <div class="text-dark text-center">
-                                            Рейтинг
+
+                            <div class="col col-8">
+                                <div class="stars stars-example-css mt-3">
+                                    <div class="br-wrapper br-theme-css-stars">
+                                        <div class="br-widget">
+                                            <a style="height: 18px; width: 18px; font-size: 18px" {% if worker.rating >= 0.5 %} class="br-selected" {% endif %}></a>
+                                            <a style="height: 18px; width: 18px; font-size: 18px" {% if worker.rating >= 1.5 %} class="br-selected" {% endif %}></a>
+                                            <a style="height: 18px; width: 18px; font-size: 18px" {% if worker.rating >= 2.5 %} class="br-selected" {% endif %}></a>
+                                            <a style="height: 18px; width: 18px; font-size: 18px" {% if worker.rating >= 3.5 %} class="br-selected" {% endif %}></a>
+                                            <a style="height: 18px; width: 18px; font-size: 18px" {% if worker.rating >= 4.5 %} class="br-selected" {% endif %}></a>
                                         </div>
                                     </div>
-                                    <div class="col col-sm-6">
-                                        <div class="text-danger text-center">
-                                            <H2>{{worker.commentscount}}</H2>
-                                        </div>
-                                        <hr class="text-dark bg-secondary" style="border: none; height: 1px;">
-                                        <div class="text-dark text-center">
-                                            Отзывы
-                                        </div>
-                                    </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <hr class="text-dark bg-secondary" style="border: none; height: 1px;">
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col col-10">
-                                    Данные проверены
-                                </div>
-                                <div class="col col-2">
-                                    {% if worker.datacheck %}
-                                        <H2 class="text-success">+</H2>
-                                    {% else %}
-                                        <H2 class="text-danger">-</H2>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col col-10">
-                                    Проверка ФСО
-                                </div>
-                                <div class="col col-2">
-                                    {% if worker.fsocheck %}
-                                        <H2 class="text-success">+</H2>
-                                    {% else %}
-                                        <H2 class="text-danger">-</H2>
-                                    {% endif %}
+                                <div style="margin-top: -18px">
+                                    <span class="color-dark-grey">{{worker.commentscount}} оценок</span>
                                 </div>
                             </div>
                         </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ЛИЧНЫЕ ДАННЫЕ -->
+            <div class="mt-3">
+                <label class="article">Личные данные</label>
+
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_name" class="col-xs-2 control-label input-medium">Имя*</label>
+                    </div>
+                    <div class="col col-3">
+                        <input type="text" name = "name" class="form-control" id="id_name" placeholder="Имя" value="{{worker.name}}" required>
                     </div>
                 </div>
-		    </div>
-            <!--ИП------------------------------------------------------------------------------------------>
-            <div class="form-group">
-                <div class="row">
-                    <div class="col">
-                        <label for="id_haveIP" class="col-xs-2 control-label"><strong>Есть ИП:</strong></label>
+
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_surname" class="col-xs-2 control-label input-medium">Фамилия*</label>
                     </div>
-                    <div class="col">
-                        {% if worker.haveip %}
-                            <input class="" id="id_haveIP" value="True" type="checkbox" name="haveIP" checked>
-                        {% else %}
-                            <input class="" id="id_haveIP" value="True" type="checkbox" name="haveIP">
-                        {% endif %}
+                    <div class="col col-3">
+                        <input type="text" name="surname" class="form-control" id="id_surname" placeholder="Фамилия" value="{{worker.surname}}" required>
                     </div>
                 </div>
-		    </div>
-            <!--РАЗРЕШЕНИЕ НА РАБОТУ------------------------------------------------------------------------------------------>
-            <div class="form-group">
-                <div class="row">
-                    <div class="col">
-                        <label for="id_workpermit" class="col-xs-2 control-label"><strong>Есть разрешение на работу:</strong></label>
+
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_surname" class="col-xs-2 control-label input-medium">Отчество</label>
                     </div>
-                    <div class="col">
-                        {% if worker.workpermit %}
-                            <input class="" id="id_workpermit" value="True" type="checkbox" name="workpermit" checked>
-                        {% else %}
-                            <input class="" id="id_workpermit" value="True" type="checkbox" name="workpermit">
-                        {% endif %}
+                    <div class="col col-3">
+                        <input type="text" name = "lastname" class="form-control" id="id_lastname" placeholder="Отчество" value="{{worker.lastname}}">
                     </div>
                 </div>
-		    </div>
-            <!--ЕСТЬ ИНСТРУМЕНТ------------------------------------------------------------------------------>
-            <div class="form-group">
-                <div class="row">
-                    <div class="col">
-                        <label for="id_haveinstrument" class="col-xs-2 control-label"><strong>Свой инструмент:</strong></label>
+
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_sex" class="col-xs-2 control-label input-medium">Пол</label>
                     </div>
-                    <div class="col">
-                        {% if worker.haveinstrument %}
-                            <input class="" id="id_haveinstrument" value="True" type="checkbox" name="haveinstrument" checked>
-                        {% else %}
-                            <input class="" id="id_haveinstrument" value="True" type="checkbox" name="haveinstrument">
-                        {% endif %}
+                    <div class="col col-9">
+                        <div class="radios-as-buttons" id = 'id_sex'>
+                            <div>
+                                <input type="radio" name="sexradio" id="sex1" {% if worker.sex == True %}checked{% endif %} value=1>
+                                <label for="sex1">Мужской</label>
+                            </div>
+                            <div>
+                                <input type="radio" name="sexradio" id="sex0" {% if worker.sex == False %}checked{% endif %} value=0>
+                                <label for="sex0">Женский</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
-		    </div>
-            <!--ПРОФЕССИИ------------------------------------------------------------------------------------------>
-            <div class="form-group">
-                <script type="text/javascript">
-                    $(document).ready(function()
-                        {$('#ProfessionsGroup').multiselect({
-                            enableClickableOptGroups: true,
-                            enableCollapsibleOptGroups: true
-                        });
-                    });
-                </script>
-                <div class="row">
-                    <div class="col">
-                        <label for="id_Professions" class="col-xs-2 control-label"><strong>Профессии:</strong></label>
+
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_birthday" class="col-xs-2 control-label input-medium">День рождения*</label>
                     </div>
-                    <div class="col">
-                        <select name = "Professions" id="ProfessionsGroup" style="width: 100%" multiple >
+                    <div class="col col-3">
+                        <input type="text" name="birthday" class="form-control" id="id_birthday"  placeholder="День рождения" value="{{worker.birthday|date:"Y-m-d"}}" readonly>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_nationality" class="col-xs-2 control-label input-medium">Гражданство</label>
+                    </div>
+                    <div class="col col-3">
+                        <select name="nationality" required id="id_nationality" class="form-control">
+                            {% for e in countryList %}
+                                <option value="{{ e.id }}" {% if worker.nationality.id == e.id %}selected{% endif %}>{{ e.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_workpermit" class="col-xs-2 control-label input-medium">Разрешение на работу</label>
+                    </div>
+                    <div class="col col-3">
+                        <label class="checkbox-container">
+                            <input class="" id="id_workpermit" value="True" type="checkbox" name="workpermit" {% if worker.workpermit %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_workpermit" class="col-xs-2 control-label input-medium">Мой город, населенный пункт</label>
+                    </div>
+                    <div class="col col-3 input-group">
+
+                        <select name="City" required id="City" class="form-control" disabled>
+                            <option value="{{ worker.city.id }}" selected>{{ worker.city.name }}</option>
+                        </select>
+
+                        <div class="input-group-append">
+                            <button style="z-index: auto" class="btn bg-dark text-light fa fa-align-justify" type="button" data-toggle="modal" data-target="#myModal"></button>
+                        </div>
+                        {% include "includes/citySearch.html" %}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_emailaddress" class="col-xs-2 control-label input-medium">Электронная почта</label>
+                    </div>
+                    <div class="col col-3">
+                        <input type="text" name = "emailaddress" class="form-control" id="id_emailaddress" placeholder="Электронная почта" value="{{worker.emailaddress}}">
+                    </div>
+                    <div class="col col-6 mt-1">
+                        <span class="badge badge-success" style="font-family: sans-serif;">Подтверждена</span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_phonenumber" class="col-xs-2 control-label input-medium">Телефон</label>
+                    </div>
+                    <div class="col col-3">
+                        <input type="text" name = "phonenumber" class="form-control" id="id_phonenumber" placeholder="Номер телефона" value="{{worker.phonenumber}}">
+                    </div>
+                    <div class="col col-6 mt-1">
+                        <span class="badge badge-success" style="font-family: sans-serif;">Подтвержден</span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_haveIP" class="col-xs-2 control-label input-medium">Я зарегистрирован как ИП</label>
+                    </div>
+                    <div class="col col-3">
+                        <label class="checkbox-container">
+                            <input class="" id="id_haveIP" value="True" type="checkbox" name="haveIP" {% if worker.haveip %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_haveinstrument" class="col-xs-2 control-label input-medium">Есть свои инструменты</label>
+                    </div>
+                    <div class="col col-3">
+                        <label class="checkbox-container">
+                            <input class="" id="id_haveinstrument" value="True" type="checkbox" name="haveinstrument" {% if worker.haveinstrument %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_Experiencewith" class="col-xs-2 control-label input-medium">Работаю на выставках с</label>
+                    </div>
+                    <div class="col col-3">
+                        <select class="form-control" id="id_Experiencewith">
+                            {% for i in 20|create_range %}
+                                <option {% if worker.experiencedate == i %}selected{% endif %}>{{i}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_experience" class="col-xs-2 control-label input-medium">Опыт работы на выставках</label>
+                    </div>
+                    <div class="col col-9">
+                        <textarea name="experience" class="form-control" rows="5" placeholder="Когда и в каких выставках участвовал, что делал" id="id_experience">{{worker.experience}}</textarea>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- МОИ УМЕНИЯ И НАВЫКИ -->
+            <div class="mt-3">
+                <label class="article">Мои умения и навыки</label>
+
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_Professions" class="col-xs-2 control-label input-medium">Профессия</label>
+                    </div>
+                    <div class="col col-9">
+                        <select name = "Professions" id="ProfessionsGroup" placeholder = "Профессия" style="width: 100%" multiple>
                             {% for key, value in professionList.items %}
                                 <optgroup label="{{ key }}">
                                     {% for elem in value %}
@@ -356,234 +318,420 @@
                     </div>
                 </div>
             </div>
-            <!--О СЕБЕ------------------------------------------------------------------------------------------>
-            <div class="form-group">
-                <label for="id_Description" class="col-xs-2 control-label"><strong>О себе:</strong></label>
-                <div class="row">
-                    <div class="col">
-                        <textarea name="Description" class="form-control" rows="5" placeholder="Кратко о себе" id="id_Description">{{worker.description}}</textarea>
+
+            <!-- УСЛУГИ И ЦЕНЫ -->
+            <div class="mt-3">
+                <label class="article">Услуги и цены</label>
+
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_Services" class="col-xs-2 control-label input-medium">Проектная работа</label>
                     </div>
-                </div>
-            </div>
-            <!--ОБРАЗОВАНИЕ------------------------------------------------------------------------------------------>
-            <div class="form-group">
-                <label for="id_education" class="col-xs-2 control-label"><strong>Образование:</strong></label>
-                <div class="row">
-                    <div class="col">
-                        <textarea name="education" class="form-control" rows="5" placeholder="Образование" id="id_education">{{worker.education}}</textarea>
-                    </div>
-                </div>
-            </div>
-            <!--ОПЫТ РАБОТЫ------------------------------------------------------------------------------------------>
-            <div class="form-group">
-                <script>
-                    $(function(){
-                        $('#id_Experiencewith').daterangepicker({
-                            singleDatePicker: true,
-                            locale: {
-                                format: 'YYYY-MM-DD'
-                            }
-                        });
-                    });
-                </script>
-                <div class="row">
-                    <div class="col">
-                        <label for="id_Experiencewith" class="col-xs-2 control-label"><strong>Стаж с (2014-07-08):</strong></label>
-                    </div>
-                    <div class="col">
-                        <input type="text" name="Experiencewith" class="form-control" id="id_Experiencewith"  placeholder="Дата" value="{{worker.experiencedate|date:"Y.m.d"}}">
-                    </div>
-                </div>
-                <p></p>
-                <div class="row">
-                    <div class="col">
-                        <textarea name="experience" class="form-control" rows="5" placeholder="Опыт работы" id="id_experience">{{worker.experience}}</textarea>
-                    </div>
-                </div>
-            </div>
-            <!--УСЛУГИ И ЦЕНЫ------------------------------------------------------------------------------------------>
-            <div class="form-group form-control">
-                <div class="row">
-                    <div class="col col-2">
-                        <label for="id_Services" class="col-xs-2 control-label"><strong>Услуги и цены:</strong></label>
-                    </div>
-                    <div class="col">
-                        <script>
-                            var currentCount = 1000;
-                            function addService() {
+                    <div class="col col-9" style="margin-left: -2pt">
 
-                                currentCount = currentCount+1
-
-                                var selectservices  = document.getElementById('id_selectServices');
-                                var inputservices   = document.getElementById('id_inputServices');
-                                var delservices     = document.getElementById('del_services');
-
-                                var newSelect   = selectservices.cloneNode(true);
-                                var newInput    = inputservices.cloneNode(true);
-                                var newDel      = delservices.cloneNode(true);
-
-                                newDel.id = 'x'+currentCount;
-
-                                var table = document.getElementById('id_Services');
-
-                                var tr31 = document.createElement('tr'); //создаем еще строку
-
-                                tr31.id     = 'trx'+currentCount;
-                                tr31.name   = 'trx'
-
-                                var td31 = document.createElement('td');  //создаем столбец
-                                var td32 = document.createElement('td');
-                                var td33 = document.createElement('td');
-
-                                td31.appendChild(newSelect);
-                                td32.appendChild(newInput);
-                                td33.appendChild(newDel);
-                                //tr11.appendChild(td31); так можно добавить в первую строку столбец
-                                tr31.appendChild(td31); //кладем в новосозданную строку первый новосозданный столбец
-                                tr31.appendChild(td32); //кладем в новосозданную строку второй новосозданный столбец
-                                tr31.appendChild(td33);
-
-                                table.appendChild(tr31); //кладем в таблицу новосозданную строку (последней)
-                            }
-
-                            function delService(id) {
-                                var idservices      = 'tr'+id;
-                                var selectservices  = document.getElementById(idservices);
-                                var table           = document.getElementById('id_Services');
-
-                                table.removeChild(selectservices)
-                            }
-                        </script>
-                        <input class="btn btn-success" id="add_services" value="+" onclick="addService()" type="button">
-                    </div>
-                </div>
-                <div class="row ">
-                    <div style="visibility:hidden; position:absolute" id="defuult">
-                        <select id="id_selectServices" class="form-control" name="selectServices" required>
-                            {% for s in serviceList %}
-                                <option value="{{ s.id }}">{{s.name}}</option>
-                            {% endfor %}
-                        </select>
-                        <input id="id_inputServices" name = "inputServices" type="number" value="" class="form-control">
-                        <input class="btn btn-danger" id="del_services" value="-" onclick="delService(this.id)" type="button">
-                    </div>
-                    <div class="col">
-                        <table name="Services" class="table" placeholder="Услуги и цены">
-                            <tbody id="id_Services">
-                            {% for service in worker.servicelist %}
-
-                                <tr id = "tr{{ service.idservice }}">
-                                    <td>
-                                        <select id="id_selectServices" class="form-control" name="selectServices" required>
-                                            {% for s in serviceList %}
-                                                {% if s.id == service.id %}
-                                                    <option value="{{ s.id }}" selected>{{s.name}}</option>
-                                                {% else %}
-                                                    <option value="{{ s.id }}">{{s.name}}</option>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input id="id_inputServices" name = "inputServices" type="number" value="{{ service.price }}" class="form-control"></input>
-                                    </td>
-                                    <td>
-                                        <input class="btn btn-danger" id = "{{ service.idservice }}" value="-" onclick="delService(this.id)" type="button">
-                                    </td>
+                        <table class="table table-hover">
+                            <thead class="thead-default">
+                                <tr>
+                                    <th style="width: 5px"></th>
+                                    <th>Услуга</th>
+                                    <th>Цена/руб.</th>
+                                    <th>&nbsp;&nbsp;&nbsp;Действия</th>
                                 </tr>
-                            {% endfor %}
+                            </thead>
+                            <tbody id = 'tbodyServices'>
+                                {% for i in worker.works.servicelist %}
+                                    <tr id="tr_{{ forloop.counter }}">
+                                        <td style="width: 5px"></td>
+                                        <td>
+                                            <select id="service_{{ forloop.counter }}" class = "form-control" style="background-color: white; border: white" disabled>
+                                                {% for s in serviceList %}
+                                                    <option value="{{s.id}}" {% if i.id == s.id %} selected {% endif %}>{{ s.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input id="price_{{ forloop.counter }}" type="number" class="form-control" value="{{ i.price }}" disabled style="background-color: white; border-color: white">
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn text-primary" id="edit_{{ forloop.counter }}" onclick="editService(this)" style="text-align: left; background-color: white">Изменить</button>
+                                            <button type="button" class="btn text-primary" id="delete_{{ forloop.counter }}" onclick="deleteService(this)" style="text-align: left; background-color: white">Удалить</button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                <tr id = 'tbodyControls'>
+                                    <td style="width: 5px"></td>
+                                    <td>
+                                        <button type="button" class="btn text-primary" id="add_services" onclick="addService()" style="text-align: left; background-color: white;">Добавить</button>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
                             </tbody>
+                            <!-- Строка таблицы для добавления -->
+                            <tr id="tr_%number%" hidden>
+                                <td style="width: 5px"></td>
+                                <td>
+                                    <select name = "service_select" id="service_%number%" class = "form-control" style="background-color: white; border: white">
+                                        {% for s in serviceList %}
+                                            <option value="{{s.id}}">{{ s.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <input name = 'service_price' id="price_%number%" type="number" class="form-control" value="0" style="background-color: white; border-color: white">
+                                </td>
+                                <td>
+                                    <button name = 'service_btnedit' type="button" class="btn text-primary" id="edit_%number%" onclick="editService(this)" style="text-align: left; background-color: white">Изменить</button>
+                                    <button name = 'service_btndelete' type="button" class="btn text-primary" id="delete_%number%" onclick="deleteService(this)" style="text-align: left; background-color: white">Удалить</button>
+                                </td>
+                            </tr>
+
                         </table>
+
                     </div>
                 </div>
-		    </div>
-            <!--ПОРТФОЛИО------------------------------------------------------------------------------------------>
-            <div class="form-group form-control">
-                <label for="id_portfolio" class="col-xs-2 control-label"><strong>Портфолио:</strong></label>
-                <div class="container-fluid">
-                    <div class="d-flex flex-row" style="overflow-x: scroll;" id="portfolio_list">
-                        <div class="col-4">
-                             <div class="card card-body" >
-                                 <div class="border-secondary " style="border: dashed">
-                                     <div class="file-upload btn pb-3" style="height:145px; margin-left: auto; margin-right: auto; width: 100%" >
-                                         <label>
-                                             <input id = "finput_portfolio" type="file" name="file" onchange="setlocalfoto(this)">
-                                             <span>Добавить файл</span>
-                                         </label>
-                                     </div>
-                                 </div>
-                                 <p></p>
-                                 <input name = "" class="form-control" id="filedescription" placeholder="Введите описание">
-                             </div>
-                        </div>
 
-                        {% for s in worker.attachments %}
-                            <div class="col-4" id="portfolio_card">
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_Services" class="col-xs-2 control-label input-medium">Постоянная работа</label>
+                    </div>
+                    <div class="col col-2">
+                        <input type="number" name = "salary" class="form-control" id="id_salary" placeholder="Зарплата" value="{{worker.works.salary}}">
+                    </div>
+                    <div class="col col-1 mt-1">
+                        руб.
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="freelance" class="col-xs-2 control-label input-medium">Фриланс</label>
+                    </div>
+                    <div class="col col-3">
+                        <input type="number" name = "freelance" class="form-control" id="id_freelance" placeholder="" value="">
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- КОМАНДИРОВКИ -->
+            <div class="mt-3">
+                <label class="article">Командировки</label>
+
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_readytotravel" class="col-xs-2 control-label input-medium">Готов к командировкам</label>
+                    </div>
+                    <div class="col col-3">
+                        <label class="checkbox-container">
+                            <input class="" id="id_readytotravel" value="True" type="checkbox" name="readytotravel" {% if worker.readytotravel %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_haveshengen" class="col-xs-2 control-label input-medium">Есть шенгенская виза</label>
+                    </div>
+                    <div class="col col-3">
+                        <label class="checkbox-container">
+                            <input class="" id="id_haveshengen" value="True" type="checkbox" name="haveshengen" {% if worker.haveshengen %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_haveintpass" class="col-xs-2 control-label input-medium">Есть загран паспорт</label>
+                    </div>
+                    <div class="col col-3">
+                        <label class="checkbox-container">
+                            <input id="id_haveintpass" value="True" type="checkbox" name="haveintpass" {% if worker.haveintpass %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ПОРТФОЛИО -->
+            <div class="mb-3">
+                <label class="article">Портфолио, работы, файлы</label>
+
+                <div class="form-group form-control">
+                    <label for="id_portfolio" class="col-xs-2 control-label"><strong>Портфолио:</strong></label>
+                    <div class="container-fluid">
+                        <div class="d-flex flex-row" style="overflow-x: scroll;" id="portfolio_list">
+                            <div class="col-4">
+                                 <div class="card card-body" >
+                                     <div class="border-secondary " style="border: dashed">
+                                         <div class="file-upload btn pb-3" style="height:145px; margin-left: auto; margin-right: auto; width: 100%" >
+                                             <label>
+                                                 <input id = "finput_portfolio" type="file" name="file" onchange="setlocalfoto(this)">
+                                                 <span>Добавить файл</span>
+                                             </label>
+                                         </div>
+                                     </div>
+                                     <p></p>
+                                     <input name = "" class="form-control" id="filedescription" placeholder="Введите описание">
+                                 </div>
+                            </div>
+
+                            {% for s in worker.attachments %}
+                                <div class="col-4" id="card_{{s.id}}">
+                                    <div class="card card-body">
+                                        <div class="product-img" style="height: 150px">
+                                            <img id ="portfolio_url" style="max-height:150px; max-width: 100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block;" src="{{ s.resizeurl }}" alt="">
+                                        </div>
+                                        <p></p>
+                                        <span name = "" class="text-sm-center" id="filedescriptionspan">{{s.description}}</span>
+                                        <button type="button" id="{{s.id}}" class="btn btn-danger" style="position:absolute; top:0; right:0;" onclick="deleteAttachment(this)">Х</button>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                            <div class="col-4" id="hidden_portfolio_card" hidden>
                                 <div class="card card-body">
                                     <div class="product-img" style="height: 150px">
-                                        <img id ="portfolio_url" style="max-height:150px; max-width: 100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block;" src="{{ s.url }}" alt="">
+                                        <img id ="portfolio_url" style="max-height:150px; max-width: 100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block;" src="" alt="">
                                     </div>
                                     <p></p>
-                                    <span name = "" class="text-sm-center" id="filedescriptionspan">{{s.description}}</span>
+                                    <span name = "" class="text-sm-center" id="filedescriptionspan"></span>
+                                    <button id="" type="button" class="btn btn-danger" style="position:absolute; top:0; right:0;" onclick="deleteAttachment(this)">Х</button>
                                 </div>
                             </div>
-                        {% endfor %}
 
-                        <div class="col-4" id="hidden_portfolio_card" hidden>
-                            <div class="card card-body">
-                                <div class="product-img" style="height: 150px">
-                                    <img id ="portfolio_url" style="max-height:150px; max-width: 100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block;" src="" alt="">
-                                </div>
-                                <p></p>
-                                <span name = "" class="text-sm-center" id="filedescriptionspan"></span>
-                            </div>
                         </div>
-
                     </div>
                 </div>
             </div>
 
-            <p></p>
+            <div class="alert alert-danger mb-3">
+                <label class="checkbox-container">
+                    <input class="" id="id_personaldataisallowed" value="True" type="checkbox" name="personaldataisallowed" {% if worker.personaldataisallowed %}checked{% endif %}>
+                    <span class="checkmark"></span>
+                    <label for="id_personaldataisallowed" class="col-xs-2 control-label input-medium">Я даю согласие на обработку персональных данных и понимаю, что мои данные будут переданы третьей стороне для проверки</label>
+                </label>
 
-            <div class="form-group container-fluid">
-                <div class="row  border-danger" style="border: dashed; background-color: #f5c6cb">
-                    <div class="col col-1">
-                        {% if worker.personaldataisallowed %}
-                            <input class="" id="id_personaldataisallowed" value="True" type="checkbox" name="personaldataisallowed" checked>
-                        {% else %}
-                            <input class="" id="id_personaldataisallowed" value="True" type="checkbox" name="personaldataisallowed">
-                        {% endif %}
-                    </div>
-                    <div class="col col-11">
-                        <span>Даю согласие на обработку перcональных данных...</span>
-                    </div>
-                </div>
-
-                <div class="row border-success mt-3" style="border: dashed; background-color: #71dd8a">
-                    <div class="col col-1">
-                        {% if worker.publishdata %}
-                            <input class="" id="id_publishdata" value="True" type="checkbox" name="publishdata" checked>
-                        {% else %}
-                            <input class="" id="id_publishdata" value="True" type="checkbox" name="publishdata">
-                        {% endif %}
-                    </div>
-                    <div class="col col-11">
-                        <span>Опубликовать анкету в общий доступ</span>
-                    </div>
-                </div>
             </div>
-            <p></p>
-		    <div class="form-group">
-		        <div class="col-xs-offset-2 col-xs-10">
-		            <button type="button" class="btn btn-danger" onclick="formsave()">Сохранить</button>
-		        </div>
-		    </div>
 
+            <div class="alert alert-success">
+                <label class="checkbox-container">
+                    <input class="" id="id_publishdata" value="True" type="checkbox" name="publishdata" {% if worker.publishdata %}checked{% endif %}>
+                    <span class="checkmark"></span>
+                    <label for="id_publishdata" class="col-xs-2 control-label input-medium">Опубликовать анкету в общий доступ</label>
+                </label>
+
+            </div>
+
+            <div class="pb-3">
+                <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+            </div>
         </form>
-
     </div>
 
-    <p></p>
+        <!--
+        <form id="workersettings" enctype="multipart/form-data" class="form-horizontal" action="" method="post" onsubmit="event.preventDefault()">
+        -->
+<script>
 
+    //Редактирование таблицы услуг
+    var currentCount = 100;
+    var newfiles    = [];
+    var deletefiles = [];
+
+    function editService(e) {
+        var n = e.id.replace("edit_","");
+        document.getElementById('service_'+n).disabled = false;
+        document.getElementById('price_'+n).disabled = false;
+    }
+
+    function deleteService(e) {
+        var n = e.id.replace("delete_","");
+        document.getElementById('tbodyServices').removeChild(document.getElementById('tr_'+n))
+    }
+
+    function addService() {
+
+        currentCount = currentCount+1;
+
+        var tbody   = document.getElementById('tbodyServices');
+        var tr      = document.getElementById('tr_%number%').cloneNode(true);
+
+        tr.id = tr.id.replace("%number%", currentCount);
+        tr.hidden = false;
+
+        tr.getElementsByTagName('select')[0].id = 'service_'+currentCount;
+        tr.getElementsByTagName('input')[0].id = 'price_'+currentCount;
+        tr.getElementsByTagName('button')[0].id = 'edit_'+currentCount;
+        tr.getElementsByTagName('button')[1].id = 'delete_'+currentCount;
+
+        tbody.insertBefore(tr, tbody.children[tbody.children.length-1]);
+    }
+
+    // Выбор даты рождения
+    $( "#id_birthday" ).datepicker({
+        changeYear: true,
+        changeMonth: true,
+        dateFormat: 'yy-mm-dd',
+    });
+
+    //активация мультиселекта
+    $(document).ready(function() {
+        $('#ProfessionsGroup').multiselect({
+            enableClickableOptGroups: true,
+            enableCollapsibleOptGroups: true
+        });
+    });
+
+    function deleteAttachment(e) {
+
+        var eid     = "card_"+e.id;
+        var divFile = document.getElementById(eid);
+
+        divFile.hidden = true;
+
+        if (eid.indexOf('new') == -1) {
+            deletefiles.push(e.id);
+        }
+        else {
+            for (i=0; i < newfiles.length; i++) {
+                if (newfiles[i].id == e.id) {
+                    newfiles.splice(e, 1);
+                }
+            }
+
+        }
+    }
+
+    function setlocalfoto(e) {
+        console.log(e.id)
+        var input = document.getElementById(e.id);
+        var fReader = new FileReader();
+        fReader.readAsDataURL(input.files[0]);
+        fReader.onloadend = function(event){
+
+            if(e.id=="finput_foto"){
+                var img = document.getElementById("fotourl");
+                img.src = event.target.result;
+            }
+
+            else{
+
+                var uid = "id" + Math.random().toString(16).slice(2);
+                var description = document.getElementById("filedescription");
+                var portfolio_list = document.getElementById("portfolio_list");
+                var portfolio_card = document.getElementById("hidden_portfolio_card").cloneNode(true);
+                var img = portfolio_card.getElementsByTagName('img')[0];
+
+                img.src = event.target.result;
+
+                portfolio_card.getElementsByTagName('span')[0].innerText = description.value;
+                portfolio_card.getElementsByTagName('button')[0].id = "new_file_"+uid;
+                portfolio_card.hidden = false;
+                portfolio_card.id     = "card_new_file_"+uid;
+                portfolio_list.insertBefore(portfolio_card, portfolio_list.children[1]);
+
+                newfiles.push({"id": "new_file_"+uid, "name": input.files[0].name, "description": description.value, "src": img.src});//
+
+                description.value = "";
+            }
+        }
+    }
+
+    $('#settingsform').validate({
+
+        submitHandler: function(form) {
+            formsave();
+            }
+        }
+    );
+
+    function formsave() {
+
+        var formData = new FormData();
+
+        //Собираем список профессий
+        var ProfList = document.getElementById("ProfessionsGroup").getElementsByTagName('option');
+        var SelectedProf = [];
+        for (i=0; i < ProfList.length; i++) {
+            if (ProfList[i].selected) {
+                SelectedProf.push(ProfList[i].value);
+            }
+        }
+
+        //Собираем список услуг
+        var ServiceList = document.getElementById("tbodyServices").getElementsByTagName('tr');
+        var SelectedService = [];
+
+        for (i=0; i < ServiceList.length; i++) {
+            var tr = ServiceList[i];
+
+            if (tr.id == 'tbodyControls'){
+                continue;
+            }
+
+            SelectedService.push({"id": tr.getElementsByTagName('select')[0].value, "price": tr.getElementsByTagName('input')[0].value});
+
+        }
+
+        //Собираем конечный JSON
+
+        var json = JSON.stringify({
+            name: document.getElementById("id_name").value,
+            surname: document.getElementById("id_surname").value,
+            lastname: document.getElementById("id_lastname").value,
+            emailaddress: document.getElementById("id_emailaddress").value,
+            phonenumber: document.getElementById("id_phonenumber").value,
+            city: document.getElementById("City").value,
+            haveip: document.getElementById("id_haveIP").checked,
+            workpermit: document.getElementById("id_workpermit").checked,
+            //description: document.getElementById("id_Description").value,
+            //education: document.getElementById("id_education").value,
+            experiencedate: document.getElementById("id_Experiencewith").value,
+            salary: document.getElementById("id_salary").value,
+            experience: document.getElementById("id_experience").value,
+            nationality: document.getElementById("id_nationality").value,
+            birthday: document.getElementById("id_birthday").value,
+            haveinstrument: document.getElementById("id_haveinstrument").checked,
+            personaldataisallowed: document.getElementById("id_personaldataisallowed").checked,
+            publishdata: document.getElementById("id_publishdata").checked,
+            fotourl: document.getElementById("fotourl").src,
+            attachments: newfiles,
+            delattachments: deletefiles,
+            proflist: SelectedProf,
+            readytotravel: document.getElementById("id_readytotravel").checked,
+            haveshengen: document.getElementById("id_haveshengen").checked,
+            haveintpass: document.getElementById("id_haveintpass").checked,
+            sex: $('input[name=sexradio]:checked').val(),
+            servicelist: SelectedService
+        });
+
+        // добавить к пересылке ещё пару ключ - значение
+        formData.append("data", json);
+        formData.append("csrfmiddlewaretoken", document.getElementsByName("csrfmiddlewaretoken")[0].value);
+
+        // отослать
+        var xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = function() { // (3)
+            if (xhr.readyState != 4) return;
+
+            if (xhr.status != 200) {
+                alert(xhr.status + ': ' + xhr.statusText);
+            } else {
+                alert("Данные сохранены");
+                location.href = (xhr.responseText);
+            }
+        }
+
+        xhr.open("POST", "save/", true);
+        xhr.send(formData);
+    }
+
+</script>
 {% endblock %}
 
