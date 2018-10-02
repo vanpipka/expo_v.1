@@ -3,15 +3,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db import connection
 from django.db.models.signals import m2m_changed, post_save
-from expo.DataSet import savefile
+from expo.SaveFile import savefile
 import datetime
 import uuid
 from django.dispatch import receiver
-
-# СООБЩЕНИЯ-----------------------------------------------------
-class ChatRoom(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-# ---------------------------------------------------------------
 
 class WorkGroup(models.Model):
 
@@ -127,7 +122,6 @@ class Worker(models.Model):
     phonenumber    = models.CharField(max_length=100)
     emailaddress   = models.CharField(max_length=100)
     WorkerAttachment    = models.ManyToManyField(WorkerAttachment)
-    chatRoom            = models.ManyToManyField(ChatRoom)
     salary              = models.DecimalField(max_digits=10, decimal_places=0, default=0) #Цена основной работы
 
     def __str__(self):
@@ -154,6 +148,19 @@ class Worker(models.Model):
         else:
             return workerQuerySet[0]
 
+    def getWorkerRating(worker):
+
+        ratingList = {"rating": 0, "commentsCount": 0}
+
+        try:
+            workerRating = WorkerRating.objects.get(idWorker=worker)
+            ratingList["rating"] = workerRating.rating
+            ratingList["commentsCount"] = workerRating.commentsCount
+
+        except:
+            print("рейтинг для " + str(worker) + " не найден")
+
+        return ratingList
 
 class Company(models.Model):
 
@@ -228,7 +235,6 @@ class Company(models.Model):
 
             company.save()
 
-
     def addCompany(user, type):
 
         if type != 2:
@@ -244,6 +250,48 @@ class Company(models.Model):
             return company
         else:
             return companyQuerySet[0]
+
+class News(models.Model):
+
+    id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name        = models.CharField(max_length=100)
+    description = models.TextField()
+    created     = models.DateTimeField("Дата добавления", auto_now_add=True)
+    link        = models.CharField(max_length=100)
+    image       = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+    def GetActual(self, position_begin=None, position_end=None):
+
+        objects = News.objects.all().order_by("-created")
+
+        if position_begin != None and position_end != None:
+            objects = objects[position_begin: position_end]
+
+        objects = list(objects.values('id', 'name', 'description', 'link', 'image', 'created'))
+
+        return objects
+
+class JobOrder(models.Model):
+
+    id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    description = models.TextField()
+    created     = models.DateTimeField("Дата добавления", auto_now_add=True, null=True)
+    date        = models.DateTimeField("Дата проведения работ", default=datetime.date(1900, 1, 1))
+    place       = models.CharField(max_length=100)
+    company     = models.ForeignKey(Company, on_delete=models.CASCADE)
+    city        = models.ForeignKey(City, on_delete=models.CASCADE, default="00000000000000000000000000000000")
+
+    def __str__(self):
+        return self.name
+
+    def GetActual(self):
+
+        objects = list(JobOrder.objects.all().order_by("-created").values('id', 'description', 'date', 'place', 'created', 'company', 'city'))
+
+        return objects
 
 class UserType(models.Model):
 
@@ -319,6 +367,7 @@ class UserType(models.Model):
 
         except ObjectDoesNotExist:
             print('не удалось получить запись userType')
+
         return elem
 
 class CostOfService(models.Model):
@@ -357,6 +406,22 @@ class Comments(models.Model):
 
         #print("Количество:" +str(commentCount)+ " среднее:" + str(rating))
 
+    def GetActual(self, position_begin=None, position_end=None):
+
+        objects = Comments.objects.all().select_related("Worker").filter(moderation=True).filter(rating__gte=3).order_by("-created")
+
+        if position_begin != None and position_end != None:
+            objects = objects[position_begin: position_end]
+
+        objects = list(objects.values('idWorker_id', 'idWorker__name', 'idWorker__surname', 'idWorker__foto', 'text'))
+
+        for e in objects:
+
+            ratingInfo = Worker.getWorkerRating(e['idWorker_id'])
+            e['rating'] = ratingInfo['rating']
+
+        return objects
+
 class WorkerRating(models.Model):
 
     id              = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -375,25 +440,6 @@ class WorkerRating(models.Model):
         workerRating.commentsCount  = rating['id__count']
 
         workerRating.save()
-
-class Order(models.Model):
-
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    description = models.CharField(max_length=100)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    worker = models.ForeignKey(Worker, on_delete=models.CASCADE)
-    date   = models.DateTimeField("Дата создания", auto_now_add=True, null=True)
-    date = models.DateTimeField("Дата создания", auto_now_add=True, null=True)
-    executiondate = models.DateTimeField("Дата создания", auto_now_add=True, null=True)
-
-class Message(models.Model):
-    
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    sender = models.ForeignKey(Worker, related_name="Отправитель", verbose_name="Отправитель", on_delete=models.CASCADE)
-    consignee = models.ForeignKey(ChatRoom, related_name="Получатель", verbose_name="Получатель", on_delete=models.CASCADE)
-    text = models.TextField("Сообщение")
-    created = models.DateTimeField("Дата добавления", auto_now_add=True, null=True)
-    moderation = models.BooleanField("Модерация", default=False)
 
 def professions_changed(sender, **kwargs):
     # Do something

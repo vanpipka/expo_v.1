@@ -6,7 +6,6 @@ from expo.DataGet import getComments, getProfessionListWithGroup, getServiceList
 from expo.DataSet import setWorker, refreshLastOnline
 from django.views.decorators.csrf import csrf_exempt
 from django.middleware import csrf
-from django.contrib.auth.models import User
 import json
 
 
@@ -187,16 +186,26 @@ def showWorker(request):
 
 def showWorkersJson(request):
 
+    #if request.user.is_authenticated:
+    #    refreshLastOnline(request.user)
+
+    #print(request.GET)
+
+    #context = {"dataset": []}
+    #context['Access-Control-Allow-Origin'] = "*"
+
+    #return JsonResponse(context)
+
     if request.user.is_authenticated:
         refreshLastOnline(request.user)
 
     profession  = None
     id          = None
 
-    print('Запрос: ' + str(request.POST))
-    print('Куки: ' + str(request.COOKIES))
+    print(request.GET)
 
     if request.method == "GET":
+
         profession = request.GET.get("profession", None)
         id = request.GET.get("id", None)
 
@@ -205,6 +214,9 @@ def showWorkersJson(request):
 
     context = {}
     context["dataset"] = gerWorkList(idGroup=profession, idWorker=id, userAauthorized=request.user.is_authenticated, groupAttribute = True)
+
+
+    context['Access-Control-Allow-Origin'] = "*"
 
     return JsonResponse(context)
 

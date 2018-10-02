@@ -3,7 +3,7 @@
 {% block content%}
 
 <div class="container">
-    <div class="row mb-1 mt-3">
+    <div class="row mb-1 mt-3 pl-3">
         <div class="col-8">
             <span class="article">Все специалисты</span>
         </div>
@@ -19,7 +19,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row pl-3">
         {% csrf_token %}
         <div class="col col-4"> <!-- style="position: fixed;">-->
             <div class="card mb-3">
@@ -522,6 +522,7 @@
 
     </div>
 </div>
+
 <div hidden class="popover fade bs-popover-right show" id="popup" style="width: 360px; transform: translate3d(100%, 0px, 0px); top: -13px; left: 0px;">
     <div class="arrow" style="top: 12px;">
     </div>

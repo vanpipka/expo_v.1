@@ -269,10 +269,8 @@
             {% include "includes/navbar.html" %}
         </header>
         <main>
-            <div class="container">
-                {% block content %}
-                {% endblock %}
-            </div>
+            {% block content %}
+            {% endblock %}
         </main>
     </div>
     {% include "includes/footer.html" %}

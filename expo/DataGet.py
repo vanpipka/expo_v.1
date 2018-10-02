@@ -22,7 +22,7 @@ def getAllProfessionsAndGroups(count = None):
                                     "url": '/worker/search?profession='+p.name,
                                     "workercount": p.workerСount})
 
-        all_workGroups.append({"name": e.name, "id": e.id, "professions": all_professions})
+        all_workGroups.append({"name": e.name, "id": e.id, "items": all_professions})
 
     #context = all_workGroups
     #context = {"dataset": all_workGroups}
@@ -92,7 +92,9 @@ def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, 
 
     for e in querySet:
 
-        ratingInfo = getWorkerRating(e)
+        print(str(e.name) + str(e.surname))
+
+        ratingInfo = Worker.getWorkerRating(e)
 
         WorkerInfo = {"id": e.id,
                         "description": e.Description,
@@ -192,9 +194,6 @@ def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, 
 
         WorkerInfo["servicelist"] = priceList
 
-
-
-        #Добавим информацию о сотруднике в список
         WorkList.append(WorkerInfo)
 
     return WorkList
@@ -235,20 +234,6 @@ def getWorker(id):
         worker = Worker(id=id)
 
     return worker
-
-def getWorkerRating(worker):
-
-    ratingList = {"rating":0, "commentsCount":0}
-
-    try:
-        workerRating = WorkerRating.objects.get(idWorker=worker)
-        ratingList["rating"] = workerRating.rating
-        ratingList["commentsCount"] = workerRating.commentsCount
-
-    except:
-        print("рейтинг для "+ str(worker) +" не найден")
-
-    return ratingList
 
 def getCityList():
 
@@ -303,30 +288,7 @@ def getCityListFull():
 
                 m.append(city)
 
-        fullList.append({'name': e.name, 'id': e.id, 'citys': m})
-
-
-
-
-
-    #for e in querySet:
-
-
-
-
-
-    #    region = str(e.region)
-
-     #   elem = cityList.get(region)
-     #   if elem == None:
-     #       cityList[region] = []
-     #       elem = cityList.get(region)
-
-        #print(elem)
-
-     #   elem.append()
-
-    #print(cityList)
+        fullList.append({'name': e.name, 'id': e.id, 'items': m})
 
     return fullList
 
@@ -509,7 +471,7 @@ def searchWorker(searchList, userAauthorized=False, returnCount = False, groupAt
 
         print("Опыт работы:" + str(workexperience))
 
-    if age_from != None and age_from != '' and age_from != '18':
+    if age_from != None and age_from != '' and age_from != 18:
 
         print('Возраст от: '+str(age_from))
 
@@ -517,7 +479,7 @@ def searchWorker(searchList, userAauthorized=False, returnCount = False, groupAt
 
         searchquery = searchquery.exclude(birthday__gte=datefrom)
 
-    if age_to != None and age_to != '' and age_to != '70':
+    if age_to != None and age_to != '' and age_to != 70:
 
         print('Возраст до: '+str(age_to))
 
@@ -532,12 +494,12 @@ def searchWorker(searchList, userAauthorized=False, returnCount = False, groupAt
 
     if searchquery != None:
 
+        searchquery = searchquery.filter(publishdata=True)
+
         if positionfrom != None and positionto!=None and returnCount!=True:
             searchquery = searchquery[positionfrom:positionto]
 
         if returnCount:
-
-            searchquery = searchquery.filter(publishdata=True)
 
             context["count"] = len(searchquery)
 
@@ -556,24 +518,6 @@ def searchWorker(searchList, userAauthorized=False, returnCount = False, groupAt
 
     return context
 
-def getWorkerChatRoom(worker):
-
-    chatRoomList = []
-
-    for e in worker.chatRoom.all():
-
-        consigneeList   = []
-        name            = ''
-        consignee       = list(Worker.objects.filter(chatRoom=e).values('id', 'name').distinct())
-
-        for consid in consignee:
-            consigneeList.append(consid['id'])
-            name = name + str(consid['name']) + ' '
-
-        chatRoomList.append({"id": e.id, "name": name})
-
-    return chatRoomList
-
 def getServiceList(searchLine = None):
 
     serviceList = []
@@ -588,8 +532,6 @@ def getServiceList(searchLine = None):
     return serviceList
 
 def calculate_age(born):
-
-    print('дата рождения' + str(born))
 
     try:
         today = datetime.datetime.today()

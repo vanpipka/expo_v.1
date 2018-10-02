@@ -1,7 +1,9 @@
-from django.http import HttpResponse , JsonResponse
-from django.shortcuts import render, redirect
-from expo.DataGet import getProfessionListWithGroup, getProfessionList, getAllProfessionsAndGroups, getCityListFull, getCityList, getServiceList
+from django.http import  JsonResponse
+from django.shortcuts import render
+from expo.DataGet import  getProfessionList, getAllProfessionsAndGroups, getCityListFull, getServiceList
 from expo.DataSet import refreshLastOnline
+from main.models import UserType, News, Comments
+
 from django.middleware import csrf
 # Create your views here.
 
@@ -13,8 +15,6 @@ def show(request):
     print(print('coocies: ' + str(request.COOKIES)))
 
     context = {}
-
-    context['all_workGroups']   = getAllProfessionsAndGroups()
 
     all_profession = getProfessionList()
     all_Groups  = []
@@ -35,12 +35,10 @@ def show(request):
 
     all_Groups.append({'professions': profarray.copy()})
 
-    context['all_profession'] = all_Groups
-
+    context['all_profession']   = all_Groups
     context['citylist']         = getCityListFull()
-
-    #if request.user.is_authenticated:
-    #    context['worker'] = getWorkerData(user_id = request.user, data = ['foto'])
+    context['comments']         = Comments.GetActual(Comments, position_begin=0, position_end=2)
+    context['news']             = News.GetActual(News, position_begin=0, position_end=3)
 
     return render(request, 'index.html', context)
 
@@ -196,10 +194,54 @@ def jsonCityList(request):
 
     return response
 
+def checkLogin(request):
+
+    answer = {}
+
+    if request.user.is_authenticated:
+        refreshLastOnline(request.user)
+
+        userType = UserType.GetUserType(request.user)
+        elem = UserType.GetElementByUser(request.user)
+
+        if userType == 1:
+            data = {'name': elem.name, 'surname': elem.surname, 'fotourl': '/static/main/media/resize' + str(elem.foto)}
+
+        elif userType == 2:
+            data = {'name': elem.name, 'surname': '', 'fotourl': '/static/main/media/resize' + str(elem.foto)}
+
+        else:
+            data = {'name': '', 'surname': '', 'fotourl': '/static/main/img/add-photo.png'}
+
+        answer['status'] = True
+        answer['user'] = data
+
+    else:
+
+        answer['status'] = False
+        answer['errors'] = {'username': 'user is not authenticated'}
+
+    response = JsonResponse(answer)
+    response['Access-Control-Allow-Origin'] = "*"
+
+    return response
+
+def checkServer(request):
+
+    if request.user.is_authenticated:
+        refreshLastOnline(request.user)
+
+    response = JsonResponse({'status': True})
+    response['Access-Control-Allow-Origin'] = "*"
+
+    return response
+
 def showJson(request):
 
     if request.user.is_authenticated:
         refreshLastOnline(request.user)
+
+    print(request.GET)
 
     context = getAllProfessionsAndGroups()
 

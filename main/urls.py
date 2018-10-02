@@ -23,6 +23,8 @@ urlpatterns = [
     path('m/servicelist/', views.jsonServicesList),
     path('m/selectionparameters/', views.jsonSelectionParameters),
     path('m/citylist/', views.jsonCityList),
+    path('m/checklogin/', views.checkLogin),
+    path('m/checkserver/', views.checkServer),
     path('m/professionlist/', views.jsonProfessionList),
     path('m/professionandgroups/', views.showJson),
 

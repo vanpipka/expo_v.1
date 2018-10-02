@@ -1,13 +1,10 @@
 from django.shortcuts import render
-from django.views.generic.edit import FormView
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.base import View
 from main.models import UserType
 import json
 from django.middleware import csrf
-from django import forms
-from django.contrib.sessions.backends.db import SessionStore
 
 # Опять же, спасибо django за готовую форму аутентификации.
 from django.contrib.auth.forms import AuthenticationForm
@@ -144,7 +141,10 @@ def signup(request, type):
                                                    content_type='application/json')
 
                         else:
-                            return HttpResponseRedirect('/')
+
+                            return HttpResponseRedirect('/worker/settings/')
+
+
 
                     else:
 
@@ -332,26 +332,6 @@ def Login(request):
                                     content_type='application/json')
             else:
                 return HttpResponseRedirect('/')
-
-#class LoginFormView(FormView):
-#    form_class = AuthenticationForm
-
-#    # Аналогично регистрации, только используем шаблон аутентификации.
-#    template_name = "accounts/login.html"
-
-#    # В случае успеха перенаправим на главную.
-#    success_url = "/"
-
-#    def form_valid(self, form):
-
-#        print('form_valid')
-
-#        # Получаем объект пользователя на основе введённых в форму данных.
-#        self.user = form.get_user()
-
-#        # Выполняем аутентификацию пользователя.
-#        auth_login(self.request, self.user)
-#        return super(LoginFormView, self).form_valid(form)
 
 def Logout(request):
 
