@@ -168,6 +168,15 @@ def jsonSelectionParameters(request):
             "type": 'boolean',
             "columnname": 'readytotravel',
         },
+
+        {
+            "title": 'Возраст',
+            "type": 'range',
+            "min": 18,
+            "max": 70,
+            "columnname": 'age',
+        },
+
     ]
 
     resp = {'searchparams': searchparams, 'csrfmiddlewaretoken': token}
@@ -197,6 +206,8 @@ def jsonCityList(request):
 def checkLogin(request):
 
     answer = {}
+
+    print(request.COOKIES)
 
     if request.user.is_authenticated:
         refreshLastOnline(request.user)

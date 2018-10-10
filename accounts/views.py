@@ -14,6 +14,9 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login, authenticate
 from django.contrib.auth import logout as auth_logout
 
+def signup_change(request):
+    return render(request, 'accounts/signup_change.html')
+
 def signup_worker(request):
     return signup(request, type=1)
 
@@ -214,12 +217,13 @@ def Login(request):
 
             if request.user.is_authenticated:
 
+                print(request.COOKIES)
                 if request.is_ajax():
 
                     error_dict = {'username': 'user is authenticated'}
 
                     return HttpResponse(
-                        json.dumps({'Access-Control-Allow-Origin': "*", 'status': False, 'errors': error_dict}),
+                        json.dumps({'Access-Control-Allow-Origin': "*", 'status': False, 'errors': error_dict, 'requestdata':{'cookies': request.COOKIES, 'request': list(request.GET), 'body': list(request.body)}}),
                         status=200,
                         content_type='application/json')
 
@@ -228,9 +232,13 @@ def Login(request):
 
             elif request.is_ajax():
 
+                print(request.COOKIES)
+
                 csrfmiddlewaretoken = csrf.get_token(request)
                 ajax_response = {'Access-Control-Allow-Origin': "*",
-                                 'csrfmiddlewaretoken': csrfmiddlewaretoken}
+                                 'csrfmiddlewaretoken': csrfmiddlewaretoken,
+                                 'requestdata': {'cookies': request.COOKIES, 'request': list(request.GET),
+                                                 'body': list(request.body)}}
 
                 ajax_response['coocies'] = {'csrftoken': request.META["CSRF_COOKIE"],
                                             'sessionid': request.session.session_key}

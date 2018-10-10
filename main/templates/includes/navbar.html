@@ -1,46 +1,60 @@
 {% load home_extras %}
 
-<div class="bg-color-dark-grey" style="height: 56px;">
+<div class="" style=" background-color: #edeef0">
     <div class="container">
         <nav class="navbar navbar-expand-lg">
-            <a href="{% get_attribute 'HOME_PAGE' %}" class="article-sm" style="color: white; text-decoration: none;">ExpoJob</a>
-            <a class="nav-link ml-4 mt-1 text-menu" style="color: white;">8 8 (800) 555-55-55</a>
+            <a href="{% get_attribute 'HOME_PAGE' %}" class="article txt-bold" style="margin-left: -12pt">vseEXPO</a>
+            <a class="nav-link ml-4 mt-1 text-menu" style="color: #1e1e1e;"><i class="fa fa-phone" aria-hidden="true"></i>&nbsp;8 8 (800) 555-55-55</a>
+            <a class="nav-link ml-4 mt-1 text-menu" style="color: #1e1e1e;"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;info@vseexpo.ru</a>
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-menu" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  style="color: white;">
-                        {% if user.usertype.worker.foto %}
-                            <img src="/static/main/media/resize{{user.usertype.worker.foto}}" class="rounded-circle z-depth-0" alt="avatar image" style="max-height: 30px">
-                            {{user.usertype.worker.name|title}}
-                        {% else %}
-                            <span class="fa fa-user"></span> Профиль
-                        {% endif %}
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        {% if user.is_active %}
-                            <a class="dropdown-item waves-effect waves-light text-menu" href="/worker/settings/">Настройки</a>
-                            <a class="dropdown-item text-menu" href="/accounts/logout/">Выйти</a>
-                        {% else %}
-                            <a class="dropdown-item text-menu" href="/accounts/login/">Войти</a>
-                        {% endif %}
+
+                {% if user.is_active %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-menu" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  style="">
+                            {% if user.usertype.worker.foto %}
+                                <img src="/static/main/media/resize{{user.usertype.worker.foto}}" class="rounded-circle z-depth-0" alt="avatar image" style="max-height: 30px">
+                                {{user.usertype.worker.name|title}}
+                            {% else %}
+                                <span class="fa fa-user"></span> Профиль
+                            {% endif %}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            {% if user.is_active %}
+                                <a class="dropdown-item waves-effect waves-light text-menu" href="/worker/settings/">Настройки</a>
+                                <a class="dropdown-item text-menu" href="/accounts/logout/">Выйти</a>
+                            {% else %}
+                                <a class="dropdown-item text-menu" href="/accounts/login/">Войти</a>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% else %}
+                    <div class="pb-2 pt-2">
+                        <a href="/accounts/signup_change/" type="" class="btn btn-danger">Стать партнером</a>
                     </div>
-                </li>
+                {% endif %}
             </ul>
         </nav>
 
     </div>
 </div>
 
-<div class="nav bg-color-grey">
+<div class="nav" style="background-color: #575759">
     <div class="container">
         <ul class="nav"><!--ml-3-->
-            <li class="nav-item">
-                <a class="nav-link text-dark text-menu {% if request.path == '/'%}nav-item-expo-active{% endif %}" href="{% get_attribute 'HOME_PAGE' %}" role="button">Главная</a>
+            <li class="nav-item pt-2 nav-item-header">
+                <a class="txt-bold nav-link text-white text-menu {% if request.path == '/'%}nav-item-expo-active{% endif %}" href="{% get_attribute 'HOME_PAGE' %}" role="button">ГЛАВНАЯ</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark text-menu {% if request.path == '/worker/search/'%}nav-item-expo-active{% endif %}" href="{% get_attribute 'HOME_PAGE' %}worker/search/" role="button">Специалисты</a>
+            <li class="nav-item pt-2 nav-item-header">
+                <a class="txt-bold nav-link text-white text-menu {% if request.path == '/worker/search/'%}nav-item-expo-active{% endif %}" href="{% get_attribute 'HOME_PAGE' %}worker/search/" role="button">СПЕЦИАЛИСТЫ</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark text-menu" href="#" role="button">Заявки</a>
+            <li class="nav-item pt-2 nav-item-header">
+                <a class="txt-bold nav-link text-white text-menu {% if request.path == '/company/'%}nav-item-expo-active{% endif %}" href="{% get_attribute 'HOME_PAGE' %}company/" role="button">КОМПАНИИ</a>
+            </li>
+            <li class="nav-item pt-2 nav-item-header">
+                <a class="txt-bold nav-link text-white text-menu {% if request.path == '/jobs/'%}nav-item-expo-active{% endif %}" href="{% get_attribute 'HOME_PAGE' %}jobs/" role="button">ЗАКАЗЫ</a>
+            </li>
+            <li class="nav-item pt-2 nav-item-header">
+                <a class="txt-bold nav-link text-white text-menu {% if request.path == '/news/'%}nav-item-expo-active{% endif %}" href="{% get_attribute 'HOME_PAGE' %}news/" role="button">СОБЫТИЯ</a>
             </li>
         </ul>
     </div>

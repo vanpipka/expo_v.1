@@ -80,7 +80,7 @@
 
                         <div class="row">
                             <div class="col">
-                                <div class="file-upload container-fluid btn btn-primary">
+                                <div class="file-upload container-fluid btn btn-danger">
                                     <label>
                                         <input id = "finput_foto" type="file" name="file" onchange="setlocalfoto(this)" accept="image/jpg,image/jpeg,image/png">
                                         <span style="color: white">Сменить фото</span>
@@ -316,7 +316,7 @@
                                     </div>
                                 {% endfor %}
 
-                                <a href="" class="text-primary" data-toggle="modal" data-target="#ModalProfession">Добавить профессию</a>
+                                <a href="" class="text-danger" data-toggle="modal" data-target="#ModalProfession">Добавить профессию</a>
                             </div>
                         </div>
 
@@ -363,15 +363,15 @@
                                             <input id="price_{{ forloop.counter }}" type="number" class="form-control" value="{{ i.price }}" disabled style="background-color: white; border-color: white">
                                         </td>
                                         <td>
-                                            <button type="button" class="btn text-primary" id="edit_{{ forloop.counter }}" onclick="editService(this)" style="text-align: left; background-color: white">Изменить</button>
-                                            <button type="button" class="btn text-primary" id="delete_{{ forloop.counter }}" onclick="deleteService(this)" style="text-align: left; background-color: white">Удалить</button>
+                                            <button type="button" class="btn text-danger" id="edit_{{ forloop.counter }}" onclick="editService(this)" style="text-align: left; background-color: white">Изменить</button>
+                                            <button type="button" class="btn text-danger" id="delete_{{ forloop.counter }}" onclick="deleteService(this)" style="text-align: left; background-color: white">Удалить</button>
                                         </td>
                                     </tr>
                                 {% endfor %}
                                 <tr id = 'tbodyControls'>
                                     <td style="width: 5px"></td>
                                     <td>
-                                        <button type="button" class="btn text-primary" id="add_services" onclick="addService()" style="text-align: left; background-color: white;">Добавить</button>
+                                        <button type="button" class="btn text-danger" id="add_services" onclick="addService()" style="text-align: left; background-color: white;">Добавить</button>
                                     </td>
                                     <td></td>
                                     <td></td>
@@ -391,8 +391,8 @@
                                     <input name = 'service_price' id="price_%number%" type="number" class="form-control" value="0" style="background-color: white; border-color: white">
                                 </td>
                                 <td>
-                                    <button name = 'service_btnedit' type="button" class="btn text-primary" id="edit_%number%" onclick="editService(this)" style="text-align: left; background-color: white">Изменить</button>
-                                    <button name = 'service_btndelete' type="button" class="btn text-primary" id="delete_%number%" onclick="deleteService(this)" style="text-align: left; background-color: white">Удалить</button>
+                                    <button name = 'service_btnedit' type="button" class="btn text-danger" id="edit_%number%" onclick="editService(this)" style="text-align: left; background-color: white">Изменить</button>
+                                    <button name = 'service_btndelete' type="button" class="btn text-danger" id="delete_%number%" onclick="deleteService(this)" style="text-align: left; background-color: white">Удалить</button>
                                 </td>
                             </tr>
 
@@ -538,7 +538,7 @@
             </div>
 
             <div class="pb-3">
-                <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                <button type="submit" class="btn btn-danger">Сохранить изменения</button>
             </div>
 
         </form>

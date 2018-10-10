@@ -4,10 +4,12 @@
 
     <div class="row mb-3">
 
-        <div class="col col-3">
-            <div class="img" align="center" style="min-width: 100%; min-height: 160px;max-height: 160px; border-radius: 4px; background-position: center; background-image: url('{% if worker.resizefotourl %} {{ worker.resizefotourl }}{% else %} {{  STATIC_URL }}/static/main/img/Foto.jpg{% endif %}'); background-size: cover;">
+        <div class="col col-4 col-sm-5 col-md-4 col-lg-3">
 
-            </div>
+            <img class="mr-3" src="{% if worker.resizefotourl %} {{ worker.resizefotourl }}{% else %} {{  STATIC_URL }}/static/main/img/Foto.jpg{% endif %}" style="width: 100%;">
+            <!--<div class="img" align="center" style="min-width: 100%; min-height: 160px;max-height: 160px; border-radius: 4px; background-position: center; background-image: url('{% if worker.resizefotourl %} {{ worker.resizefotourl }}{% else %} {{  STATIC_URL }}/static/main/img/Foto.jpg{% endif %}'); background-size: cover;">
+
+            </div>-->
 
             <div class="row mt-1">
 
@@ -21,42 +23,42 @@
                     <div class="stars stars-example-css mt-3">
                         <div class="br-wrapper br-theme-css-stars">
                             <div class="br-widget">
-                                <a style="height: 18px; width: 18px; font-size: 18px" {% if worker.rating >= 0.5 %} class="br-selected" {% endif %}></a>
-                                <a style="height: 18px; width: 18px; font-size: 18px" {% if worker.rating >= 1.5 %} class="br-selected" {% endif %}></a>
-                                <a style="height: 18px; width: 18px; font-size: 18px" {% if worker.rating >= 2.5 %} class="br-selected" {% endif %}></a>
-                                <a style="height: 18px; width: 18px; font-size: 18px" {% if worker.rating >= 3.5 %} class="br-selected" {% endif %}></a>
-                                <a style="height: 18px; width: 18px; font-size: 18px" {% if worker.rating >= 4.5 %} class="br-selected" {% endif %}></a>
+                                <a {% if worker.rating >= 0.5 %} class="br-selected" {% endif %}></a>
+                                <a {% if worker.rating >= 1.5 %} class="br-selected" {% endif %}></a>
+                                <a {% if worker.rating >= 2.5 %} class="br-selected" {% endif %}></a>
+                                <a {% if worker.rating >= 3.5 %} class="br-selected" {% endif %}></a>
+                                <a {% if worker.rating >= 4.5 %} class="br-selected" {% endif %}></a>
                             </div>
                         </div>
                     </div>
                     <div style="margin-top: -18px">
-                        <span class="color-dark-grey">{{worker.commentscount}} оценок</span>
+                        <label class="col-xs-2 control-label input-medium color-dark-grey">{{worker.commentscount}} оценок</label>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col col-9">
+        <div class="col col-8 col-sm-7 col-md-8 col-lg-9">
             <div class="row">
-                <div class="col col-8">
-                    <a href="{{ worker.url }}" class="text-primary article-sm" style="text-decoration: none">{{ worker.name|title }} {{ worker.surname|title }}</a>
+                <div class="col col-12 col-sm-12 col-md-12 col-lg-8 ">
+                    <a href="{{ worker.url }}" class="text-danger article-sm" style="text-decoration: none">{{ worker.name|title }} {{ worker.surname|title }}</a>
                     {% if worker.age %}
                         <span class="color-dark-grey article-sm">, {{ worker.age }} {{ worker.age|decline }}
                         </span>
                     {% endif %}
                 </div>
-                <div class="col col-4">
+                <div class="col col-12 col-sm-12 col-md-12 col-lg-4">
                     {% if worker.isonline %}
                         <span class="badge badge-primary float-right mt-3" style="font-family: sans-serif;">Онлайн</span>
                     {% else %}
                         <div class="pt-2 text-right">
-                            <span style="color: #4e555b">был в сети {{ worker.lastonline|date:"d M" }}</span>
+                            <label for="onlyfoto" class="col-xs-2 control-label input-medium">был в сети {{ worker.lastonline|date:"d M" }}</label>
                         </div>
                     {% endif %}
                 </div>
             </div>
             <div class="row">
-                <div class="col col-7">
+                <div class="col col-sm-12 col-md-12 col-lg-7">
                     <div class="row mb-2">
                         <div class="col">
                             <span class="text-menu txt-bold">{{ worker.city.name }}</span>
@@ -117,7 +119,7 @@
 
                 </div>
 
-                <div class="col col-5">
+                <div class="col col-sm-12 col-md-12 col-lg-5">
                     <span class="badge container-fluid {% if worker.fsocheck %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Проверка ФСО пройдена</span>
                     <span class="badge container-fluid {% if worker.workpermit %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Есть разрешение на работу</span>
                     <span class="badge container-fluid {% if worker.datacheck %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Данные проверены</span>
@@ -127,6 +129,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
     <div class="row">

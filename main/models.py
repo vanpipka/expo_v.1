@@ -170,7 +170,10 @@ class Company(models.Model):
     foto            = models.ImageField(null=True, blank=True, upload_to="img/", verbose_name='Изображение')
     phonenumber     = models.CharField(max_length=100)
     emailaddress    = models.CharField(max_length=100)
+    description     = models.TextField()
     idCity          = models.ForeignKey(City, on_delete=models.CASCADE, default="00000000000000000000000000000000")
+
+    lastOnline      = models.DateTimeField("Последний онлайн", auto_now_add=True, null=True)
 
     def __str__(self):
         return self.name
@@ -200,6 +203,7 @@ class Company(models.Model):
                         'resizefotourl': '/static/main/media/resize' + str(companyObject.foto) if companyObject.foto else '',
                         'phonenumber': companyObject.phonenumber,
                         'emailaddress': companyObject.emailaddress,
+                        'description': companyObject.description,
                         'city': {"id": companyObject.idCity.id, "name": companyObject.idCity.name}}
 
             return company
@@ -216,6 +220,7 @@ class Company(models.Model):
             company.vatnumber       = data.get('vatnumber', '')
             company.phonenumber     = data.get('phonenumber', '')
             company.emailaddress    = data.get('emailaddress', '')
+            company.description     = data.get('description', '')
 
             if data.__contains__('city') and data.get('city', '') != '':
                 try:
@@ -278,20 +283,113 @@ class JobOrder(models.Model):
 
     id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     description = models.TextField()
-    created     = models.DateTimeField("Дата добавления", auto_now_add=True, null=True)
+    created     = models.DateTimeField("Дата добавления", auto_now_add=True)
     date        = models.DateTimeField("Дата проведения работ", default=datetime.date(1900, 1, 1))
     place       = models.CharField(max_length=100)
     company     = models.ForeignKey(Company, on_delete=models.CASCADE)
-    city        = models.ForeignKey(City, on_delete=models.CASCADE, default="00000000000000000000000000000000")
+    city            = models.ForeignKey(City, on_delete=models.CASCADE, default="00000000000000000000000000000000")
+    responseCount   = models.DecimalField(max_digits=3, decimal_places=0, default=0)
 
     def __str__(self):
-        return self.name
+        return self.description
 
-    def GetActual(self):
+    def GetActual(self, user=None):
 
-        objects = list(JobOrder.objects.all().order_by("-created").values('id', 'description', 'date', 'place', 'created', 'company', 'city'))
+        response_array = []
+
+        if User != None:
+
+            userType = UserType.GetUserType(user)
+
+            if userType == 1:
+
+                worker = UserType.GetElementByUser(user)
+
+                response_list = list(JobResponse.objects.filter(worker=worker).values('jobOrder_id'))
+
+                for e in response_list:
+                    if response_array.count(e['jobOrder_id']) == 0:
+                        response_array.append(e['jobOrder_id'])
+
+        objects = list(JobOrder.objects.all().select_related('city').select_related('company').order_by("-created").values('id', 'responseCount', 'description', 'date', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name'))
+
+        for e in objects:
+
+            e['response_is_available'] = response_array.count(e['id']) == 0
 
         return objects
+
+    def SaveResponse(user, data):
+
+        userType = UserType.GetUserType(user)
+
+        if userType == 1:
+
+            try:
+
+                jobOrder = JobResponse()
+
+                jobOrder.jobOrder = JobOrder.objects.get(id=data['job_id'])
+                jobOrder.worker   = UserType.GetElementByUser(user)
+                jobOrder.description  = data.get('job_description', '')
+
+                jobOrder.save()
+
+            except:
+
+                return False
+
+            return True
+
+        else:
+
+            return False
+
+    def SaveOrder(user, data):
+
+        userType = UserType.GetUserType(user)
+
+        if userType == 2:
+
+            try:
+
+                jobOrder = JobOrder()
+
+                jobOrder.company        = UserType.GetElementByUser(user)
+                jobOrder.description    = data.get('job_description', '')
+                jobOrder.city           = City.objects.get(id=data.get('job_city', '00000000000000000000000000000000'))
+
+                try:
+                    jobOrder.date = datetime.datetime.strptime(data.get('job_date', "1960-01-01"), "%Y-%m-%d")
+                except:
+                     print('ошибка при сохранении даты рождения: ' + str(worker) + '/1960-01-01')
+
+
+                jobOrder.save()
+
+            except:
+
+                return False
+
+            return True
+
+        else:
+
+            return False
+
+class JobResponse(models.Model):
+
+    id       = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    jobOrder = models.ForeignKey(JobOrder, on_delete=models.CASCADE)
+    worker   = models.ForeignKey(Worker, on_delete=models.CASCADE)
+    answer   = models.TextField()
+    status   = models.DecimalField(max_digits=2, decimal_places=0, default=0)
+
+    def save(self, *args, **kwargs):
+        super(JobResponse, self).save(*args, **kwargs)  # Call the "real" save() method.
+
+        self.jobOrder.responseCount = len(JobResponse.objects.filter(jobOrder = self.jobOrder).values('id'))
+        self.jobOrder.save()
 
 class UserType(models.Model):
 

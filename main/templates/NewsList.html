@@ -5,6 +5,31 @@
 {% block content%}
     <div class="container mt-3">
 
+        <div class="row mb-1 pl-3">
+            <div class="col-8">
+                <span class="article">Все события</span>
+            </div>
+            <div class="col-4">
+                <div class="row" style="margin-right: -2em">
+                    <!--<div class="col-4" style="line-height: 3.4em;">
+                           <label for="inputsorting" class="text-menu">Сортировка</label>
+                       </div>
+                       <div class="col-8">
+                           <div class="btn-group mt-2" role="group" aria-label="Basic example">
+                             <button type="button" class="btn">По дате проведения</button>
+                             <button type="button" class="btn">По дате добавления</button>
+                           </div>
+                       </div>-->
+                </div>
+            </div>
+
+        </div>
+        <div class="row" style="margin-top: -20px">
+            <div class="col ml-3 mr-3">
+                <hr class="bg-color-dark-grey" style="border: none; height: 1px;">
+            </div>
+        </div>
+
     {% for n in newsList %}
 
         <div class="row pl-3">
@@ -30,7 +55,7 @@
 
                 <div class="row" style="position: absolute; bottom: 0px; width: 100%">
                     <div class="col col-4">
-                        <a href="{{ n.link }}" target="_blank" class="btn btn-primary bg-white text-primary">Перейти на сайт</a>
+                        <a href="{{ n.link }}" target="_blank" class="btn btn-danger-white">Перейти на сайт</a>
                     </div>
                     <div class="col col-8 text-right pt-2">
                         <span style="color: grey">Дата публикации: {{ n.created|date:"d M" }}</span>

@@ -1,0 +1,36 @@
+
+
+{% extends "wrapper.html" %}
+
+{% block content %}
+
+<div style="left: 50%; top: 50%; position: absolute; margin: -250px 0 0 -250px;">
+
+    <div class="card" style="width: 500px; border-radius: 0px">
+        <div class="card-header text-center">
+            <span class="article txt-bold">Регистрация</span>
+        </div>
+        <div class="card-body">
+            <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab" style="border-radius: 0px">
+                <div class="mb-3 mt-3 ml-3 mr-3">
+                    <div class="row" style="height: 30px">
+                    </div>
+                    <div class="row">
+                        <div class="col col-12">
+                            <a class="btn btn-danger btn-lg container-fluid" href="/accounts/signup">Для соискателей</a>
+                        </div>
+                        <div class="col col-12 mt-3">
+                            <a class="btn btn-danger btn-lg container-fluid" href="/accounts/signup_company">Для работодателей</a>
+                        </div>
+                    </div>
+                    <div class="row" style="height: 30px">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock %}

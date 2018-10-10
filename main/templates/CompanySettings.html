@@ -76,7 +76,7 @@
 
                         <div class="row">
                             <div class="col">
-                                <div class="file-upload container-fluid btn btn-primary">
+                                <div class="file-upload container-fluid btn btn-danger">
                                     <label>
                                         <input id = "finput_foto" type="file" name="file" onchange="setlocalfoto(this)" accept="image/jpg,image/jpeg,image/png">
                                         <span style="color: white">Сменить логотип</span>
@@ -153,10 +153,19 @@
                     </div>
                 </div>
 
+                <div class="row mb-3">
+                    <div class="col col-3">
+                        <label for="id_experience" class="col-xs-2 control-label input-medium">Описание</label>
+                    </div>
+                    <div class="col col-9">
+                        <textarea name="description" class="form-control" rows="5" placeholder="Краткое описание компании" id="id_description">{{company.description}}</textarea>
+                    </div>
+                </div>
+
             </div>
 
             <div class="pb-3">
-                <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                <button type="submit" class="btn btn-danger">Сохранить изменения</button>
             </div>
         </form>
     </div>
@@ -199,6 +208,7 @@
             phonenumber: document.getElementById("id_phonenumber").value,
             fotourl: document.getElementById("fotourl").src,
             city: document.getElementById("City").value,
+            description: document.getElementById("id_description").value,
         });
 
         // добавить к пересылке ещё пару ключ - значение

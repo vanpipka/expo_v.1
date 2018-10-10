@@ -5,48 +5,226 @@
 {% block content%}
     <div class="container mt-3">
 
-    {% for n in newsList %}
-
-        <div class="row pl-3">
-
-            <div class="col col-3">
-                <div class="img" align="center" style="min-width: 100%; min-height: 160px;max-height: 160px; border-radius: 4px; background-position: center; background-image: url('{{  STATIC_URL }}{{ n.image }}'); background-size: cover;">
-
+        <div class="row mb-1 pl-3">
+            <div class="col-8">
+                <span class="article">Все заявки</span>
+            </div>
+            <div class="col-4">
+                <div class="row" style="margin-right: -2em">
+                    <!--<div class="col-4" style="line-height: 3.4em;">
+                        <label for="inputsorting" class="text-menu">Сортировка</label>
+                    </div>
+                    <div class="col-8">
+                        <div class="btn-group mt-2" role="group" aria-label="Basic example">
+                          <button type="button" class="btn">По дате проведения</button>
+                          <button type="button" class="btn">По дате добавления</button>
+                        </div>
+                    </div>-->
                 </div>
-
             </div>
 
-            <div class="col col-9">
-                <div class="row">
-                    <div class="col">
-                        <span class="article">{{ n.name }}</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        {{ n.description }}
-                    </div>
-                </div>
+        </div>
+        <div class="row" style="margin-top: -20px">
+            <div class="col ml-3 mr-3">
+                <hr class="bg-color-dark-grey" style="border: none; height: 1px;">
+            </div>
+        </div>
 
-                <div class="row" style="position: absolute; bottom: 0px; width: 100%">
+        {% for n in jobsList %}
+
+            <div id="div_{{ n.id }}">
+
+                <div class="row pt-3 mr-3" style="margin: 5px">
+                    <div class="col col-4 col-md-4">
+                        <span class="text-menu-grey">Место проведения</span>
+                    </div>
+                    <div class="col col-6 col-md-4">
+                        <span class="text-menu txt-bold" id="job_city_{{ n.id }}">{{ n.city__name }}</span>
+                    </div>
+
+                    {% if user.is_active and userType == 1%}
+                    <div class="col col-2 col-md-4">
+                        {% if n.response_is_available %}
+                            <button class="btn btn-danger container-fluid" type="button" onclick="get_job_data(this)" style=" border-radius: 0px; margin-top: -13px" data-toggle="modal" data-target="#addResponse" id = '{{ n.id }}'>Откликнуться</button>
+                        {% else %}
+                            <button class="btn btn-secondary bg-white text-dark container-fluid" type="button" style="margin-top: -13px; border-radius: 0px" id = '{{ n.id }}'>Отклик отправлен</button>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="row pt-3 mr-3" style="margin: 5px">
                     <div class="col col-4">
-                        <a href="{{ n.link }}" target="_blank" class="btn btn-primary bg-white text-primary">Перейти на сайт</a>
+                        <span class="text-menu-grey">Дата проведения</span>
                     </div>
-                    <div class="col col-8 text-right pt-2">
-                        <span style="color: grey">Дата публикации: {{ n.created|date:"d M" }}</span>
+                    <div class="col col-8">
+                        <span class="text-menu txt-bold" id ="job_date_{{ n.id }}">{{ n.date|date:"d M Y" }}</span>
                     </div>
                 </div>
 
-            </div>
-        </div>
+                <div class="row pt-3 mr-3" style="margin: 5px">
+                    <div class="col col-4">
+                        <span class="text-menu-grey">Описание</span>
+                    </div>
+                    <div class="col col-8">
+                        <span>{{ n.description }}</span>
+                    </div>
+                </div>
 
-        <div class="row">
-            <div class="col">
-                <hr class="bg-color-grey" style="border: none; height: 2px;">
+                <div class="row color-dark-grey mb-3 pr-3">
+                    <div class="col col-4">
+                    </div>
+                    <div class="col col-4 text-right" id ="job_company_{{ n.id }}">
+                        {{ n.company__name }}
+                    </div>
+                    <div class="col col-2 text-right" >
+                        {{ n.created|date:"d M Y" }}
+                    </div>
+                    <div class="col col-2 text-right pr-3" >
+                        <span class="badge container-fluid {% if n.responseCount %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">{% if n.responseCount %}{{ n.responseCount }} отклик(а){% else %}Откликов нет{% endif %}</span>
+                    </div>
+                </div>
             </div>
-        </div>
 
-    {% endfor %}
+            <div class="row ">
+                <div class="col ml-3 mr-3">
+                    <hr class="bg-color-dark-grey" style="border: none; height: 1px;">
+                </div>
+            </div>
+
+        {% endfor %}
 
     </div>
+
+    {% if user.is_active %}
+
+        {% if  userType == 2 %}
+            <div style="position: fixed; bottom: 50px; right: 50px; z-index: 10;">
+                <a href="/jobs/new/" class="btn btn-danger btn-lg fa fa-plus-circle" style="">Добавить заявку</a>
+            </div>
+        {% endif %}
+
+        <div class="modal fade" id="addResponse" tabindex="-1" role="dialog" aria-labelledby="addResponseLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+
+                    {% if  userType == 1 %}
+                        <div class="modal-header">
+                            <span class="article">Новый отклик</span>
+                            <button type="button" class="close" data-dismiss="addResponse" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form id="form" name = "form">
+                            <div class="modal-body" style="width: 100%; overflow: auto;">
+
+                                <div class="row">
+
+                                    <div class = "col">
+
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <div>
+                                                    <input id="job_id" hidden name="job_id"></input>
+                                                    <div class="row mr-3" style="margin: 5px">
+                                                        <div class="col col-6">
+                                                            <span class="text-menu-grey">Место проведения</span>
+                                                        </div>
+                                                        <div class="col col-6">
+                                                            <span class="text-menu txt-bold" id="job_city">--</span>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="row pt-3 mr-3" style="margin: 5px">
+                                                        <div class="col col-6">
+                                                            <span class="text-menu-grey">Дата проведения</span>
+                                                        </div>
+                                                        <div class="col col-6">
+                                                            <span class="text-menu txt-bold" id="job_date">--</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row pt-3 mr-3" style="margin: 5px">
+                                                        <div class="col col-6">
+                                                            <span class="text-menu-grey">Компания</span>
+                                                        </div>
+                                                        <div class="col col-6">
+                                                            <span class="text-menu txt-bold" id="job_company">--</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row"  style="padding-top: 5px">
+                                                    <div class="col">
+                                                        <textarea required name="job_description" class="form-control" rows="5" placeholder="Напишите почемы мы должны выбрать именно вас" id="job_description"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <script>
+
+                                                $('#form').validate({
+
+                                                    submitHandler: function(form) {
+                                                        saveResponse();
+                                                        }
+                                                    }
+                                                );
+
+                                                function get_job_data(btn){
+                                                    var id = btn.id;
+                                                    document.getElementById('job_city').innerText       = document.getElementById('job_city_'+id).innerText;
+                                                    document.getElementById('job_date').innerText       = document.getElementById('job_date_'+id).innerText;
+                                                    document.getElementById('job_company').innerText    = document.getElementById('job_company_'+id).innerText;
+                                                    document.getElementById('job_id').value             = id;
+                                                }
+
+                                                function saveResponse() {
+
+                                                    var formData = new FormData();
+
+                                                    //Собираем конечный JSON
+
+                                                    var json = JSON.stringify({
+                                                        job_id: document.getElementById("job_id").value,
+                                                        job_description: document.getElementById("job_description").value
+                                                    });
+
+                                                    // добавить к пересылке ещё пару ключ - значение
+                                                    formData.append("data", json);
+                                                    formData.append("csrfmiddlewaretoken", document.getElementsByName("csrfmiddlewaretoken")[0].value);
+
+                                                    // отослать
+                                                    var xhr = new XMLHttpRequest();
+
+                                                    xhr.onreadystatechange = function() { // (3)
+
+                                                        if (xhr.readyState != 4) return;
+
+                                                        if (xhr.status != 200) {
+                                                            alert(xhr.status + ': ' + xhr.statusText);
+                                                        } else {
+                                                            alert("Данные сохранены");
+                                                            location.href = (xhr.responseText);
+                                                        }
+                                                    }
+
+                                                    xhr.open("POST", "http://py.itoe.ru:56503/jobs/save/", true);
+                                                    xhr.send(formData);
+                                                }
+                                            </script>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                                <button type="submit" class="btn btn-danger">Отправить</button>
+                            </div>
+                        </form>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
 {% endblock %}

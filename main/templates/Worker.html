@@ -51,11 +51,11 @@
                             <div class="stars stars-example-css mt-3">
                                 <div class="br-wrapper br-theme-css-stars">
                                     <div class="br-widget">
-                                        <a style="height: 18px; width: 18px; font-size: 18px" {% if worker.rating >= 0.5 %} class="br-selected" {% endif %}></a>
-                                        <a style="height: 18px; width: 18px; font-size: 18px" {% if worker.rating >= 1.5 %} class="br-selected" {% endif %}></a>
-                                        <a style="height: 18px; width: 18px; font-size: 18px" {% if worker.rating >= 2.5 %} class="br-selected" {% endif %}></a>
-                                        <a style="height: 18px; width: 18px; font-size: 18px" {% if worker.rating >= 3.5 %} class="br-selected" {% endif %}></a>
-                                        <a style="height: 18px; width: 18px; font-size: 18px" {% if worker.rating >= 4.5 %} class="br-selected" {% endif %}></a>
+                                        <a {% if worker.rating >= 0.5 %} class="br-selected" {% endif %}></a>
+                                        <a {% if worker.rating >= 1.5 %} class="br-selected" {% endif %}></a>
+                                        <a {% if worker.rating >= 2.5 %} class="br-selected" {% endif %}></a>
+                                        <a {% if worker.rating >= 3.5 %} class="br-selected" {% endif %}></a>
+                                        <a {% if worker.rating >= 4.5 %} class="br-selected" {% endif %}></a>
                                     </div>
                                 </div>
                             </div>
@@ -350,111 +350,111 @@
 
     {% if user.is_active %}
         <div style="position: fixed; bottom: 50px; right: 50px; z-index: 10;">
-            <button class="btn btn-primary btn-lg fa fa-plus-circle" style="height: 50px" type="button" data-toggle="modal" data-target="#addComment">Добавить комментарий</button>
+            <button class="btn btn-danger btn-lg fa fa-plus-circle" style="height: 50px" type="button" data-toggle="modal" data-target="#addComment">Добавить комментарий</button>
         </div>
         <div class="modal fade" id="addComment" tabindex="-1" role="dialog" aria-labelledby="addCommentLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="article">Новый комментарий</span>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" style="width: 100%; overflow: auto">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="article">Новый комментарий</span>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="width: 100%; overflow: auto">
 
-                    <div class="row">
+                        <div class="row">
 
-                            <div class = "col">
+                                <div class = "col">
 
-                                {% if user.is_active %}
-                                    <form action="" method="post">
-                                        {% csrf_token %}
+                                    {% if user.is_active %}
+                                        <form action="" method="post">
+                                            {% csrf_token %}
 
-                                        <div class="form-group">
-                                            <div class="row pt-3">
-                                                <div class="col col-4">
-                                                    <select required class=" custom-select" name="{{ commentForm.rating.name }}" id="comment_rating">
-                                                        <option value="" style="display:none">Оценка</option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                    </select>
+                                            <div class="form-group">
+                                                <div class="row pt-3">
+                                                    <div class="col col-4">
+                                                        <select required class=" custom-select" name="{{ commentForm.rating.name }}" id="comment_rating">
+                                                            <option value="" style="display:none">Оценка</option>
+                                                            <option value="1">1</option>
+                                                            <option value="2">2</option>
+                                                            <option value="3">3</option>
+                                                            <option value="4">4</option>
+                                                            <option value="5">5</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col col-8">
+                                                        <select required class=" custom-select" name="{{ commentForm.idProf.name }}" id="comment_profession">
+                                                            <option value="" style="display:none">Работа</option>
+                                                            {% for prof in worker.proflist %}
+                                                                <option value="{{ prof.id }}">{{ prof.name }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                                <div class="col col-8">
-                                                    <select required class=" custom-select" name="{{ commentForm.idProf.name }}" id="comment_profession">
-                                                        <option value="" style="display:none">Работа</option>
-                                                        {% for prof in worker.proflist %}
-                                                            <option value="{{ prof.id }}">{{ prof.name }}</option>
-                                                        {% endfor %}
-                                                    </select>
+                                                <div class="row"  style="padding-top: 5px">
+                                                    <div class="col">
+                                                        <textarea required name="{{ commentForm.text.name }}" class="form-control" rows="5" placeholder="Ваш комментарий..." id="comment_text"></textarea>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="row"  style="padding-top: 5px">
-                                                <div class="col">
-                                                    <textarea required name="{{ commentForm.text.name }}" class="form-control" rows="5" placeholder="Ваш комментарий..." id="comment_text"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
 
-                                        <script>
+                                            <script>
 
-                                                    var workerid = "{{ worker.id }}";
+                                                        var workerid = "{{ worker.id }}";
 
-                                                    function saveComment() {
+                                                        function saveComment() {
 
-                                                        var formData = new FormData();
+                                                            var formData = new FormData();
 
-                                                        //Собираем конечный JSON
+                                                            //Собираем конечный JSON
 
-                                                        var json = JSON.stringify({
-                                                            idworker: workerid,
-                                                            text: document.getElementById("comment_text").value,
-                                                            rating: document.getElementById("comment_rating").value,
-                                                            idprofession: document.getElementById("comment_profession").value
+                                                            var json = JSON.stringify({
+                                                                idworker: workerid,
+                                                                text: document.getElementById("comment_text").value,
+                                                                rating: document.getElementById("comment_rating").value,
+                                                                idprofession: document.getElementById("comment_profession").value
 
-                                                        });
+                                                            });
 
-                                                        // добавить к пересылке ещё пару ключ - значение
-                                                        formData.append("data", json);
-                                                        formData.append("csrfmiddlewaretoken", document.getElementsByName("csrfmiddlewaretoken")[0].value);
+                                                            // добавить к пересылке ещё пару ключ - значение
+                                                            formData.append("data", json);
+                                                            formData.append("csrfmiddlewaretoken", document.getElementsByName("csrfmiddlewaretoken")[0].value);
 
-                                                        // отослать
-                                                        var xhr = new XMLHttpRequest();
+                                                            // отослать
+                                                            var xhr = new XMLHttpRequest();
 
-                                                        xhr.onreadystatechange = function() { // (3)
-                                                            if (xhr.readyState != 4) return;
+                                                            xhr.onreadystatechange = function() { // (3)
+                                                                if (xhr.readyState != 4) return;
 
 
-                                                            if (xhr.status != 200) {
-                                                                alert(xhr.status + ': ' + xhr.statusText);
-                                                            } else {
-                                                                alert("Данные сохранены");
-                                                                alert(xhr.responseText);
-                                                                location.href = (xhr.responseText);
+                                                                if (xhr.status != 200) {
+                                                                    alert(xhr.status + ': ' + xhr.statusText);
+                                                                } else {
+                                                                    alert("Данные сохранены");
+                                                                    alert(xhr.responseText);
+                                                                    location.href = (xhr.responseText);
+                                                                }
                                                             }
+
+                                                            xhr.open("POST", "http://py.itoe.ru:56503/worker/comments/save/", true);
+                                                            xhr.send(formData);
                                                         }
+                                                    </script>
 
-                                                        xhr.open("POST", "http://py.itoe.ru:56503/worker/comments/save/", true);
-                                                        xhr.send(formData);
-                                                    }
-                                                </script>
+                                        </form>
+                                    {% endif %}
 
-                                    </form>
-                                {% endif %}
-
+                                </div>
                             </div>
-                        </div>
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="saveComment()">Сохранить</button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="saveComment()">Сохранить</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     {% endif %}
 
     <p></p>

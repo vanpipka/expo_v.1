@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import json
 
 USE_I18N = True
 USE_L10N = False
@@ -20,17 +21,35 @@ LANGUAGE_CODE = 'ru-RU'
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+#Прочитаем настройки из файла
+SETTINGS_DIR = os.path.join(BASE_DIR, 'expo_settings')
+#
+with open(os.path.join(SETTINGS_DIR, 'settings.json'), 'r') as f:
 
+    try:
+        struct = json.loads(f.read())
+
+        SECRET_KEY      = struct.get('SECRET_KEY', '')
+        DEBUG           = struct.get('DEBUG', False)
+        ALLOWED_HOSTS   = struct.get('ALLOWED_HOSTS', '')
+        HOME_PAGE       = struct.get('HOME_PAGE', '')
+
+    except json.JSONDecodeError:
+        SECRET_KEY      = ''
+        DEBUG           = False
+        ALLOWED_HOSTS   = ''
+        HOME_PAGE       = ''
+#print(BASE_DIR)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '6i0a)qi2!4&^(c7ie2@_v1y2w^sq##9+ilw)3^v!d5&xuh)=3a'
+#SECRET_KEY = '6i0a)qi2!4&^(c7ie2@_v1y2w^sq##9+ilw)3^v!d5&xuh)=3a'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG = True
 
-ALLOWED_HOSTS = ['10.10.48.201', 'vpn2.contrail.ru', 'cs.itoe.ru', 'py.itoe.ru']
+#ALLOWED_HOSTS = ['10.10.48.201', 'vpn2.contrail.ru', 'cs.itoe.ru', 'py.itoe.ru']
 
 
 # Application definition
@@ -84,42 +103,13 @@ AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
 
-    # `allauth` specific authentication methods, such as login by e-mail
-    #'allauth.account.auth_backends.AuthenticationBackend',
 )
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
-#ACCOUNT_AUTHENTICATION_METHOD = 'phonenumber'
-#ACCOUNT_AUTHENTICATION_METHOD = 'email'
-
-SITE_ID = 3
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_URL = "/accounts/login/"
-
-
-
-#SOCIALACCOUNT_QUERY_EMAIL = False
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackEnd'
-
-#WSGI_APPLICATION = 'expo.wsgi.application'
-
-#CHANNELS
-# Channels
-#ASGI_APPLICATION = 'expo.routing.application'
-
-#CHANNEL_LAYERS = {
-#    'default': {
-#       'BACKEND': 'channels_redis.core.RedisChannelLayer',
-#        'CONFIG': {
-#            "hosts": [('py.itoe.ru', 6379)],
-#        },
-#    },
-#}
-
-# Database
-# https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
     'default': {
@@ -173,13 +163,11 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
 
-HOME_PAGE = 'http://py.itoe.ru:56503/'
-
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'mail.mmss.ltd'
-EMAIL_PORT = 25
-EMAIL_HOST_USER = 'info@mmss.ltd'
-EMAIL_HOST_PASSWORD = 'ieh7w2k'
-DEFAULT_FROM_EMAIL = 'info@mmss.ltd'
-DEFAULT_TO_EMAIL = 'info@mmss.ltd'
+#EMAIL_USE_TLS = True
+#EMAIL_HOST = 'mail.mmss.ltd'
+#EMAIL_PORT = 25
+#EMAIL_HOST_USER = 'info@mmss.ltd'
+#EMAIL_HOST_PASSWORD = 'ieh7w2k'
+#DEFAULT_FROM_EMAIL = 'info@mmss.ltd'
+#DEFAULT_TO_EMAIL = 'info@mmss.ltd'
 

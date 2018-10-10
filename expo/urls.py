@@ -24,6 +24,10 @@ urlpatterns = [
     path('worker/', include('worker.urls')),
     path('company/', views.company),
     path('news/', views.news),
+    path('jobs/save/', views.savejobs),
+    path('jobs/saveorder/', views.saveorder),
+    path('jobs/new/', views.newjobs),
+    path('jobs/', views.jobs),
 ]
 
 

@@ -17,12 +17,22 @@
           height: 100%;
     }
 
+
+
     :root {
         --bg-color-grey: #EFEFEF;
         --text-color-dark: rgba(0,0,0,0.87);
         --color-dark-grey: #8E959C;
     }
-    
+
+    input{
+        border-radius: 0px
+    }
+
+    .form-group, .custom-select, .btn, .form-control{
+        border-radius: 0px
+    }
+
     .popup-block{
         position: relative;
     }
@@ -46,13 +56,93 @@
         color: rgba(0,0,0,0.87);
     }
 
+    .btn-danger, .btn-danger-hover-white{
+        background-color: #d21c43;/*#c82333;*/
+        color: white;
+        border-radius: 0px;
+        font-weight: bold;
+
+    }
+
+    .text-danger{
+        color: #d21c43;
+    }
+
+    .selector-div:hover{
+        background-color: #d21c43;
+        color: white;
+    }
+
+
+
+    .nav-item-footer:hover{
+        border-bottom: 1px solid #d21c43;
+    }
+
+    .nav-item-footer-active{
+        border-bottom: 1px solid #d21c43;
+    }
+
+    .nav-item-expo-active {
+        border-bottom: 4px solid #d21c43/*#c82333;*/; /* Параметры рамки */
+    }
+
+    .selector-link{
+        color: #313131;
+    }
+
+    .selector-link:hover{
+        color: white;
+    }
+
+    .btn-danger-white{
+        background-color: white;/*#c82333;*/
+        color: #d21c43;
+        border-radius: 0px;
+        font-weight: bold;
+        border-color: #d21c43;
+    }
+
+    .btn-danger-white:hover{
+        color: #313131;/*#c82333;*/
+        border-color: #313131;
+    }
+
+    .btn-danger:hover{
+        background-color: #575759;/*#c82333;*/
+        border-color: #313131;
+    }
+
+    .btn-danger-hover-white:hover{
+        background-color: white/*#c82333;*/;
+        color: #d21c43;
+        border-color: #313131;
+    }
+
     .txt-bold{
         font-weight: bold;
     }
 
+    a.article:hover{
+        color: #d21c43;
+    }
+
+    a.article{
+        color: #1e1e1e;
+        font-family: 'PT Sans', serif;
+    }
+
+    .nav-item-header:hover{
+        background-color: #3b3b3b;
+    }
+
+    .nav-item-hover-white:hover{
+        background-color: white;
+    }
     span.article{
-        color: rgba(0,0,0,0.87);
-        font-family: 'Roboto Slab', serif;
+        color: #313131;
+        font-weight: bold;
+        font-family: 'PT Sans', serif;
     }
     label, .text-menu{
         color: var(--text-color-dark);
@@ -62,6 +152,17 @@
     .text-menu-grey{
         color: #8E959C;
         font-family: 'Open Sans', sans-serif;
+    }
+
+    @media (min-width: 576px){
+        .search-down {
+            visibility: visible;
+            height: 100%;
+        }
+        .search-down-div{
+            visibility: hidden;
+            height: 0px;
+        }
     }
 
     @media (min-width: 768px) {
@@ -74,6 +175,15 @@
         .article-sm{
             font-size: 16px;
         }
+        .search-down {
+            visibility: hidden;
+            height: 0px;
+        }
+        .search-down-div{
+            visibility: visible;
+            height: 100%;
+        }
+
     }
     @media (min-width: 992px) {
         label,.text-menu {
@@ -85,6 +195,14 @@
         .article-sm{
             font-size: 20px;
         }
+        .search-down {
+            visibility: hidden;
+            height: 0px;
+        }
+        .search-down-div{
+            visibility: visible;
+            height: 100%;
+        }
     }
     @media (min-width: 1200px) {
         label, .text-menu {
@@ -95,6 +213,14 @@
         }
         .article-sm{
             font-size: 24px;
+        }
+        .search-down {
+            visibility: hidden;
+            height: 0px;
+        }
+        .search-down-div{
+            visibility: visible;
+            height: 100%;
         }
     }
 
@@ -156,12 +282,12 @@
 
     /* When the checkbox is checked, add a blue background */
     .checkbox-container input:checked ~ .checkmark {
-        background-color: #007bff;
+        background-color: #d21c43;
 
     }
 
     .checkbox-container input:checked ~ .checkmark-radio {
-        background-color: #007bff;
+        background-color: #d21c43;
 
     }
 
@@ -233,18 +359,18 @@
         cursor: pointer;
     }
     .radios-as-buttons input:checked + label {
-        background: #007bff;
+        background: #d21c43;
         color: white;
-        box-shadow: inset 0 3px 6px rgba(0, 0, 0, .2);
+        /*box-shadow: inset 0 3px 6px rgba(0, 0, 0, .2);*/
     }
     .radios-as-buttons div:first-child label {
         margin-left: 0;
-        border-top-left-radius: 4px;
-        border-bottom-left-radius: 4px;
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
     }
     .radios-as-buttons div:last-child label {
-        border-top-right-radius: 4px;
-        border-bottom-right-radius: 4px;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
     }
 
     /*ПРИЖИМАЕМ ФУТЕР К НИЗУ СТРАНИЦЫ*/
@@ -252,15 +378,17 @@
         min-height: 100%;
     }
     main {
-        padding-bottom: 100px;
+        padding-bottom: 350px;
         /*Высота футера*/
     }
     footer {
-        margin-top: -100px;
+        margin-top: -350px;
         /*Минус Высота футера*/
-        height: 100px;
+        height: 350px;
         /*Высота футера*/
     }
+
+
 
 </style>
 

@@ -1,48 +1,62 @@
 
+{% load home_extras %}
+<footer class="page-footer container-fluid footer" style="background-color: #dcdddf">
 
-<footer class="page-footer font-small bg-dark container-fluid footer text-light">
+    <div class="nav" style="background-color: #dcdddf;">
+        <div class="container" style="border-bottom: 1px solid white">
+            <div class="mt-4 mb-3">
+                <ul class="nav pt-2"><!--ml-3-->
+                    <li class="nav-item pr-3" style="border-right: 1px solid #313131;">
+                        <a class="text-dark txt-bold text-menu nav-item-footer {% if request.path == '/'%}nav-item-footer-active{% endif %}" style="text-decoration: none" role="button" href="{% get_attribute 'HOME_PAGE' %}">Главная</a>
+                    </li>
+                    <li class="nav-item pl-3 pr-3" style="border-right: 1px solid #313131;">
+                        <a class="text-dark txt-bold text-menu nav-item-footer {% if request.path == '/worker/search/'%}nav-item-footer-active{% endif %}" style="text-decoration: none" href="{% get_attribute 'HOME_PAGE' %}worker/search/" role="button">Специалисты</a>
+                    </li>
+                    <li class="nav-item pl-3 pr-3" style="border-right: 1px solid #313131;">
+                        <a class="text-dark txt-bold text-menu nav-item-footer {% if request.path == '/company/'%}nav-item-footer-active{% endif %}" style="text-decoration: none" href="{% get_attribute 'HOME_PAGE' %}company/" role="button">Компании</a>
+                    </li>
+                    <li class="nav-item pl-3 pr-3" style="border-right: 1px solid #313131;">
+                        <a class="text-dark txt-bold text-menu nav-item-footer {% if request.path == '/jobs/'%}nav-item-footer-active{% endif %}" style="text-decoration: none" href="{% get_attribute 'HOME_PAGE' %}jobs/" role="button">Заказы</a>
+                    </li>
+                    <li class="nav-item pl-3 pr-3">
+                        <a class="text-dark txt-bold text-menu nav-item-footer {% if request.path == '/news/'%}nav-item-footer-active{% endif %}" style="text-decoration: none" href="{% get_attribute 'HOME_PAGE' %}news/" role="button">События</a>
+                    </li>
+                </ul>
+            </div>
 
+        </div>
 
-    <div class="container-fluid text-center text-md-left">
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col col-4">
+                    <div class="txt-bold text-menu" style="color: #d21c43">
+                        Контактная информация
+                    </div>
 
+                    <div class="txt-bold text-menu mt-3" style="color: #313131">
+                        <i class="fa fa-location-arrow" aria-hidden="true"></i>&nbsp;Москва, ул. Народная д. 66 оф. 666</a>
+                    </div>
 
-        <div class="row">
+                    <div class="txt-bold text-menu mt-2" style="color: #313131">
+                        <i class="fa fa-phone" aria-hidden="true"></i>&nbsp;8 8 (800) 555-55-55</a>
+                    </div>
 
+                    <div class="txt-bold text-menu mt-2" style="color: #313131">
+                        <i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;info@vseexpo.ru</a>
+                    </div>
 
-            <div class="col-md-3 mt-md-0 mt-3">
-                <div class="row">
-                    <h5><span>&nbsp;EXPO</span></h5>
                 </div>
-
-            </div>
-            <div class="col-md-3 mt-md-0 mt-3">
-
-
-                <p>Ежедневно: с 09-00 до 20-00</p>
-                <p>Почта</p>
-
-            </div>
-
-
-            <div class="col-md-6 mt-md-0 mt-6">
-
-
-                <p>ООО "EXPO"</p>
-                <p>195253, г. Москва, адрес</p>
-
             </div>
 
 
         </div>
 
-    </div>
+        <div class="container text-dark mt-2" style="">
+            Компания "ВсеЭкспо" — Какой то текст о компании © vseEXPO 2018 Все права защищены. <a style="color: #d21c43; text-decoration: none" href=""> Политика обработки персональных данных.</a>
+        </div>
 
 
-    <!--
-    <div class="footer-copyright text-center py-3">© 2018 Copyright:
-        <a href="#">ExpoJob</a>
     </div>
-    -->
 
 </footer>
 

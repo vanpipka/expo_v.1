@@ -12,7 +12,7 @@
 
                 {% for i in citylist %}
 
-                    {% if i.citys %}
+                    {% if i.items %}
                     <div class="panel-group" id="collapse-group">
                         <div class="panel panel-default">
                             <div class="panel-heading">
@@ -20,7 +20,7 @@
                             </div>
 
                             <div id="el1{{ i.id }}" class="panel-collapse collapse in ml-5">
-                            {% for elem in i.citys %}
+                            {% for elem in i.items %}
                                 <div>
                                     <input class="form-check-input" type="radio" name="checkcity" id="{{elem.id}}" onclick="setCity(this)" value="{{elem.name}}">
                                     <label class="form-check-label" for="{{elem.id}}">

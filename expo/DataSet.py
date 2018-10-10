@@ -1,4 +1,5 @@
 from datetime import datetime as datet
+from django.utils import timezone
 #from main.models import *
 from main.models import Worker, City, Country, Professions, WorkerAttachment, CostOfService, Service, UserType
 from expo.SaveFile import savefile
@@ -226,7 +227,7 @@ def refreshLastOnline(userId):
         el = UserType.GetElementByUser(userId)
         print(el)
         if el != None:
-            el.lastOnline = datet.now()
+            el.lastOnline = timezone.now()
             el.save()
 
     except:

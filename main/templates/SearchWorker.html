@@ -21,10 +21,10 @@
 
     <div class="row pl-3">
         {% csrf_token %}
-        <div class="col col-4"> <!-- style="position: fixed;">-->
+        <div class="col col-12 col-sm-12 col-md-5 col-lg-4"> <!-- style="position: fixed;">-->
             <div class="card mb-3">
-                <div class="card-block card-header bg-color-grey article article-sm">
-                    <span class="" style="margin-left: 0.15em">Критерии отбора</span>
+                <div class="card-block card-header" style="display:inline-block">
+                    <span class="article article-sm" style="margin-left: 0.15em">Критерии отбора</span>
                 </div>
                 <div class="ml-4 mr-4 mt-3">
                     <label class="text-menu txt-bold" for="City">Город</label>
@@ -41,426 +41,425 @@
                         <input type="text" data-toggle="dropdown" class="input-medium search-query form-control" id="profession" name="profession" placeholder="Все профессии..." value="{{ searchproperty.profession }}">
                     </div>
                 </div>
-                <div class="ml-4 mr-4 mt-3">
-                    <label class="text-menu txt-bold">Анкетные данные</label>
-                    <!--<div class = "popup-block">
-                        <input type="checkbox" name="onlyfoto" id="onlyfoto" value="True" {% if searchproperty.onlyfoto == True %}checked{% endif %} onclick="setpopup(this)">
-                        <label for="onlyfoto" onclick="setpopup(this)">
-                            С фотографией
-                        </label>
-                    </div>-->
-
-                    <div class = "row popup-block" >
-
-                        <div class="col col-2" >
-                            <label class="checkbox-container">
-                                <input class="" id="onlyfoto" value="True" type="checkbox" name="onlyfoto" {% if searchproperty.onlyfoto %}checked{% endif %}  onclick="setpopup(this)">
-                                <span class="checkmark"></span>
-                            </label>
-                        </div>
-                        <div class="col col-10">
-                            <label for="onlyfoto" class="col-xs-2 control-label input-medium">Только с фото</label>
-                        </div>
-                    </div>
-
-                    <!--<div class = "popup-block">
-                        <input type="checkbox" name="onlycomments" id="onlycomments" value="True" {% if searchproperty.onlycomments == True %}checked{% endif %} onclick="setpopup(this)">
-                        <label for="onlycomments" onclick="setpopup(this)">
-                            C отзывами
-                        </label>
-                    </div>-->
-
-                    <div class = "row popup-block" >
-
-                        <div class="col col-2" >
-                            <label class="checkbox-container">
-                                <input class="" id="onlycomments" value="True" type="checkbox" name="onlycomments" {% if searchproperty.onlycomments %}checked{% endif %}  onclick="setpopup(this)">
-                                <span class="checkmark"></span>
-                            </label>
-                        </div>
-                        <div class="col col-10">
-                            <label for="onlycomments" class="col-xs-2 control-label input-medium">C отзывами</label>
-                        </div>
-                    </div>
-
-                    <!--<div class = "popup-block">
-                        <input type="checkbox" name="haveip" id="haveip" value="True" {% if searchproperty.haveip == True %}checked{% endif %} onclick="setpopup(this)">
-                        <label for="haveip" onclick="setpopup(this)">
-                            Зарегистрирован как ИП
-                        </label>
-                    </div>-->
-
-                    <div class = "row popup-block" >
-
-                        <div class="col col-2" >
-                            <label class="checkbox-container">
-                                <input class="" id="haveip" value="True" type="checkbox" name="haveip" {% if searchproperty.haveip %}checked{% endif %}  onclick="setpopup(this)">
-                                <span class="checkmark"></span>
-                            </label>
-                        </div>
-                        <div class="col col-10">
-                            <label for="haveip" class="col-xs-2 control-label input-medium">Зарегистрирован как ИП</label>
-                        </div>
-                    </div>
-
-
-
-                    <!--<div class = "popup-block">
-                        <input type="checkbox" name="workpermit" id="workpermit" value="True" {% if searchproperty.workpermit == True %}checked{% endif %} onclick="setpopup(this)">
-                        <label for="workpermit" onclick="setpopup(this)" style="color: red">
-                            Есть разрешение на работу
-                        </label>
-                    </div>-->
-
-                    <div class = "row popup-block" >
-                        <div class="col col-2" >
-                            <label class="checkbox-container">
-                                <input class="" id="workpermit" value="True" type="checkbox" name="workpermit" {% if searchproperty.workpermit %}checked{% endif %}  onclick="setpopup(this)">
-                                <span class="checkmark"></span>
-                            </label>
-                        </div>
-                        <div class="col col-10">
-                            <label for="workpermit" class="col-xs-2 control-label input-medium">Есть разрешение на работу</label>
-                        </div>
-                    </div>
-
-                    <!--<div class = "popup-block">
-                        <input type="checkbox" name="fsocheck" id="fsocheck" value="True" {% if searchproperty.fsocheck == True %}checked{% endif %} onclick="setpopup(this)">
-                        <label for="fsocheck" onclick="setpopup(this)">
-                            Проверка ФСО пройдена
-                        </label>
-                    </div>-->
-
-                    <div class = "row popup-block" >
-                        <div class="col col-2" >
-                            <label class="checkbox-container">
-                                <input class="" id="fsocheck" value="True" type="checkbox" name="fsocheck" {% if searchproperty.fsocheck %}checked{% endif %}  onclick="setpopup(this)">
-                                <span class="checkmark"></span>
-                            </label>
-                        </div>
-                        <div class="col col-10">
-                            <label for="fsocheck" class="col-xs-2 control-label input-medium">Проверка ФСО пройдена</label>
-                        </div>
-                    </div>
-
-                    <!--<div class = "popup-block">
-                        <input type="checkbox" name="datacheck" id="datacheck" value="True" {% if searchproperty.datacheck == True %}checked{% endif %} onclick="setpopup(this)">
-                        <label for="datacheck" onclick="setpopup(this)">
-                            Данные проверены
-                        </label>
-                    </div>-->
-
-                    <div class = "row popup-block" >
-                        <div class="col col-2" >
-                            <label class="checkbox-container">
-                                <input class="" id="datacheck" value="True" type="checkbox" name="datacheck" {% if searchproperty.datacheck %}checked{% endif %}  onclick="setpopup(this)">
-                                <span class="checkmark"></span>
-                            </label>
-                        </div>
-                        <div class="col col-10">
-                            <label for="datacheck" class="col-xs-2 control-label input-medium">Данные проверены</label>
-                        </div>
-                    </div>
-
-                    <!--<div class = "popup-block">
-                        <input type="checkbox" name="haveinstrument" id="haveinstrument" value="True" {% if searchproperty.haveinstrument == True %}checked{% endif %} onclick="setpopup(this)">
-                        <label for="haveinstrument" onclick="setpopup(this)">
-                            Есть инструмент
-                        </label>
-                    </div>-->
-
-                    <div class = "row popup-block" >
-                        <div class="col col-2" >
-                            <label class="checkbox-container">
-                                <input class="" id="haveinstrument" value="True" type="checkbox" name="haveinstrument" {% if searchproperty.haveinstrument %}checked{% endif %}  onclick="setpopup(this)">
-                                <span class="checkmark"></span>
-                            </label>
-                        </div>
-                        <div class="col col-10">
-                            <label for="haveinstrument" class="col-xs-2 control-label input-medium">Есть инструмент</label>
-                        </div>
-                    </div>
-
+                <div class="search-down text-center mt-3 pt-2" id="search-down" style="background-color: #edeef0">
+                    <label class="text-menu txt-bold"><button class="btn" style="background-color: #edeef0" onclick="showSearch(this)">Показать все отборы</button></label>
                 </div>
-                <div class="ml-4 mr-4 mt-3">
-                    <label class="text-menu txt-bold">Стаж</label>
-
-                    <div class = "row popup-block">
-                        <div class="col col-2" >
-                            <label class="checkbox-container">
-                                <input type="radio" name="workexperience" id="workexperience0" value="0" {% if searchproperty.workexperience == "WorkExperience0" or not searchproperty.workexperience %} checked {% endif %}  onclick="setpopup(this)">
-                                <span class="checkmark-radio"></span>
+                <div class="search-down-div" id = "search-down-div">
+                    <div class="ml-4 mr-4 mt-3">
+                        <label class="text-menu txt-bold">Анкетные данные</label>
+                        <!--<div class = "popup-block">
+                            <input type="checkbox" name="onlyfoto" id="onlyfoto" value="True" {% if searchproperty.onlyfoto == True %}checked{% endif %} onclick="setpopup(this)">
+                            <label for="onlyfoto" onclick="setpopup(this)">
+                                С фотографией
                             </label>
-                        </div>
-                        <div class="col col-10">
-                            <label for="workexperience0" class="col-xs-2 control-label input-medium">Не важно</label>
-                        </div>
-                    </div>
+                        </div>-->
 
-                    <div class = "row popup-block">
-                        <div class="col col-2" >
-                            <label class="checkbox-container">
-                                <input type="radio" name="workexperience" id="workexperience1" value="1" {% if searchproperty.workexperience == "WorkExperience1" %} checked {% endif %} onclick="setpopup(this)">
-                                <span class="checkmark-radio"></span>
-                            </label>
-                        </div>
-                        <div class="col col-10">
-                            <label for="workexperience1" class="col-xs-2 control-label input-medium">до 1 года</label>
-                        </div>
-                    </div>
+                        <div class = "row popup-block" >
 
-                    <div class = "row popup-block">
-                        <div class="col col-2" >
-                            <label class="checkbox-container">
-                                <input type="radio" name="workexperience" id="workexperience2" value="2" {% if searchproperty.workexperience == "WorkExperience2" %} checked {% endif %} onclick="setpopup(this)">
-                                <span class="checkmark-radio"></span>
-                            </label>
-                        </div>
-                        <div class="col col-10">
-                            <label for="workexperience2" class="col-xs-2 control-label input-medium">1-3 года</label>
-                        </div>
-                    </div>
-
-                    <div class = "row popup-block">
-                        <div class="col col-2" >
-                            <label class="checkbox-container">
-                                <input type="radio" name="workexperience" id="workexperience3" value="3" {% if searchproperty.workexperience == "WorkExperience3" %} checked {% endif %} onclick="setpopup(this)">
-                                <span class="checkmark-radio"></span>
-                            </label>
-                        </div>
-                        <div class="col col-10">
-                            <label for="workexperience3" class="col-xs-2 control-label input-medium">3-7 лет</label>
-                        </div>
-                    </div>
-
-                    <div class = "row popup-block">
-                        <div class="col col-2" >
-                            <label class="checkbox-container">
-                                <input type="radio" name="workexperience" id="workexperience4" value="4" {% if searchproperty.workexperience == "WorkExperience4" %} checked {% endif %} onclick="setpopup(this)">
-                                <span class="checkmark-radio"></span>
-                            </label>
-                        </div>
-                        <div class="col col-10">
-                            <label for="workexperience4" class="col-xs-2 control-label input-medium">более 7 лет</label>
-                        </div>
-                    </div>
-
-                    <!--<div class = "popup-block">
-                        <input type="radio" name="workexperience" id="workexperience0" value="0" {% if searchproperty.workexperience == "WorkExperience0" or not searchproperty.workexperience %} checked {% endif %}  onclick="setpopup(this)">
-                        <label for="workexperience0"  onclick="setpopup(this)">
-                            Не важно
-                        </label>
-                    </div>
-                    <div class = "popup-block">
-                        <input type="radio" name="workexperience" id="workexperience1" value="1" {% if searchproperty.workexperience == "WorkExperience1" %} checked {% endif %} onclick="setpopup(this)">
-                        <label for="workexperience1" onclick="setpopup(this)">
-                            до 1 года
-                        </label>
-                    </div>
-                    <div class = "popup-block">
-                        <input type="radio" name="workexperience" id="workexperience2" value="2" {% if searchproperty.workexperience == "WorkExperience2" %} checked {% endif %} onclick="setpopup(this)">
-                        <label for="workexperience2">
-                            1-3 года
-                        </label>
-                    </div>
-                    <div class = "popup-block">
-                        <input type="radio" name="workexperience" id="workexperience3" value="3" {% if searchproperty.workexperience == "WorkExperience3" %} checked {% endif %} onclick="setpopup(this)">
-                        <label for="workexperience3" onclick="setpopup(this)">
-                            3-7 лет
-                        </label>
-                    </div>
-                    <div class = "popup-block">
-                        <input type="radio" name="workexperience" id="workexperience4" value="4" {% if searchproperty.workexperience == "WorkExperience4" %} checked {% endif %} onclick="setpopup(this)">
-                        <label for="workexperience4" onclick="setpopup(this)">
-                            более 7 лет
-                        </label>
-                    </div>-->
-                </div>
-                <div class="ml-4 mr-4 mt-3 ">
-
-                    <label class="text-menu txt-bold">Возраст</label>
-                    <p>
-                        <input class="txt-color-dark" type="text" id="amount" readonly style="border:0;">
-                    </p>
-                    <div class="popup-block">
-                        <div>
-                            <div class = "popup-block">
-                                <div class="ml-2 mr-2" id="slider-range"></div>
+                            <div class="col col-2" >
+                                <label class="checkbox-container">
+                                    <input class="" id="onlyfoto" value="True" type="checkbox" name="onlyfoto" {% if searchproperty.onlyfoto %}checked{% endif %}  onclick="setpopup(this)">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                            <div class="col col-10">
+                                <label for="onlyfoto" class="col-xs-2 control-label input-medium">Только с фото</label>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="ml-4 mr-4 mt-3">
-                    <label class="text-menu txt-bold">Командировки</label>
-                    <!--<div class = "popup-block">
-                        <input type="checkbox" name="readytotravel" id="readytotravel" value="True" {% if searchproperty.readytotravel == True %}checked{% endif %} onclick="setpopup(this)">
-                        <label for="readytotravel" onclick="setpopup(this)">
-                            Готов к командировкам
-                        </label>
-                    </div>-->
 
-                    <div class = "row popup-block" >
-                        <div class="col col-2" >
-                            <label class="checkbox-container">
-                                <input class="" id="readytotravel" value="True" type="checkbox" name="readytotravel" {% if searchproperty.readytotravel %}checked{% endif %}  onclick="setpopup(this)">
-                                <span class="checkmark"></span>
+                        <!--<div class = "popup-block">
+                            <input type="checkbox" name="onlycomments" id="onlycomments" value="True" {% if searchproperty.onlycomments == True %}checked{% endif %} onclick="setpopup(this)">
+                            <label for="onlycomments" onclick="setpopup(this)">
+                                C отзывами
                             </label>
-                        </div>
-                        <div class="col col-10">
-                            <label for="readytotravel" class="col-xs-2 control-label input-medium">Готов к командировкам</label>
-                        </div>
-                    </div>
+                        </div>-->
 
-                    <!--<div class = "popup-block">
-                        <input type="checkbox" name="haveintpass" id="haveintpass" value="True" {% if searchproperty.haveintpass == True %}checked{% endif %} onclick="setpopup(this)">
-                        <label for="haveintpass" onclick="setpopup(this)">
-                            Есть загранпаспорт
-                        </label>
-                    </div>-->
+                        <div class = "row popup-block" >
 
-                    <div class = "row popup-block" >
-                        <div class="col col-2" >
-                            <label class="checkbox-container">
-                                <input class="" id="haveintpass" value="True" type="checkbox" name="haveintpass" {% if searchproperty.haveintpass %}checked{% endif %}  onclick="setpopup(this)">
-                                <span class="checkmark"></span>
-                            </label>
-                        </div>
-                        <div class="col col-10">
-                            <label for="haveintpass" class="col-xs-2 control-label input-medium">Есть загранпаспорт</label>
-                        </div>
-                    </div>
-
-                    <!--<div class = "popup-block">
-                        <input type="checkbox" name="haveshengen" id="haveshengen" value="True" {% if searchproperty.haveshengen == True %}checked{% endif %} onclick="setpopup(this)">
-                        <label for="haveshengen" onclick="setpopup(this)">
-                            Есть шенгенская виза
-                        </label>
-                    </div>-->
-
-                    <div class = "row popup-block" >
-                        <div class="col col-2" >
-                            <label class="checkbox-container">
-                                <input class="" id="haveshengen" value="True" type="checkbox" name="haveshengen" {% if searchproperty.haveshengen %}checked{% endif %}  onclick="setpopup(this)">
-                                <span class="checkmark"></span>
-                            </label>
-                        </div>
-                        <div class="col col-10">
-                            <label for="haveshengen" class="col-xs-2 control-label input-medium">Есть шенгенская виза</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="ml-4 mr-4 mt-3">
-                    <label class="text-menu txt-bold">Тип работы</label>
-                    <select type="text" name = "worktype" class="form-control"  id="worktype" placeholder="" onchange = SelectWorkType.call(this)>
-                        <option value="">Не важно</option>
-                        <option value="1" {% if searchproperty.worktype == 1 %}selected{% endif %}>Постояная работа</option>
-                        <option value="2" {% if searchproperty.worktype == 2 %}selected{% endif %}>Проектная работа</option>
-                        <option value="3" {% if searchproperty.worktype == 3 %}selected{% endif %}>Фриланс</option>
-                    </select>
-                </div>
-
-                <div class="ml-4 mr-4 mt-3" id="projectwork" style="display: none">
-
-                    {% for e in servicelist %}
-                        <div class="row pb-1" >
-                            <div class="col-sm-4">
-                                <label class="form-label" for="service_{{ forloop.counter }}">{{ e.name }}</label>
+                            <div class="col col-2" >
+                                <label class="checkbox-container">
+                                    <input class="" id="onlycomments" value="True" type="checkbox" name="onlycomments" {% if searchproperty.onlycomments %}checked{% endif %}  onclick="setpopup(this)">
+                                    <span class="checkmark"></span>
+                                </label>
                             </div>
-                            <div class="col-sm-8" name = "service_div">
-                                <span hidden>{{ e.id }}</span>
-                                <input class="form-control" type="number" name="service_{{ forloop.counter }}" id="service_{{ forloop.counter }}">
+                            <div class="col col-10">
+                                <label for="onlycomments" class="col-xs-2 control-label input-medium">C отзывами</label>
                             </div>
                         </div>
-                    {% endfor %}
 
-                </div>
+                        <!--<div class = "popup-block">
+                            <input type="checkbox" name="haveip" id="haveip" value="True" {% if searchproperty.haveip == True %}checked{% endif %} onclick="setpopup(this)">
+                            <label for="haveip" onclick="setpopup(this)">
+                                Зарегистрирован как ИП
+                            </label>
+                        </div>-->
 
-                <div class="ml-4 mr-4 mt-3" id="fulltimework" style="display: none">
+                        <div class = "row popup-block" >
 
-                    <div class = "row popup-block">
-                        <div class="col col-2" >
-                            <label class="checkbox-container">
-                                <input type="radio" name="price" id="price_1" value="" checked onclick="setpopup(this)">
-                                <span class="checkmark-radio"></span>
+                            <div class="col col-2" >
+                                <label class="checkbox-container">
+                                    <input class="" id="haveip" value="True" type="checkbox" name="haveip" {% if searchproperty.haveip %}checked{% endif %}  onclick="setpopup(this)">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                            <div class="col col-10">
+                                <label for="haveip" class="col-xs-2 control-label input-medium">Зарегистрирован как ИП</label>
+                            </div>
+                        </div>
+
+
+
+                        <!--<div class = "popup-block">
+                            <input type="checkbox" name="workpermit" id="workpermit" value="True" {% if searchproperty.workpermit == True %}checked{% endif %} onclick="setpopup(this)">
+                            <label for="workpermit" onclick="setpopup(this)" style="color: red">
+                                Есть разрешение на работу
+                            </label>
+                        </div>-->
+
+                        <div class = "row popup-block" >
+                            <div class="col col-2" >
+                                <label class="checkbox-container">
+                                    <input class="" id="workpermit" value="True" type="checkbox" name="workpermit" {% if searchproperty.workpermit %}checked{% endif %}  onclick="setpopup(this)">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                            <div class="col col-10">
+                                <label for="workpermit" class="col-xs-2 control-label input-medium">Есть разрешение на работу</label>
+                            </div>
+                        </div>
+
+                        <!--<div class = "popup-block">
+                            <input type="checkbox" name="fsocheck" id="fsocheck" value="True" {% if searchproperty.fsocheck == True %}checked{% endif %} onclick="setpopup(this)">
+                            <label for="fsocheck" onclick="setpopup(this)">
+                                Проверка ФСО пройдена
+                            </label>
+                        </div>-->
+
+                        <div class = "row popup-block" >
+                            <div class="col col-2" >
+                                <label class="checkbox-container">
+                                    <input class="" id="fsocheck" value="True" type="checkbox" name="fsocheck" {% if searchproperty.fsocheck %}checked{% endif %}  onclick="setpopup(this)">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                            <div class="col col-10">
+                                <label for="fsocheck" class="col-xs-2 control-label input-medium">Проверка ФСО пройдена</label>
+                            </div>
+                        </div>
+
+                        <!--<div class = "popup-block">
+                            <input type="checkbox" name="datacheck" id="datacheck" value="True" {% if searchproperty.datacheck == True %}checked{% endif %} onclick="setpopup(this)">
+                            <label for="datacheck" onclick="setpopup(this)">
+                                Данные проверены
+                            </label>
+                        </div>-->
+
+                        <div class = "row popup-block" >
+                            <div class="col col-2" >
+                                <label class="checkbox-container">
+                                    <input class="" id="datacheck" value="True" type="checkbox" name="datacheck" {% if searchproperty.datacheck %}checked{% endif %}  onclick="setpopup(this)">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                            <div class="col col-10">
+                                <label for="datacheck" class="col-xs-2 control-label input-medium">Данные проверены</label>
+                            </div>
+                        </div>
+
+                        <!--<div class = "popup-block">
+                            <input type="checkbox" name="haveinstrument" id="haveinstrument" value="True" {% if searchproperty.haveinstrument == True %}checked{% endif %} onclick="setpopup(this)">
+                            <label for="haveinstrument" onclick="setpopup(this)">
+                                Есть инструмент
+                            </label>
+                        </div>-->
+
+                        <div class = "row popup-block" >
+                            <div class="col col-2" >
+                                <label class="checkbox-container">
+                                    <input class="" id="haveinstrument" value="True" type="checkbox" name="haveinstrument" {% if searchproperty.haveinstrument %}checked{% endif %}  onclick="setpopup(this)">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                            <div class="col col-10">
+                                <label for="haveinstrument" class="col-xs-2 control-label input-medium">Есть инструмент</label>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="ml-4 mr-4 mt-3">
+                        <label class="text-menu txt-bold">Стаж</label>
+
+                        <div class = "row popup-block">
+                            <div class="col col-2" >
+                                <label class="checkbox-container">
+                                    <input type="radio" name="workexperience" id="workexperience0" value="0" {% if searchproperty.workexperience == "WorkExperience0" or not searchproperty.workexperience %} checked {% endif %}  onclick="setpopup(this)">
+                                    <span class="checkmark-radio"></span>
+                                </label>
+                            </div>
+                            <div class="col col-10">
+                                <label for="workexperience0" class="col-xs-2 control-label input-medium">Не важно</label>
+                            </div>
+                        </div>
+
+                        <div class = "row popup-block">
+                            <div class="col col-2" >
+                                <label class="checkbox-container">
+                                    <input type="radio" name="workexperience" id="workexperience1" value="1" {% if searchproperty.workexperience == "WorkExperience1" %} checked {% endif %} onclick="setpopup(this)">
+                                    <span class="checkmark-radio"></span>
+                                </label>
+                            </div>
+                            <div class="col col-10">
+                                <label for="workexperience1" class="col-xs-2 control-label input-medium">до 1 года</label>
+                            </div>
+                        </div>
+
+                        <div class = "row popup-block">
+                            <div class="col col-2" >
+                                <label class="checkbox-container">
+                                    <input type="radio" name="workexperience" id="workexperience2" value="2" {% if searchproperty.workexperience == "WorkExperience2" %} checked {% endif %} onclick="setpopup(this)">
+                                    <span class="checkmark-radio"></span>
+                                </label>
+                            </div>
+                            <div class="col col-10">
+                                <label for="workexperience2" class="col-xs-2 control-label input-medium">1-3 года</label>
+                            </div>
+                        </div>
+
+                        <div class = "row popup-block">
+                            <div class="col col-2" >
+                                <label class="checkbox-container">
+                                    <input type="radio" name="workexperience" id="workexperience3" value="3" {% if searchproperty.workexperience == "WorkExperience3" %} checked {% endif %} onclick="setpopup(this)">
+                                    <span class="checkmark-radio"></span>
+                                </label>
+                            </div>
+                            <div class="col col-10">
+                                <label for="workexperience3" class="col-xs-2 control-label input-medium">3-7 лет</label>
+                            </div>
+                        </div>
+
+                        <div class = "row popup-block">
+                            <div class="col col-2" >
+                                <label class="checkbox-container">
+                                    <input type="radio" name="workexperience" id="workexperience4" value="4" {% if searchproperty.workexperience == "WorkExperience4" %} checked {% endif %} onclick="setpopup(this)">
+                                    <span class="checkmark-radio"></span>
+                                </label>
+                            </div>
+                            <div class="col col-10">
+                                <label for="workexperience4" class="col-xs-2 control-label input-medium">более 7 лет</label>
+                            </div>
+                        </div>
+
+                        <!--<div class = "popup-block">
+                            <input type="radio" name="workexperience" id="workexperience0" value="0" {% if searchproperty.workexperience == "WorkExperience0" or not searchproperty.workexperience %} checked {% endif %}  onclick="setpopup(this)">
+                            <label for="workexperience0"  onclick="setpopup(this)">
+                                Не важно
                             </label>
                         </div>
-                        <div class="col col-10">
-                            <label for="price_1" class="col-xs-2 control-label input-medium">Не важно</label>
-                        </div>
-                    </div>
-
-                    <div class = "row popup-block">
-                        <div class="col col-2" >
-                            <label class="checkbox-container">
-                                <input type="radio" name="price" id="price_2" value="1" onclick="setpopup(this)">
-                                <span class="checkmark-radio"></span>
+                        <div class = "popup-block">
+                            <input type="radio" name="workexperience" id="workexperience1" value="1" {% if searchproperty.workexperience == "WorkExperience1" %} checked {% endif %} onclick="setpopup(this)">
+                            <label for="workexperience1" onclick="setpopup(this)">
+                                до 1 года
                             </label>
                         </div>
-                        <div class="col col-10">
-                            <label for="price_2" class="col-xs-2 control-label input-medium">до 50т.р.</label>
-                        </div>
-                    </div>
-
-                    <div class = "row popup-block">
-                        <div class="col col-2" >
-                            <label class="checkbox-container">
-                                <input type="radio" name="price" id="price_3" value="2" onclick="setpopup(this)">
-                                <span class="checkmark-radio"></span>
+                        <div class = "popup-block">
+                            <input type="radio" name="workexperience" id="workexperience2" value="2" {% if searchproperty.workexperience == "WorkExperience2" %} checked {% endif %} onclick="setpopup(this)">
+                            <label for="workexperience2">
+                                1-3 года
                             </label>
                         </div>
-                        <div class="col col-10">
-                            <label for="price_3" class="col-xs-2 control-label input-medium">50-100т.р.</label>
-                        </div>
-                    </div>
-
-                    <div class = "row popup-block">
-                        <div class="col col-2" >
-                            <label class="checkbox-container">
-                                <input type="radio" name="price" id="price_4" value="3" onclick="setpopup(this)">
-                                <span class="checkmark-radio"></span>
+                        <div class = "popup-block">
+                            <input type="radio" name="workexperience" id="workexperience3" value="3" {% if searchproperty.workexperience == "WorkExperience3" %} checked {% endif %} onclick="setpopup(this)">
+                            <label for="workexperience3" onclick="setpopup(this)">
+                                3-7 лет
                             </label>
                         </div>
-                        <div class="col col-10">
-                            <label for="price_4" class="col-xs-2 control-label input-medium">100-150т.р.</label>
-                        </div>
-                    </div>
-
-                    <div class = "row popup-block">
-                        <div class="col col-2" >
-                            <label class="checkbox-container">
-                                <input type="radio" name="price" id="price_5" value="4" onclick="setpopup(this)">
-                                <span class="checkmark-radio"></span>
+                        <div class = "popup-block">
+                            <input type="radio" name="workexperience" id="workexperience4" value="4" {% if searchproperty.workexperience == "WorkExperience4" %} checked {% endif %} onclick="setpopup(this)">
+                            <label for="workexperience4" onclick="setpopup(this)">
+                                более 7 лет
                             </label>
-                        </div>
-                        <div class="col col-10">
-                            <label for="price_5" class="col-xs-2 control-label input-medium">более 150т.р.</label>
-                        </div>
+                        </div>-->
                     </div>
+                    <div class="ml-4 mr-4 mt-3 ">
 
-                </div>
-
-
-
-                <div class="ml-4 mr-4 mt-3">
-                    <label class="text-menu txt-bold">Рейтинг более</label>
-
-                    <div class = "row popup-block">
-                        <div class="col" >
+                        <label class="text-menu txt-bold">Возраст</label>
+                        <p>
+                            <input class="txt-color-dark" type="text" id="amount" readonly style="border:0;">
+                        </p>
+                        <div class="popup-block">
                             <div>
-                                <select type="text" name = "inputrating" class="form-control" id="inputrating" onchange="setpopup(this)">
-                                    <option value="">Не важно</option>
-                                    <option {% if searchproperty.inputrating == '1' %}selected{% endif %}>1</option>
-                                    <option {% if searchproperty.inputrating == '2' %}selected{% endif %}>2</option>
-                                    <option {% if searchproperty.inputrating == '3' %}selected{% endif %}>3</option>
-                                    <option {% if searchproperty.inputrating == '4' %}selected{% endif %}>4</option>
-                                    <option {% if searchproperty.inputrating == '5' %}selected{% endif %}>5</option>
-                                </select>
+                                <div class = "popup-block">
+                                    <div class="ml-2 mr-2" id="slider-range"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ml-4 mr-4 mt-3">
+                        <label class="text-menu txt-bold">Командировки</label>
+                        <!--<div class = "popup-block">
+                            <input type="checkbox" name="readytotravel" id="readytotravel" value="True" {% if searchproperty.readytotravel == True %}checked{% endif %} onclick="setpopup(this)">
+                            <label for="readytotravel" onclick="setpopup(this)">
+                                Готов к командировкам
+                            </label>
+                        </div>-->
+
+                        <div class = "row popup-block" >
+                            <div class="col col-2" >
+                                <label class="checkbox-container">
+                                    <input class="" id="readytotravel" value="True" type="checkbox" name="readytotravel" {% if searchproperty.readytotravel %}checked{% endif %}  onclick="setpopup(this)">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                            <div class="col col-10">
+                                <label for="readytotravel" class="col-xs-2 control-label input-medium">Готов к командировкам</label>
+                            </div>
+                        </div>
+
+                        <!--<div class = "popup-block">
+                            <input type="checkbox" name="haveintpass" id="haveintpass" value="True" {% if searchproperty.haveintpass == True %}checked{% endif %} onclick="setpopup(this)">
+                            <label for="haveintpass" onclick="setpopup(this)">
+                                Есть загранпаспорт
+                            </label>
+                        </div>-->
+
+                        <div class = "row popup-block" >
+                            <div class="col col-2" >
+                                <label class="checkbox-container">
+                                    <input class="" id="haveintpass" value="True" type="checkbox" name="haveintpass" {% if searchproperty.haveintpass %}checked{% endif %}  onclick="setpopup(this)">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                            <div class="col col-10">
+                                <label for="haveintpass" class="col-xs-2 control-label input-medium">Есть загранпаспорт</label>
+                            </div>
+                        </div>
+
+                        <!--<div class = "popup-block">
+                            <input type="checkbox" name="haveshengen" id="haveshengen" value="True" {% if searchproperty.haveshengen == True %}checked{% endif %} onclick="setpopup(this)">
+                            <label for="haveshengen" onclick="setpopup(this)">
+                                Есть шенгенская виза
+                            </label>
+                        </div>-->
+
+                        <div class = "row popup-block" >
+                            <div class="col col-2" >
+                                <label class="checkbox-container">
+                                    <input class="" id="haveshengen" value="True" type="checkbox" name="haveshengen" {% if searchproperty.haveshengen %}checked{% endif %}  onclick="setpopup(this)">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                            <div class="col col-10">
+                                <label for="haveshengen" class="col-xs-2 control-label input-medium">Есть шенгенская виза</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ml-4 mr-4 mt-3">
+                        <label class="text-menu txt-bold">Тип работы</label>
+                        <select type="text" name = "worktype" class="form-control"  id="worktype" placeholder="" onchange = SelectWorkType.call(this)>
+                            <option value="">Не важно</option>
+                            <option value="1" {% if searchproperty.worktype == 1 %}selected{% endif %}>Постояная работа</option>
+                            <option value="2" {% if searchproperty.worktype == 2 %}selected{% endif %}>Проектная работа</option>
+                            <option value="3" {% if searchproperty.worktype == 3 %}selected{% endif %}>Фриланс</option>
+                        </select>
+                    </div>
+                    <div class="ml-4 mr-4 mt-3" id="projectwork" style="display: none">
+
+                        {% for e in servicelist %}
+                            <div class="row pb-1" >
+                                <div class="col-sm-4">
+                                    <label class="form-label" for="service_{{ forloop.counter }}">{{ e.name }}</label>
+                                </div>
+                                <div class="col-sm-8" name = "service_div">
+                                    <span hidden>{{ e.id }}</span>
+                                    <input class="form-control" type="number" name="service_{{ forloop.counter }}" id="service_{{ forloop.counter }}">
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                    <div class="ml-4 mr-4 mt-3" id="fulltimework" style="display: none">
+
+                        <div class = "row popup-block">
+                            <div class="col col-2" >
+                                <label class="checkbox-container">
+                                    <input type="radio" name="price" id="price_1" value="" checked onclick="setpopup(this)">
+                                    <span class="checkmark-radio"></span>
+                                </label>
+                            </div>
+                            <div class="col col-10">
+                                <label for="price_1" class="col-xs-2 control-label input-medium">Не важно</label>
+                            </div>
+                        </div>
+
+                        <div class = "row popup-block">
+                            <div class="col col-2" >
+                                <label class="checkbox-container">
+                                    <input type="radio" name="price" id="price_2" value="1" onclick="setpopup(this)">
+                                    <span class="checkmark-radio"></span>
+                                </label>
+                            </div>
+                            <div class="col col-10">
+                                <label for="price_2" class="col-xs-2 control-label input-medium">до 50т.р.</label>
+                            </div>
+                        </div>
+
+                        <div class = "row popup-block">
+                            <div class="col col-2" >
+                                <label class="checkbox-container">
+                                    <input type="radio" name="price" id="price_3" value="2" onclick="setpopup(this)">
+                                    <span class="checkmark-radio"></span>
+                                </label>
+                            </div>
+                            <div class="col col-10">
+                                <label for="price_3" class="col-xs-2 control-label input-medium">50-100т.р.</label>
+                            </div>
+                        </div>
+
+                        <div class = "row popup-block">
+                            <div class="col col-2" >
+                                <label class="checkbox-container">
+                                    <input type="radio" name="price" id="price_4" value="3" onclick="setpopup(this)">
+                                    <span class="checkmark-radio"></span>
+                                </label>
+                            </div>
+                            <div class="col col-10">
+                                <label for="price_4" class="col-xs-2 control-label input-medium">100-150т.р.</label>
+                            </div>
+                        </div>
+
+                        <div class = "row popup-block">
+                            <div class="col col-2" >
+                                <label class="checkbox-container">
+                                    <input type="radio" name="price" id="price_5" value="4" onclick="setpopup(this)">
+                                    <span class="checkmark-radio"></span>
+                                </label>
+                            </div>
+                            <div class="col col-10">
+                                <label for="price_5" class="col-xs-2 control-label input-medium">более 150т.р.</label>
                             </div>
                         </div>
 
                     </div>
-                </div>
-                <div class="ml-4 mr-4 mt-3">
+                    <div class="ml-4 mr-4 mt-3">
+                        <label class="text-menu txt-bold">Рейтинг более</label>
+
+                        <div class = "row popup-block">
+                            <div class="col" >
+                                <div>
+                                    <select type="text" name = "inputrating" class="form-control" id="inputrating" onchange="setpopup(this)">
+                                        <option value="">Не важно</option>
+                                        <option {% if searchproperty.inputrating == '1' %}selected{% endif %}>1</option>
+                                        <option {% if searchproperty.inputrating == '2' %}selected{% endif %}>2</option>
+                                        <option {% if searchproperty.inputrating == '3' %}selected{% endif %}>3</option>
+                                        <option {% if searchproperty.inputrating == '4' %}selected{% endif %}>4</option>
+                                        <option {% if searchproperty.inputrating == '5' %}selected{% endif %}>5</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="ml-4 mr-4 mt-3">
                     <label class="text-menu txt-bold">Пол</label>
 
                     <div class = "row popup-block">
@@ -500,21 +499,21 @@
                     </div>
 
                 </div>
-
+                </div>
                 <div class="card-block card-footer article" style="font-size: 24px; background-color: white">
                     <div class="row">
                         <div class="col">
-                            <button class="btn btn-primary container-fluid" type="button" onclick="search()">Показать</button>
+                            <button style="border-radius: 0px" class="btn btn-danger container-fluid" type="button" onclick="search()">Показать</button>
                         </div>
                         <div class="col">
-                            <a class="btn btn-light container-fluid txt-color-dark" href="">Сбросить</a>
+                            <a style="border-radius: 0px" class="btn btn-light container-fluid txt-color-dark" href="">Сбросить</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col col-8"  id = 'workerscontainer'>
+        <div class="col col-12 col-sm-12 col-md-7 col-lg-8"  id = 'workerscontainer'>
 
             {% include "includes/WorkerList.html" %}
 
@@ -535,7 +534,7 @@
                     <span>0</span>
                 </div>
                 <div class="col col-4">
-                    <button type="button" class="btn btn-primary btn-sm container-fluid" onclick="search()">Поиск</button>
+                    <button style="border-radius: 0px" type="button" class="btn btn-danger btn-sm container-fluid" onclick="search()">Поиск</button>
                 </div>
             </div>
         </div>
@@ -582,8 +581,7 @@
                 //salary: $('input[name=price]:checked').val(),
                 inputrating: document.getElementById("inputrating").value,
                 readytotravel: document.getElementById("readytotravel").checked,
-                age_from: $( "#slider-range" ).slider( "values", 0 ),
-                age_to: $( "#slider-range" ).slider( "values", 1 ),
+                age: {'min':$( "#slider-range" ).slider( "values", 0 ), max: $( "#slider-range" ).slider( "values", 1 )},
                 positionfrom: position};
 
             if (document.getElementById("worktype").value == "1") {
@@ -736,6 +734,30 @@
                 projectwork.style.display = 'none';
                 fulltimework.style.display = 'none';
             }
+        }
+
+        function showSearch(btn) {
+
+            element = $('#search-down');
+            element1 = $('#search-down-div');
+
+            if (element.css('visibility')){
+                element.css('visibility', 'hidden');
+                element.css('height', '0px');
+
+                element1.css('visibility', 'visible');
+                element1.css('height', '100%');
+            }
+
+
+
+
+
+
+
+
+
+            //alert(search_down.style.visibility);
         }
 
         //$('#example-css').barrating({

@@ -5,6 +5,31 @@
 {% block content%}
     <div class="container mt-3">
 
+        <div class="row mb-1 pl-3">
+            <div class="col-8">
+                <span class="article">Все компании</span>
+            </div>
+            <div class="col-4">
+                <div class="row" style="margin-right: -2em">
+                    <!--<div class="col-4" style="line-height: 3.4em;">
+                           <label for="inputsorting" class="text-menu">Сортировка</label>
+                       </div>
+                       <div class="col-8">
+                           <div class="btn-group mt-2" role="group" aria-label="Basic example">
+                             <button type="button" class="btn">По дате проведения</button>
+                             <button type="button" class="btn">По дате добавления</button>
+                           </div>
+                       </div>-->
+                </div>
+            </div>
+
+        </div>
+        <div class="row" style="margin-top: -20px">
+            <div class="col ml-3 mr-3">
+                <hr class="bg-color-dark-grey" style="border: none; height: 1px;">
+            </div>
+        </div>
+
     {% for company in companyList %}
 
         <div class="row pl-3">
@@ -19,7 +44,10 @@
             <div class="col col-9">
                 <div class="row">
                     <div class="col col-8">
-                        <span class="article" style="text-decoration: none">{{ company.name }}</span>
+                        <span class="text-menu txt-bold">{{ company.name }}</span>
+                        <div>
+                            {{ company.description }}
+                        </div>
                     </div>
                     <div class="col col-4">
                         {% if company.isonline %}

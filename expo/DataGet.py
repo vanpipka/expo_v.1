@@ -1,4 +1,5 @@
 from datetime import *
+from django.utils import timezone
 from main.models import *
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -65,7 +66,7 @@ def getProfessionListWithGroup(count = None, selectedList=[]):
 
 def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, user_id = None, itsSettings = False, groupAttribute = False):
 
-    nowDate  = datetime.datetime.now(timezone.utc)
+    nowDate  = timezone.now()
     WorkList = []
 
     if user_id != None:
@@ -314,8 +315,7 @@ def searchWorker(searchList, userAauthorized=False, returnCount = False, groupAt
     positionfrom    = searchList.get('positionfrom')
     positionto      = searchList.get('positionto')
     workpermit      = searchList.get('workpermit')
-    age_from        = searchList.get('age_from')
-    age_to          = searchList.get('age_to')
+    age             = searchList.get('age')
     readytotravel   = searchList.get('readytotravel')
     price           = searchList.get('salary')
     projectwork     = searchList.get('projectwork')
@@ -461,31 +461,36 @@ def searchWorker(searchList, userAauthorized=False, returnCount = False, groupAt
         workexperience = workexperience
         searchProperty["workexperience"] = "workexperience"+str(workexperience)
         if workexperience == '1':
-            searchquery = searchquery.filter(Experiencewith__year__gte = datetime.datetime.now().year)
+            searchquery = searchquery.filter(Experiencewith__year__gte = timezone.now().year)
         elif workexperience == '2':
-            searchquery = searchquery.filter(Experiencewith__year__gte = datetime.datetime.now().year-3).exclude(Experiencewith__year__gte = datetime.datetime.now().year)
+            searchquery = searchquery.filter(Experiencewith__year__gte = timezone.now().year-3).exclude(Experiencewith__year__gte = timezone.now().year)
         elif workexperience == '3':
-            searchquery = searchquery.filter(Experiencewith__year__gte = datetime.datetime.now().year-7).exclude(Experiencewith__year__gte = datetime.datetime.now().year-3)
+            searchquery = searchquery.filter(Experiencewith__year__gte = timezone.now().year-7).exclude(Experiencewith__year__gte = timezone.now().year-3)
         elif workexperience == '4':
-            searchquery = searchquery.exclude(Experiencewith__year__gte = datetime.datetime.now().year-7)
+            searchquery = searchquery.exclude(Experiencewith__year__gte = timezone.now().year-7)
 
         print("Опыт работы:" + str(workexperience))
 
-    if age_from != None and age_from != '' and age_from != 18:
+    if age != None and age != '':
 
-        print('Возраст от: '+str(age_from))
+        age_from    = age.get('min', '')
+        age_to      = age.get('max', '')
 
-        datefrom = datetime.date(datetime.datetime.now().year - int(age_from), datetime.datetime.now().month, datetime.datetime.now().day)
+        if age_from != None and age_from != '' and age_from != 18:
 
-        searchquery = searchquery.exclude(birthday__gte=datefrom)
+            print('Возраст от: '+str(age_from))
 
-    if age_to != None and age_to != '' and age_to != 70:
+            datefrom = datetime.date(timezone.now().year - int(age_from), timezone.now().month, timezone.now().day)
 
-        print('Возраст до: '+str(age_to))
+            searchquery = searchquery.exclude(birthday__gte=datefrom)
 
-        datefrom = datetime.date(datetime.datetime.now().year - int(age_to) - 1, datetime.datetime.now().month, datetime.datetime.now().day)
+        if age_to != None and age_to != '' and age_to != 70:
 
-        searchquery = searchquery.filter(birthday__gte=datefrom)
+            print('Возраст до: '+str(age_to))
+
+            datefrom = datetime.date(timezone.now().year - int(age_to) - 1, timezone.now().month, timezone.now().day)
+
+            searchquery = searchquery.filter(birthday__gte=datefrom)
 
     if onlyfoto != None and onlyfoto == True:
         print("Только с фото: Истина")

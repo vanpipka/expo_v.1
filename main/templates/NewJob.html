@@ -1,0 +1,120 @@
+{% extends "wrapper.html" %}
+{% load home_extras %}
+{% load i18n %}
+
+{% block content%}
+
+    {% if user.is_active %}
+
+        {% if  userType == 2 %}
+
+            <div class="container mt-3">
+
+                <span class="article">Новая заявка</span>
+
+                <div>
+
+                    <div class="row mt-5">
+
+                        <div class = "col">
+                            <form name="form" id="form">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <div>
+                                        <input id="job_id" hidden name="job_id"></input>
+                                        <div class="row mr-3" style="margin: 5px">
+                                            <div class="col col-4">
+                                                <span class="text-menu-grey">Город проведения</span>
+                                            </div>
+                                            <div class="col col-8 input-group">
+                                                <select name="City" required id="City" class="form-control" disabled>
+                                                    <option value="" selected></option>
+                                                </select>
+
+                                                <div class="input-group-append">
+                                                    <button style="z-index: auto" class="btn bg-dark text-light fa fa-align-justify" type="button" data-toggle="modal" data-target="#myModal"></button>
+                                                </div>
+                                                {% include "includes/citySearch.html" %}
+                                            </div>
+                                        </div>
+                                        <div class="row pt-3 mr-3" style="margin: 5px">
+                                            <div class="col col-4">
+                                                <span class="text-menu-grey">Дата проведения</span>
+                                            </div>
+                                            <div class="col col-8">
+                                                <input type="text" name="date" class="form-control" id="id_date"  placeholder="Дата проведения" value="" required readonly>
+                                            </div>
+                                        </div>
+                                        <div class="row pt-3 mr-3" style="margin: 5px">
+                                            <div class="col col-4">
+                                                <span class="text-menu-grey">Описание</span>
+                                            </div>
+                                            <div class="col col-8">
+                                                <textarea name="job_description" class="form-control" rows="5" placeholder="Описание предстоящих работ" id="job_description" required></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script>
+
+                                    $('#form').validate({
+
+                                        submitHandler: function(form) {
+                                            saveJob();
+                                            }
+                                        }
+                                    );
+
+                                    $( "#id_date" ).datepicker({
+                                        changeYear: true,
+                                        changeMonth: true,
+                                        dateFormat: 'yy-mm-dd',
+                                    });
+
+                                    function saveJob() {
+
+                                        var formData = new FormData();
+
+                                        //Собираем конечный JSON
+
+                                        var json = JSON.stringify({
+                                            job_city: document.getElementById("City").value,
+                                            job_date: document.getElementById("id_date").value,
+                                            job_description: document.getElementById("job_description").value
+                                        });
+
+                                        // добавить к пересылке ещё пару ключ - значение
+                                        formData.append("data", json);
+                                        formData.append("csrfmiddlewaretoken", document.getElementsByName("csrfmiddlewaretoken")[0].value);
+
+                                        // отослать
+                                        var xhr = new XMLHttpRequest();
+
+                                        xhr.onreadystatechange = function() { // (3)
+                                            if (xhr.readyState != 4) return;
+
+                                            if (xhr.status != 200) {
+                                                alert(xhr.status + ': ' + xhr.statusText);
+                                            } else {
+                                                alert("Данные сохранены");
+                                                location.href = (xhr.responseText);
+                                            }
+                                        }
+
+                                        xhr.open("POST", "http://py.itoe.ru:56503/jobs/saveorder/", true);
+                                        xhr.send(formData);
+                                    }
+                                </script>
+                                <button type="submit" class="btn btn-danger">Сохранить</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    {% endif %}
+
+{% endblock %}
