@@ -28,5 +28,5 @@ urlpatterns = [
     path('comments/save/', views.saveComments),
     path('m/comments/', views.showCommentsJson),
     path('testcsrf/', views.my_view),
-    path('searchtest/', views.showSearchTest),
+    path('m/searchcount/', views.showSearchTest),
 ]

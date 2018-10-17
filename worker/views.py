@@ -138,6 +138,10 @@ def showSettingsJson(request):
 
     if request.user.is_authenticated:
 
+        struct = {
+            "group": {"name": "Личные данные", "items": [{"name": "Имя", "type": "String", "value": ""}]}
+        }
+
         token = csrf.get_token(request)
 
         worker          = gerWorkList(user_id=request.user, userAauthorized=request.user.is_authenticated, itsSettings=True)
@@ -149,10 +153,47 @@ def showSettingsJson(request):
         else:
             worker          = {"name": "", "surname": "", "lastname":""}
 
-        context = {'worker': worker,
+        struct = {
+            "group": [
+                {"name": "Фотография", "items": [
+                    {"columnname": "fotourl", "type": "base64", "value": worker.get('resizefotourl', '')},
+                    {"columnname": "rating", "type": "int", "value": worker.get('rating', 0), 'hidden': True},
+                    {"columnname": "commentscount", "type": "int", "value": worker.get('commentscount', 0), 'hidden': True},
+                ]},
+                {"name": "Личные данные", "items": [
+                    {"columnname": "name","label": "Имя", "type": "string", "value": worker.get('name', ''), "required": True},
+                    {"columnname": "surname", "label": "Фамилия", "type": "string", "value": worker.get('surname', ''), "required": True},
+                    {"columnname": "lastname", "label": "Отчество", "type": "string", "value": worker.get('lastname', '')},
+                    {"columnname": "sex", "label": "Пол", "type": "list", "values": ["Женский", "Мужской"],"value": 1 if (worker.get('sex', True)) else 0},
+                    {"columnname": "birthday", "label": "Дата рождения", "type": "date", "value": worker.get('birthday', ''), "required": True},
+                    {"columnname": "country", "label": "Гражданство", "type": "ref", "value": worker.get('nationality', '')},
+                    {"columnname": "workpermit", "label": "Разрешение на работу", "type": "boolean", "value": worker.get('workpermit', False)},
+                    {"columnname": "city", "label": "Мой город, населенный пункт", "type": "ref", "value": worker.get('city', '')},
+                    {"columnname": "phonenumber", "label": "Телефон", "type": "string", "phone": worker.get('phonenumber', '')},
+                    {"columnname": "emailaddress", "label": "Электронная почтка", "type": "email", "value": worker.get('emailaddress', '')},
+                    {"columnname": "haveip", "label": "Я зарегистрирован как ИП", "type": "boolean", "value": worker.get('haveip', False)},
+                    {"columnname": "haveinstrument", "label": "Есть свои инструменты", "type": "boolean", "value": worker.get('haveinstrument', False)},
+                    {"columnname": "experience", "label": "Опыт работы на выставках", "type": "text", "value": worker.get('experience', '')}
+                ]},
+                {"name": "Командировки", "items": [
+                    {"columnname": "readytotravel", "label": "Готов к командировкам", "type": "boolean", "value": worker.get('readytotravel', False)},
+                    {"columnname": "haveintpass", "label": "Есть загранпаспорт", "type": "boolean", "value": worker.get('haveintpass', False)},
+                    {"columnname": "haveshengen", "label": "Есть шенгенская виза", "type": "boolean", "value": worker.get('haveshengen', False)},
+                ]},
+                {"name": "Услуги и цены", "items": [
+                    {"columnname": "salary", "label": "Постоянная работа", "type": "int", "value": worker['works'].get('salary', 0)},
+                ]},
+                {"name": "Дополнительно", "items": [
+                    {"columnname": "personaldataisallowed", "label": "Даю согласие на обработку персональных данных", "type": "Boolean", "value": worker.get('personaldataisallowed', False), "backgroundcolor": "#dc3545"},
+                    {"columnname": "publishdata", "label": "Опубликовать анкету в общий доступ", "type": "Boolean", "value": worker.get('publishdata', False), "backgroundcolor": "#20c997"},
+                ]}
+            ]
+        }
+
+        context = {'worker': struct,
                        #'city': getCityList(),
                        #'serviceList': getServiceList(),
-                       'professionList': getProfessionListWithGroup(selectedList=selectedList),
+                       #'professionList': getProfessionListWithGroup(selectedList=selectedList),
                        'csrfmiddlewaretoken': token}
 
         #return render(request, 'WorkerSettings.html', context)

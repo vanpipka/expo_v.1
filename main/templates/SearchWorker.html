@@ -646,7 +646,7 @@
                         span.innerText = JSON.parse(xhr.responseText).count;
                     }
                 }
-                xhr.open("POST", "http://py.itoe.ru:56503/worker/searchtest/", true);
+                xhr.open("POST", "http://py.itoe.ru:56503/worker/m/searchcount/", true);
                 xhr.send(formData);
             }
         }

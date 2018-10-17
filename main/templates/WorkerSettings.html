@@ -613,12 +613,14 @@
             //добавляем значение в список
             var option = document.createElement('option');
             option.value = Prof.id;
-            option.id = "opt_" + Prof.value;
+            option.id = "opt_" + Prof.id;
             option.selected = true;
             Parent.appendChild(option);
 
             //добавляем див со значением
             var div_selected_prof = document.getElementById('hidden_div_selected_prof').cloneNode(true);
+
+            div_selected_prof.id = "ps_"+Prof.id;
 
             div_selected_prof.hidden = false;
 

@@ -401,13 +401,13 @@ def getJsonData(request, type):
             elem        = UserType.GetElementByUser(request.user)
 
             if userType == 1:
-                data = {'name': elem.name, 'surname': elem.surname, 'fotourl': '/static/main/media/resize' + str(elem.foto)}
+                data = {'name': elem.name, 'surname': elem.surname, 'fotourl': '/static/main/media/resize' + str(elem.foto), 'id': str(elem.id)}
 
             elif userType == 2:
-                data = {'name': elem.name, 'surname': '', 'fotourl': '/static/main/media/resize' + str(elem.foto)}
+                data = {'name': elem.name, 'surname': '', 'fotourl': '/static/main/media/resize' + str(elem.foto), 'id': str(elem.id)}
 
             else:
-                data = {'name': '', 'surname': '', 'fotourl': '/static/main/img/add-photo.png'}
+                data = {'name': '', 'surname': '', 'fotourl': '/static/main/img/add-photo.png', 'id': ''}
 
             ajax_response['status'] = True
             ajax_response['user'] = data

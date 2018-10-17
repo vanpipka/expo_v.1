@@ -333,7 +333,7 @@ def searchWorker(searchList, userAauthorized=False, returnCount = False, groupAt
     # Отбор по таблице рейтинг отдельно, пока не умею делать левое соединение
 
     isOnlyComments  = onlycomments != None and onlycomments == True
-    isRating        = rating != None and rating != ''
+    isRating        = rating != None and rating != '' and rating != 0
 
     if isOnlyComments or isRating:
         ratingList  = []
