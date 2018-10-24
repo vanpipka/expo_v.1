@@ -642,18 +642,18 @@ class UserType(models.Model):
 
         elem = None
 
-        try:
-            element = UserType.objects.get(user=user)
+        #try:
+        element = UserType.objects.get(user=user)
 
-            print(element)
+        print(element)
 
-            if element.type == 1:
-                elem = element.worker
-            else:
-                elem = element.company
+        if element.type == 1:
+            elem = element.worker
+        else:
+            elem = element.company
 
-        except ObjectDoesNotExist:
-            print('не удалось получить запись userType')
+        #except ObjectDoesNotExist:
+        print('не удалось получить запись userType')
 
         return elem
 
