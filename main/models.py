@@ -2,10 +2,14 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.contrib.auth.models import User
 from django.db import connection
-from django.db.models.signals import m2m_changed, post_save
-from expo.SaveFile import savefile
+from django.db.models.signals import m2m_changed #, post_save
 import datetime
 import uuid
+import base64
+from PIL import Image
+from django.conf import settings
+from os import path
+
 from django.dispatch import receiver
 
 class WorkGroup(models.Model):
@@ -62,7 +66,7 @@ class Region(models.Model):
 
     id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name        = models.CharField(max_length=100)
-    country     = models.ForeignKey(Country, on_delete=models.CASCADE)
+    country     = models.ForeignKey(Country, on_delete=models.CASCADE, default='00000000000000000000000000000000')
 
     def __str__(self):
         return self.name
@@ -88,6 +92,105 @@ class WorkerAttachment(models.Model):
     file        = models.FileField(null=True, blank=True, upload_to="media/attach/", verbose_name='Изображение')
     resizeFile  = models.FileField(null=True, blank=True, upload_to="media/resizeattach/", verbose_name='Изображение')
     Description = models.CharField(max_length=200)
+
+class Attacment(models.Model):
+
+    id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    path        = models.FileField(null=True, blank=True, upload_to="media/attach/", verbose_name='Изображение')
+    resizePath  = models.FileField(null=True, blank=True, upload_to="media/resizeattach/", verbose_name='Изображение')
+    Description = models.CharField(max_length=200)
+
+    def savefile(base64data, src = 'attacment', resizeit=False):
+
+        if base64data.find('base64') == -1:
+            return ''
+        if base64data.find('image/') == -1:
+            return ''
+
+        d = base64data.partition(",")
+        print("Фото======================================================================")
+
+        strOne = d[2]
+        strOne = strOne.encode()
+        strOne = b"=" + strOne
+
+        your_media_root = settings.MEDIA_ROOT
+        directory = str(your_media_root)
+
+        name = str(uuid.uuid4()) + '.png'
+
+        #
+        fullpath = path.join(directory, src, name)
+
+        attachment = Attacment()
+
+        print(fullpath)
+
+        try:
+            with open(fullpath, "wb") as fh:
+                fh.write(base64.decodebytes(strOne.strip()))
+
+                attachment.path = fullpath.replace(directory, '').replace('\\', '/')
+
+            if resizeit:
+                resizename = str(uuid.uuid4()) + '.png'
+                fullresizepath = path.join(directory, 'attacmentresize', resizename)
+
+                Attacment.scale_image(input_image_path=fullpath, output_image_path=fullresizepath)
+                attachment.resizePath = fullresizepath.replace(directory, '').replace('\\', '/')
+
+        except:
+            attachment.path = ''
+            attachment.resizePath = ''
+
+        attachment.save()
+
+        return attachment
+
+    def scale_image(input_image_path,
+                    output_image_path,
+                    width=150,
+                    height=150
+                    ):
+        original_image = Image.open(input_image_path)
+        w, h = original_image.size
+
+        if w > h:
+            position = (w - h) / 2
+            croped_image = original_image.crop((position, 0, w - position, h))
+        elif h > w:
+            position = (h - w) / 2
+            croped_image = original_image.crop((0, position, w, h - position))
+        else:
+            croped_image = original_image
+
+        if width and height:
+            max_size = (width, height)
+        elif width:
+            max_size = (width, h)
+        elif height:
+            max_size = (w, height)
+        else:
+            # No width or height specified
+            raise RuntimeError('Width or height required!')
+
+        croped_image.thumbnail(max_size, Image.ANTIALIAS)
+        croped_image.save(output_image_path)
+
+        return output_image_path
+
+    def getresizelink(attach):
+
+        if attach.resizePath:
+            return str(settings.MEDIA_URL) + str(attach.resizePath)
+        else:
+            return str(settings.STATIC_URL) + 'main/img/add-photo.png'
+
+    def getlink(attach):
+        if attach.path:
+            return str(settings.MEDIA_URL) + str(attach.path)
+        else:
+            return str(settings.STATIC_URL) + 'main/img/add-photo.png'
 
 class Worker(models.Model):
 
@@ -116,7 +219,8 @@ class Worker(models.Model):
     birthday    = models.DateField(datetime.date, default=None, null=True)
     Experiencewith = models.DateField(datetime.date, null=True)
     experience     = models.TextField()
-    foto           = models.ImageField(null=True, blank=True, upload_to="img/", verbose_name='Изображение')
+    foto           = models.ImageField(null=True, blank=True, upload_to="media/", verbose_name='Изображение')
+    image          = models.ForeignKey(Attacment, on_delete=models.CASCADE, default="00000000000000000000000000000000")
     lastOnline     = models.DateTimeField("Последний онлайн", auto_now_add=True, null=True)
     professions    = models.ManyToManyField(Professions)
     phonenumber    = models.CharField(max_length=100)
@@ -168,6 +272,7 @@ class Company(models.Model):
     name            = models.CharField(max_length=100)
     vatnumber       = models.CharField(max_length=10)
     foto            = models.ImageField(null=True, blank=True, upload_to="img/", verbose_name='Изображение')
+    image           = models.ForeignKey(Attacment, on_delete=models.CASCADE, default="00000000000000000000000000000000")
     phonenumber     = models.CharField(max_length=100)
     emailaddress    = models.CharField(max_length=100)
     description     = models.TextField()
@@ -199,8 +304,8 @@ class Company(models.Model):
 
             company = {'name': companyObject.name,
                         'vatnumber': companyObject.vatnumber,
-                        'fotourl': '/static/main/media/' + str(companyObject.foto) if companyObject.foto else '',
-                        'resizefotourl': '/static/main/media/resize' + str(companyObject.foto) if companyObject.foto else '',
+                        'fotourl': Attacment.getlink(companyObject.image),
+                        'resizefotourl': Attacment.getresizelink(companyObject.image),
                         'phonenumber': companyObject.phonenumber,
                         'emailaddress': companyObject.emailaddress,
                         'description': companyObject.description,
@@ -233,10 +338,10 @@ class Company(models.Model):
             if data.__contains__('fotourl'):
                 strOne = data.__getitem__('fotourl')
 
-                fileurl = savefile(base64data=strOne, src='foto', resizeit=True)
+                fileurl = Attacment.savefile(base64data=strOne, src='foto', resizeit=True)
 
                 if fileurl:
-                    company.foto = fileurl
+                    company.image = fileurl
 
             company.save()
 
@@ -277,6 +382,11 @@ class News(models.Model):
 
         objects = list(objects.values('id', 'name', 'description', 'link', 'image', 'created'))
 
+        for e in objects:
+
+            if e['image']:
+                e['image'] = str(settings.MEDIA_URL) + str(e['image'])
+
         return objects
 
 class JobOrder(models.Model):
@@ -289,6 +399,7 @@ class JobOrder(models.Model):
     company     = models.ForeignKey(Company, on_delete=models.CASCADE)
     city            = models.ForeignKey(City, on_delete=models.CASCADE, default="00000000000000000000000000000000")
     responseCount   = models.DecimalField(max_digits=3, decimal_places=0, default=0)
+    deleted         = models.BooleanField(default=False)
 
     def __str__(self):
         return self.description
@@ -313,9 +424,28 @@ class JobOrder(models.Model):
 
         objects = list(JobOrder.objects.all().select_related('city').select_related('company').order_by("-created").values('id', 'responseCount', 'description', 'date', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name'))
 
+        id_jobs = []
+
+        for e in objects:
+            id_jobs.append(e['id'])
+
+        #print(id_jobs)
+
+        jobComposition = list(JobComposition.objects.all().filter(jobOrder_id__in=id_jobs).select_related('profession').values('jobOrder_id', 'profession__id', 'profession__name', 'count', 'price'))
+
+        print(jobComposition)
+
         for e in objects:
 
             e['response_is_available'] = response_array.count(e['id']) == 0
+
+            e['job_composition'] = []
+
+            for j in jobComposition:
+                if j['jobOrder_id'] == e['id']:
+                    e['job_composition'].append(j)
+
+
 
         return objects
 
@@ -327,13 +457,13 @@ class JobOrder(models.Model):
 
             try:
 
-                jobOrder = JobResponse()
+                jobResponse = JobResponse()
 
-                jobOrder.jobOrder = JobOrder.objects.get(id=data['job_id'])
-                jobOrder.worker   = UserType.GetElementByUser(user)
-                jobOrder.description  = data.get('job_description', '')
+                jobResponse.jobOrder = JobOrder.objects.get(id=data['job_id'])
+                jobResponse.worker   = UserType.GetElementByUser(user)
+                jobResponse.description  = data.get('job_description', '')
 
-                jobOrder.save()
+                jobResponse.save()
 
             except:
 
@@ -351,7 +481,7 @@ class JobOrder(models.Model):
 
         if userType == 2:
 
-            try:
+            #try:
 
                 jobOrder = JobOrder()
 
@@ -362,20 +492,47 @@ class JobOrder(models.Model):
                 try:
                     jobOrder.date = datetime.datetime.strptime(data.get('job_date', "1960-01-01"), "%Y-%m-%d")
                 except:
-                     print('ошибка при сохранении даты рождения: ' + str(worker) + '/1960-01-01')
+                     print('ошибка при сохранении даты рождения: ' + str(jobOrder) + '/1960-01-01')
 
 
                 jobOrder.save()
 
-            except:
+                job_composition = data.get('job_composition', [])
+
+                for e in job_composition:
+
+                    if e.get('id', ''):
+
+                        Composition = JobComposition()
+
+                        Composition.jobOrder = jobOrder
+                        Composition.profession = Professions.objects.get(id=e.get('id', ''))
+                        Composition.count = int(e.get('count', 0))
+                        Composition.price = int(e.get('price', 0))
+
+                        Composition.save()
+
+            #except:
 
                 return False
 
-            return True
+            #return True
 
         else:
 
             return False
+
+
+class JobComposition(models.Model):
+
+    id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    jobOrder    = models.ForeignKey(JobOrder, on_delete=models.CASCADE)
+    profession  = models.ForeignKey(Professions, on_delete=models.CASCADE)
+    count       = models.DecimalField(max_digits=2, decimal_places=0, default=0)
+    price       = models.DecimalField(max_digits=10, decimal_places=0, default=0)
+
+    def __str__(self):
+        return self.id
 
 class JobResponse(models.Model):
 
@@ -458,6 +615,8 @@ class UserType(models.Model):
         try:
             element = UserType.objects.get(user=user)
 
+            print(element)
+
             if element.type == 1:
                 elem = element.worker
             else:
@@ -478,7 +637,7 @@ class CostOfService(models.Model):
 class Comments(models.Model):
 
     id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    idUser      = models.ForeignKey(Worker, related_name="User", verbose_name="Пользователь", on_delete=models.CASCADE)
+    idUser      = models.ForeignKey(User, related_name="User", verbose_name="Пользователь", on_delete=models.CASCADE)
     idWorker    = models.ForeignKey(Worker, related_name="Worker", verbose_name="Работник", on_delete=models.CASCADE)
     idProf      = models.ForeignKey(Professions, verbose_name="Работа", on_delete=models.CASCADE)
     text        = models.TextField("Комментарий")
@@ -511,12 +670,14 @@ class Comments(models.Model):
         if position_begin != None and position_end != None:
             objects = objects[position_begin: position_end]
 
-        objects = list(objects.values('idWorker_id', 'idWorker__name', 'idWorker__surname', 'idWorker__foto', 'text'))
+        objects = list(objects.values('idWorker_id', 'idWorker__name', 'idWorker__surname', 'idWorker__image', 'text'))
 
         for e in objects:
 
             ratingInfo = Worker.getWorkerRating(e['idWorker_id'])
             e['rating'] = ratingInfo['rating']
+
+            e['idWorker__image'] = Attacment.getresizelink(Attacment.objects.get(id = e['idWorker__image']))
 
         return objects
 

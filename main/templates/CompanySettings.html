@@ -48,31 +48,13 @@
 
                     <div class="col col-3">
 
-                        {% if company.resizefotourl %}
-                            <div class="row mb-2">
-                                <div class="col">
-                                    <div class="product-img" style="height: 150px;">
-                                        <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:150px" src="{{  company.resizefotourl }}" alt="">
-                                    </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <div class="product-img" style="height: 150px;">
+                                    <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:150px" src="{{  company.resizefotourl }}" alt="">
                                 </div>
                             </div>
-                        {% elif company.fotourl %}
-                            <div class="row mb-2">
-                                <div class="col">
-                                    <div class="product-img" style="height: 150px;">
-                                        <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:150px" src="{{ company.fotourl }}" alt="">
-                                    </div>
-                                </div>
-                            </div>
-                        {% else %}
-                            <div class="row mb-2">
-                                <div class="col">
-                                    <div class="product-img border-secondary" style="height: 150px; border: dashed; border-radius: 5px ">
-                                        <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:150px" src="/static/main/img/add-photo.png" alt="">
-                                    </div>
-                                </div>
-                            </div>
-                        {% endif %}
+                        </div>
 
                         <div class="row">
                             <div class="col">

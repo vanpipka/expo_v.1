@@ -23,10 +23,10 @@
                                     <div>
                                         <input id="job_id" hidden name="job_id"></input>
                                         <div class="row mr-3" style="margin: 5px">
-                                            <div class="col col-4">
+                                            <div class="col col-3">
                                                 <span class="text-menu-grey">Город проведения</span>
                                             </div>
-                                            <div class="col col-8 input-group">
+                                            <div class="col col-9 input-group">
                                                 <select name="City" required id="City" class="form-control" disabled>
                                                     <option value="" selected></option>
                                                 </select>
@@ -38,24 +38,81 @@
                                             </div>
                                         </div>
                                         <div class="row pt-3 mr-3" style="margin: 5px">
-                                            <div class="col col-4">
+                                            <div class="col col-3">
                                                 <span class="text-menu-grey">Дата проведения</span>
                                             </div>
-                                            <div class="col col-8">
+                                            <div class="col col-9">
                                                 <input type="text" name="date" class="form-control" id="id_date"  placeholder="Дата проведения" value="" required readonly>
                                             </div>
                                         </div>
                                         <div class="row pt-3 mr-3" style="margin: 5px">
-                                            <div class="col col-4">
+                                            <div class="col col-3">
                                                 <span class="text-menu-grey">Описание</span>
                                             </div>
-                                            <div class="col col-8">
+                                            <div class="col col-9">
                                                 <textarea name="job_description" class="form-control" rows="5" placeholder="Описание предстоящих работ" id="job_description" required></textarea>
                                             </div>
                                         </div>
+
+                                        <div class="row pt-3 mr-3" style="margin: 5px">
+                                            <div class="col col-3">
+                                                <span class="text-menu-grey">Требуются</span>
+                                            </div>
+                                            <div class="col col-9">
+
+                                                <table class="table table-bordered">
+                                                    <thead class="thead-default">
+                                                        <tr>
+                                                            <th>Сотрудники</th>
+                                                            <th>Количество</th>
+                                                            <th>Ставка(руб./ч)</th>
+                                                            <th>&nbsp;&nbsp;&nbsp;Действия</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id = 'tbodyServices'>
+
+                                                        <tr id = 'tbodyControls'>
+                                                            <td>
+                                                                <button type="button" class="btn text-danger" id="add_services" onclick="addService()" style="text-align: left; background-color: white;">Добавить</button>
+                                                            </td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </tbody>
+                                                    <!-- Строка таблицы для добавления -->
+                                                    <tr id="tr_%number%" hidden>
+                                                        <td>
+                                                            <select name = "service_select" id="service_%number%" class = "form-control" style="background-color: white; border: white">
+                                                                {% for s in professionsList %}
+                                                                    <option value="{{s.id}}">{{ s.name }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input name = 'service_count' id="service_%number%" type="number" class="form-control" value="0" style="background-color: white; border-color: white">
+                                                        </td>
+                                                        <td>
+                                                            <input name = 'service_price' id="price_%number%" type="number" class="form-control" value="0" style="background-color: white; border-color: white">
+                                                        </td>
+                                                        <td>
+                                                            <!--<button name = 'service_btnedit' type="button" class="btn text-danger" id="edit_%number%" onclick="editService(this)" style="text-align: left; background-color: white">Изменить</button>-->
+                                                            <button name = 'service_btndelete' type="button" class="btn text-danger" id="delete_%number%" onclick="deleteService(this)" style="text-align: left; background-color: white">Удалить</button>
+                                                        </td>
+                                                    </tr>
+
+                                                </table>
+
+
+
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                                 <script>
+
+                                    var currentCount = 100;
 
                                     $('#form').validate({
 
@@ -75,12 +132,28 @@
 
                                         var formData = new FormData();
 
+                                        //Собираем список услуг
+                                        var ServiceList = document.getElementById("tbodyServices").getElementsByTagName('tr');
+                                        var SelectedService = [];
+
+                                        for (i=0; i < ServiceList.length; i++) {
+                                            var tr = ServiceList[i];
+
+                                            if (tr.id == 'tbodyControls'){
+                                                continue;
+                                            }
+
+                                            SelectedService.push({"id": tr.getElementsByTagName('select')[0].value, "count": tr.getElementsByTagName('input')[0].value, "price": tr.getElementsByTagName('input')[1].value});
+
+                                        }
+
                                         //Собираем конечный JSON
 
                                         var json = JSON.stringify({
                                             job_city: document.getElementById("City").value,
                                             job_date: document.getElementById("id_date").value,
-                                            job_description: document.getElementById("job_description").value
+                                            job_description: document.getElementById("job_description").value,
+                                            job_composition: SelectedService
                                         });
 
                                         // добавить к пересылке ещё пару ключ - значение
@@ -104,8 +177,33 @@
                                         xhr.open("POST", "http://py.itoe.ru:56503/jobs/saveorder/", true);
                                         xhr.send(formData);
                                     }
+
+                                    function addService() {
+
+                                        currentCount = currentCount+1;
+
+                                        var tbody   = document.getElementById('tbodyServices');
+                                        var tr      = document.getElementById('tr_%number%').cloneNode(true);
+
+                                        tr.id = tr.id.replace("%number%", currentCount);
+                                        tr.hidden = false;
+
+                                        tr.getElementsByTagName('select')[0].id = 'service_'+currentCount;
+                                        tr.getElementsByTagName('input')[0].id = 'count_'+currentCount;
+                                        tr.getElementsByTagName('input')[0].id = 'price_'+currentCount;
+                                        /*tr.getElementsByTagName('button')[0].id = 'edit_'+currentCount;*/
+                                        tr.getElementsByTagName('button')[0].id = 'delete_'+currentCount;
+
+                                        tbody.insertBefore(tr, tbody.children[tbody.children.length-1]);
+                                    }
+
+                                    function deleteService(e) {
+                                        var n = e.id.replace("delete_","");
+                                        document.getElementById('tbodyServices').removeChild(document.getElementById('tr_'+n))
+                                    }
+
                                 </script>
-                                <button type="submit" class="btn btn-danger">Сохранить</button>
+                                <button type="submit" class="btn btn-danger mb-3">Сохранить</button>
                             </form>
                         </div>
                     </div>

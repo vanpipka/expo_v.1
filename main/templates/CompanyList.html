@@ -35,7 +35,7 @@
         <div class="row pl-3">
 
             <div class="col col-3">
-                <div class="img" align="center" style="min-width: 100%; min-height: 160px;max-height: 160px; border-radius: 4px; background-position: center; background-image: url('{% if company.resizefotourl %} {{ company.resizefotourl }}{% else %} {{  STATIC_URL }}/static/main/img/add-photo.png{% endif %}'); background-size: cover;">
+                <div class="img" align="center" style="min-width: 100%; min-height: 160px;max-height: 160px; border-radius: 4px; background-position: center; background-image: url('{{ company.resizefotourl }}'); background-size: cover;">
 
                 </div>
 

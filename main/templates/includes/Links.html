@@ -1,11 +1,9 @@
 {% load staticfiles %}
 {% load home_extras %}
-
-    <link rel="stylesheet" href="{{ STATIC_URL }}/static/main/css/bootstrap.css"/>
-    <link rel="stylesheet" href="{{ STATIC_URL }}/static/main/css/daterangepicker.css"/>
-    <link rel="stylesheet" href="{{ STATIC_URL }}/static/main/css/expo/expo.css"/>
-    <link rel="stylesheet" href="{{ STATIC_URL }}/static/main/css/bootstrap-multiselect.css"/>
-    <link rel="stylesheet" href="{{ STATIC_URL }}/static/main/css/css-stars.css"/>
+    <link rel="stylesheet" href="{% get_attribute 'STATIC_URL' %}main/css/bootstrap.css"/>
+    <link rel="stylesheet" href="{% get_attribute 'STATIC_URL' %}main/css/daterangepicker.css"/>
+    <link rel="stylesheet" href="{% get_attribute 'STATIC_URL' %}main/css/bootstrap-multiselect.css"/>
+    <link rel="stylesheet" href="{% get_attribute 'STATIC_URL' %}main/css/css-stars.css"/>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css"/>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto+Slab" rel="stylesheet"/>
@@ -15,8 +13,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}/static/main/js/jquery.maskedinput.min.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}/static/main/js/bootstrap-multiselect.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}/static/main/js/bootstrap.js"></script>
-    <script src="{{ STATIC_URL }}/static/main/js/jquery.barrating1.js"></script>
+    <script type="text/javascript" src="{% get_attribute 'STATIC_URL' %}main/js/jquery.maskedinput.min.js"></script>
+    <script type="text/javascript" src="{% get_attribute 'STATIC_URL' %}main/js/bootstrap-multiselect.js"></script>
+    <script type="text/javascript" src="{% get_attribute 'STATIC_URL' %}main/js/bootstrap.js"></script>
+    <script src="{% get_attribute 'STATIC_URL' %}main/js/jquery.barrating1.js"></script>
     <!---->

@@ -13,31 +13,13 @@
 
                 <div class="col col-3">
 
-                    {% if worker.resizefotourl %}
-                        <div class="row mb-2">
-                            <div class="col">
-                                <div class="product-img" style="height: 150px;">
-                                    <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:150px" src="{{  worker.resizefotourl }}" alt="">
-                                </div>
-                            </div>
-                        </div>
-                    {% elif worker.fotourl %}
-                        <div class="row mb-2">
-                            <div class="col">
-                                <div class="product-img" style="height: 150px;">
-                                    <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:150px" src="{{ worker.fotourl }}" alt="">
-                                </div>
-                            </div>
-                        </div>
-                    {% else %}
-                        <div class="row mb-2">
-                            <div class="col">
-                                <div class="product-img border-secondary" style="height: 150px; border: dashed; border-radius: 5px ">
-                                    <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:150px" src="/static/main/img/add-photo.png" alt="">
-                                </div>
-                            </div>
-                        </div>
-                    {% endif %}
+                   <div class="row mb-2">
+                       <div class="col">
+                           <div class="product-img" style="height: 150px;">
+                               <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:150px" src="{{  worker.resizefotourl }}" alt="">
+                           </div>
+                       </div>
+                   </div>
 
                     <div class="row mt-2">
 
@@ -325,7 +307,7 @@
                             <div class="col col-8">
                             </div>
                             <div class="col col-2">
-                                {{ comment.idUser }}
+                                {{ comment.user.name }}
                             </div>
                             <div class="col col-2 text-right">
                                 {{ comment.created|date:"d M Y" }}

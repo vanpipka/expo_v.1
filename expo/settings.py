@@ -33,12 +33,25 @@ with open(os.path.join(SETTINGS_DIR, 'settings.json'), 'r') as f:
         DEBUG           = struct.get('DEBUG', False)
         ALLOWED_HOSTS   = struct.get('ALLOWED_HOSTS', '')
         HOME_PAGE       = struct.get('HOME_PAGE', '')
+        STATIC_ROOT     = os.path.join(BASE_DIR, struct.get('STATIC', ''))
+        STATIC_URL      = struct.get('STATIC_HOST', '')
+        MEDIA_ROOT      = os.path.join(BASE_DIR, struct.get('MEDIA', ''))
+        MEDIA_URL       = struct.get('MEDIA_HOST', '')
 
+        #print(struct)
     except json.JSONDecodeError:
         SECRET_KEY      = ''
         DEBUG           = False
         ALLOWED_HOSTS   = ''
         HOME_PAGE       = ''
+        #STATIC_ROOT     = os.path.join(BASE_DIR, 'static')
+        #STATIC_URL      = 'static/'
+        MEDIA_ROOT      = os.path.join(BASE_DIR, 'media')
+        MEDIA_URL       = 'media/   '
+
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+#STATIC_URL = '/static/'
+
 #print(BASE_DIR)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
@@ -157,11 +170,10 @@ SITE_ID = 2
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-STATIC_URL = '/static/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
-MEDIA_URL = '/media/'
+
+#MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+#MEDIA_URL = '/media/'
 
 #EMAIL_USE_TLS = True
 #EMAIL_HOST = 'mail.mmss.ltd'

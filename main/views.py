@@ -1,8 +1,8 @@
 from django.http import  JsonResponse
 from django.shortcuts import render
-from expo.DataGet import  getProfessionList, getAllProfessionsAndGroups, getCityListFull, getServiceList
+from expo.DataGet import  getProfessionList, getAllProfessionsAndGroups, getCityListFull, getServiceList, getCountryList
 from expo.DataSet import refreshLastOnline
-from main.models import UserType, News, Comments
+from main.models import UserType, News, Comments, Attacment
 
 from django.middleware import csrf
 # Create your views here.
@@ -203,6 +203,19 @@ def jsonCityList(request):
 
     return response
 
+def jsonCountryList(request):
+
+    if request.user.is_authenticated:
+        refreshLastOnline(request.user)
+
+    #context = getCityList()
+    context = getCountryList()
+
+    response = JsonResponse({'dataset': context})
+    response['Access-Control-Allow-Origin'] = "*"
+
+    return response
+
 def checkLogin(request):
 
     answer = {}
@@ -216,13 +229,13 @@ def checkLogin(request):
         elem = UserType.GetElementByUser(request.user)
 
         if userType == 1:
-            data = {'name': elem.name, 'surname': elem.surname, 'fotourl': '/static/main/media/resize' + str(elem.foto), 'id': str(elem.id)}
+            data = {'name': elem.name, 'surname': elem.surname, 'fotourl': Attacment.getresizelink(elem.image) + str(elem.foto), 'id': str(elem.id)}
 
         elif userType == 2:
-            data = {'name': elem.name, 'surname': '', 'fotourl': '/static/main/media/resize' + str(elem.foto), 'id': str(elem.id)}
+            data = {'name': elem.name, 'surname': '', 'fotourl': Attacment.getresizelink(elem.image) + str(elem.foto), 'id': str(elem.id)}
 
         else:
-            data = {'name': '', 'surname': '', 'fotourl': '/static/main/img/add-photo.png', 'id': ''}
+            data = {'name': '', 'surname': '', 'fotourl': '', 'id': ''}
 
         answer['status'] = True
         answer['user'] = data

@@ -2,6 +2,7 @@ from datetime import *
 from django.utils import timezone
 from main.models import *
 from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
 
 def getAllProfessionsAndGroups(count = None):
 
@@ -95,6 +96,8 @@ def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, 
 
         print(str(e.name) + str(e.surname))
 
+        media_url = settings.MEDIA_URL
+
         ratingInfo = Worker.getWorkerRating(e)
 
         WorkerInfo = {"id": e.id,
@@ -152,13 +155,12 @@ def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, 
             WorkerInfo["haveintpass"] = e.haveIntPass
             WorkerInfo["readytotravel"] = e.readytotravel
 
-        if e.foto:
-            WorkerInfo["fotourl"] = '/static/main/media/' + str(e.foto)
-            WorkerInfo["resizefotourl"] = '/static/main/media/resize' + str(e.foto)
-        else:
-
-            WorkerInfo["fotourl"] = '/static/main/img/add-photo.png'
-            WorkerInfo["resizefotourl"] = '/static/main/img/add-photo.png'
+        #if e.foto:
+        WorkerInfo["fotourl"] = Attacment.getlink(e.image)
+        WorkerInfo["resizefotourl"] = Attacment.getresizelink(e.image)
+        #else:
+        #WorkerInfo["fotourl"] = '/static/main/img/add-photo.png'
+        #WorkerInfo["resizefotourl"] = '/static/main/img/add-photo.png'
 
         if e.Experiencewith != None:
             WorkerInfo["experiencewith"] = calculate_age(e.Experiencewith) # Переделать на разность дат
@@ -182,8 +184,8 @@ def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, 
             profList.append({"id": prof.id, "name": prof.name})
         WorkerInfo["proflist"] = profList
 
-        for attachment in e.WorkerAttachment.all():
-            attachments.append({"id": attachment.id, "url": '/static/main/media/' + str(attachment.file), "resizeurl": '/static/main/media/resize' + str(attachment.file),  "description": attachment.Description})
+        #for attachment in e.WorkerAttachment.all():
+        #    attachments.append({"id": attachment.id, "url": '/static/main/media/' + str(attachment.file), "resizeurl": '/static/main/media/resize' + str(attachment.file),  "description": attachment.Description})
         WorkerInfo["attachments"] = attachments
 
         #Цены на услуги
@@ -205,25 +207,30 @@ def getMinWorkerList():
     querySet = Worker.objects.filter(publishdata=True)
 
     for e in querySet:
-        workerlist.append({"id": e.id, "name": e.name, "resizefotourl": '/static/main/media/resize' + str(e.foto)})
+        workerlist.append({"id": e.id, "name": e.name, "resizefotourl": Attacment.getresizelink(e.image)})
         
     return workerlist
 
-def getComments(idUser):
+def getComments(idWorker):
 
     commentsList = []
-    query = Comments.objects.filter(idWorker=idUser).order_by("-created").select_related('idUser').select_related('idWorker').select_related('idProf')
+    query = Comments.objects.filter(idWorker=idWorker).order_by("-created").select_related('idWorker').select_related('idProf')
 
     for e in query:
-        commentsList.append({
-            "user": {"id": e.idUser.id, "name": e.idUser.name, "fotourl": '/static/main/media/resize' + str(e.idUser.foto)},
-            "worker": {"id": e.idWorker.id, "name": e.idWorker.name, "fotourl": '/static/main/media/resize' + str(e.idWorker.foto)},
-            "profession": {"id": e.idProf.id, "name": e.idProf.name},
-            "text": e.text,
-            "created": e.created,
-            "moderation": e.moderation,
-            "rating": e.rating,
-        })
+
+        user = UserType.GetElementByUser(e.idUser)
+
+        if user != None:
+
+            commentsList.append({
+                "user": {"id": user.id, "name": user.name, "fotourl": Attacment.getresizelink(user.image)},
+                "worker": {"id": e.idWorker.id, "name": e.idWorker.name, "fotourl": Attacment.getresizelink(e.idWorker.image)},
+                "profession": {"id": e.idProf.id, "name": e.idProf.name},
+                "text": e.text,
+                "created": e.created,
+                "moderation": e.moderation,
+                "rating": e.rating,
+            })
 
     return commentsList
 

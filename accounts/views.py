@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.base import View
-from main.models import UserType
+from main.models import UserType, Attacment
 import json
 from django.middleware import csrf
 
@@ -401,13 +401,13 @@ def getJsonData(request, type):
             elem        = UserType.GetElementByUser(request.user)
 
             if userType == 1:
-                data = {'name': elem.name, 'surname': elem.surname, 'fotourl': '/static/main/media/resize' + str(elem.foto), 'id': str(elem.id)}
+                data = {'name': elem.name, 'surname': elem.surname, 'fotourl': Attacment.getresizelink(elem.image), 'id': str(elem.id)}
 
             elif userType == 2:
-                data = {'name': elem.name, 'surname': '', 'fotourl': '/static/main/media/resize' + str(elem.foto), 'id': str(elem.id)}
+                data = {'name': elem.name, 'surname': '', 'fotourl': Attacment.getresizelink(elem.image), 'id': str(elem.id)}
 
             else:
-                data = {'name': '', 'surname': '', 'fotourl': '/static/main/img/add-photo.png', 'id': ''}
+                data = {'name': '', 'surname': '', 'fotourl': '', 'id': ''}
 
             ajax_response['status'] = True
             ajax_response['user'] = data

@@ -161,16 +161,16 @@ def showSettingsJson(request):
                     {"columnname": "commentscount", "type": "int", "value": worker.get('commentscount', 0), 'hidden': True},
                 ]},
                 {"name": "Личные данные", "items": [
-                    {"columnname": "name","label": "Имя", "type": "string", "value": worker.get('name', ''), "required": True},
                     {"columnname": "surname", "label": "Фамилия", "type": "string", "value": worker.get('surname', ''), "required": True},
+                    {"columnname": "name","label": "Имя", "type": "string", "value": worker.get('name', ''), "required": True},
                     {"columnname": "lastname", "label": "Отчество", "type": "string", "value": worker.get('lastname', '')},
-                    {"columnname": "sex", "label": "Пол", "type": "list", "values": ["Женский", "Мужской"],"value": 1 if (worker.get('sex', True)) else 0},
+                    {"columnname": "sex", "label": "Пол", "type": "binaryswitch", "values": ["Женский", "Мужской"],"value": 1 if (worker.get('sex', True)) else 0},
                     {"columnname": "birthday", "label": "Дата рождения", "type": "date", "value": worker.get('birthday', ''), "required": True},
                     {"columnname": "country", "label": "Гражданство", "type": "ref", "value": worker.get('nationality', '')},
                     {"columnname": "workpermit", "label": "Разрешение на работу", "type": "boolean", "value": worker.get('workpermit', False)},
                     {"columnname": "city", "label": "Мой город, населенный пункт", "type": "ref", "value": worker.get('city', '')},
-                    {"columnname": "phonenumber", "label": "Телефон", "type": "string", "phone": worker.get('phonenumber', '')},
-                    {"columnname": "emailaddress", "label": "Электронная почтка", "type": "email", "value": worker.get('emailaddress', '')},
+                    {"columnname": "phonenumber", "label": "Телефон", "type": "string", "subtype": "phone", "value": worker.get('phonenumber', '')},
+                    {"columnname": "emailaddress", "label": "Электронная почтка", "type": "string", "subtype": "email", "value": worker.get('emailaddress', '')},
                     {"columnname": "haveip", "label": "Я зарегистрирован как ИП", "type": "boolean", "value": worker.get('haveip', False)},
                     {"columnname": "haveinstrument", "label": "Есть свои инструменты", "type": "boolean", "value": worker.get('haveinstrument', False)},
                     {"columnname": "experience", "label": "Опыт работы на выставках", "type": "text", "value": worker.get('experience', '')}
@@ -180,12 +180,16 @@ def showSettingsJson(request):
                     {"columnname": "haveintpass", "label": "Есть загранпаспорт", "type": "boolean", "value": worker.get('haveintpass', False)},
                     {"columnname": "haveshengen", "label": "Есть шенгенская виза", "type": "boolean", "value": worker.get('haveshengen', False)},
                 ]},
+                {"name": "Мои умения и навыки", "items": [
+                    {"columnname": "professions", "label": "Профессия", "type": "multipleref", "value": worker.get('proflist', [])},
+                ]},
                 {"name": "Услуги и цены", "items": [
+                    {"columnname": "services", "label": "Проектная работа", "type": "table", "value": worker['works'].get('servicelist', [])},
                     {"columnname": "salary", "label": "Постоянная работа", "type": "int", "value": worker['works'].get('salary', 0)},
                 ]},
                 {"name": "Дополнительно", "items": [
-                    {"columnname": "personaldataisallowed", "label": "Даю согласие на обработку персональных данных", "type": "Boolean", "value": worker.get('personaldataisallowed', False), "backgroundcolor": "#dc3545"},
-                    {"columnname": "publishdata", "label": "Опубликовать анкету в общий доступ", "type": "Boolean", "value": worker.get('publishdata', False), "backgroundcolor": "#20c997"},
+                    {"columnname": "personaldataisallowed", "label": "Даю согласие на обработку персональных данных", "type": "boolean", "value": worker.get('personaldataisallowed', False), "backgroundcolor": "#dc3545"},
+                    {"columnname": "publishdata", "label": "Опубликовать анкету в общий доступ", "type": "boolean", "value": worker.get('publishdata', False), "backgroundcolor": "#20c997"},
                 ]}
             ]
         }
@@ -219,8 +223,8 @@ def showWorker(request):
 
         commentForm = CommentForm()
 
-    workerList = gerWorkList(idWorker=[id], userAauthorized=userAauthorized)
-    comments = Comments.objects.filter(idWorker=id).order_by("-created")[:10]
+    workerList  = gerWorkList(idWorker=[id], userAauthorized=userAauthorized)
+    comments    = getComments(idWorker=id)
 
     print("Ответ:" + str(len(workerList)))
     return render(request, 'Worker.html', {"worker": workerList[0], "commentForm": commentForm, "comments": comments, "userAauthorized": userAauthorized})
@@ -349,7 +353,7 @@ def showCommentsJson(request):
         userid = request.GET.get("userid", "")
 
         if userid != "":
-            context["dataset"] = getComments(idUser=userid)
+            context["dataset"] = getComments(idWorker=userid)
 
     context['csrfmiddlewaretoken'] = csrf.get_token(request)
 
@@ -369,7 +373,7 @@ def saveComments(request):
 
                 Comment = Comments()
 
-                Comment.idUser   = request.user.usertype.worker
+                Comment.idUser   = request.user
                 Comment.idWorker = get_object_or_404(Worker, id=data.get("idworker"))
                 Comment.text     = data.get("text")
                 Comment.rating   = data.get("rating")
@@ -408,19 +412,3 @@ def my_view(request):
         context = searchWorker({'Profession': [category]})
 
     return render(request, 'SearchWorker.html', context)
-
-def handle_uploaded_file(f, id):
-
-    directory = 'C:/djangoprojects/main/static/main/media/'
-    name      = 'foto/'+str(id)+'_'+'fff.png'
-
-    #file = load(file)
-
-    print(name)
-
-    filename  = directory + name
-    with open(filename, 'wb+') as dest:
-        for chunk in f.chunks():
-            dest.write(chunk)
-
-    return name

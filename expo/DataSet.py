@@ -1,10 +1,7 @@
 from datetime import datetime as datet
 from django.utils import timezone
-#from main.models import *
-from main.models import Worker, City, Country, Professions, WorkerAttachment, CostOfService, Service, UserType
-from expo.SaveFile import savefile
-
-#from main.models import Comments
+from main.models import Worker, City, Country, Professions, WorkerAttachment, CostOfService, Service, UserType, Attacment
+#from expo.SaveFile import savefile
 
 def setWorker(id, data):
 
@@ -158,13 +155,12 @@ def setWorker(id, data):
     if data.__contains__('fotourl'):
         strOne = data.__getitem__('fotourl')
 
-        fileurl = savefile(base64data=strOne, src='foto', resizeit=True)
+        fileurl = Attacment.savefile(base64data=strOne, src='foto', resizeit=True)
 
         if fileurl:
-            worker.foto = fileurl
+            worker.image = fileurl
 
     #Сохраним
-    print("cj[hfyztv")
     worker.save()
 
     # Обработаем выбранные профессии
@@ -182,23 +178,23 @@ def setWorker(id, data):
         WorkerAttachment.objects.filter(id__in=delattachments).delete()
 
     # Обработаем файлы
-    if data.__contains__('attachments'):
-        print("Обработка файлов=======================================")
-        files = list(data.__getitem__('attachments'))
-        for file in files:
-            strOne = file['src']
-
-            fileurl = savefile(base64data=strOne, src='attach', resizeit=True)
-
-            if fileurl:
-                attach = WorkerAttachment()
-
-                attach.Description  = file['description']
-                attach.file         = fileurl
-                attach.resizeFile   = 'resize'+fileurl
-                attach.save()
-
-                worker.WorkerAttachment.add(attach)
+    #if data.__contains__('attachments'):
+     #   print("Обработка файлов=======================================")
+     #   files = list(data.__getitem__('attachments'))
+     #   for file in files:
+     #       strOne = file['src']
+#
+     #       fileurl = savefile(base64data=strOne, src='attach', resizeit=True)
+#
+     #       if fileurl:
+     #           attach = WorkerAttachment()
+#
+     #           attach.Description  = file['description']
+     #           attach.file         = fileurl
+     #           attach.resizeFile   = 'resize'+fileurl
+     #           attach.save()
+#
+      #          worker.WorkerAttachment.add(attach)
 
     #обработаем указанные цены
     CostOfService.objects.filter(idWorker=worker).delete()

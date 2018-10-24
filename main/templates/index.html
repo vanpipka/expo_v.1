@@ -1,4 +1,5 @@
 {% extends "wrapper.html" %}
+{% load home_extras %}
 
 {% block content%}
     
@@ -6,7 +7,7 @@
 
     {% else %}
 
-        <div class="bg-dark" style="background-image: url('/static/main/img/bg.png')">
+        <div class="bg-dark" style="background-image: url('{% get_attribute 'STATIC_URL' %}main/img/bg.png')">
 
             <div class="container">
 
@@ -70,7 +71,7 @@
             <div class="col col-4 text-center" >
                 <div class="pt-3 pb-3 pr-3 pl-3" style="background-color: #EFEFEF;">
                     <div>
-                        <img src="/static/main/img/city_1.png">
+                        <img src="{% get_attribute 'STATIC_URL' %}main/img/city_1.png">
                     </div>
                     <div>
                         <span class="article article-sm">Смотрите предложения в вашем городе</span>
@@ -81,7 +82,7 @@
             <div class="col col-4 text-center">
                 <div class="pt-3 pb-3 pr-3 pl-3" style="width: 99%; background-color: #EFEFEF;">
                     <div>
-                        <img src="/static/main/img/money_1.png">
+                        <img src="{% get_attribute 'STATIC_URL' %}main/img/money_1.png">
                     </div>
                     <div>
                         <span class="article article-sm">Вам предложат работу прямо на сайте</span>
@@ -92,7 +93,7 @@
             <div class="col col-4 text-center">
                 <div class="pt-3 pb-3 pr-3 pl-3" style=" background-color: #EFEFEF;">
                     <div>
-                        <img src="/static/main/img/beer_1.png">
+                        <img src="{% get_attribute 'STATIC_URL' %}main/img/beer_1.png">
                     </div>
                     <div>
                         <span class="article article-sm">Общайтесь с коллегами, кооперируйтесь</span>
@@ -210,7 +211,7 @@
                             <div style="margin-top: -75px">
                                 <div class="row">
                                     <div class="col text-center">
-                                        <img src="{{  STATIC_URL }}{% if c.idWorker__foto %}/static/main/media/resize{{ c.idWorker__foto }} {% else %} /static/main/img/add-photo.png {% endif %}" style="border-radius: 50%; border: 10px #ecedf0 solid; height: 150px; background-color: lightgrey">
+                                        <img src="{{ c.idWorker__image }}" style="border-radius: 50%; border: 10px #ecedf0 solid; height: 150px; background-color: lightgrey">
                                     </div>
                                 </div>
                                 <div class="col text-center">
@@ -289,14 +290,14 @@
                         </div>
                         <div class="row">
                             <div class="col text-left" style="max-height: 77px">
-                                <img class="mr-3" src="/static/main/img/GetInAppstor.png" style="height: 50px;">
-                                <img src="/static/main/img/GetInGoogle.png" style="height: 50px;">
+                                <img class="mr-3" src="{% get_attribute 'STATIC_URL' %}main/img/GetInAppstor.png" style="height: 50px;">
+                                <img src="{% get_attribute 'STATIC_URL' %}main/img/GetInGoogle.png" style="height: 50px;">
                             </div>
                         </div>
                     </div>
                     <div class="col col-md-6 col-lg-4">
                         <img >
-                            <img src="/static/main/img/phone.png">
+                            <img src="{% get_attribute 'STATIC_URL' %}main/img/phone.png">
                         </img>
                     </div>
                 </div>
@@ -315,7 +316,7 @@
                     {% for e in news %}
                         <div class="col mb-3 col-md-12 col-sm-12 col-lg-4 text-center" >
                             <div class="card "style="border-radius: 0px; border: 1px solid #3b3b3b">
-                                <div class="img card-img-top" align="center" style="border-radius: 0px; min-width: 100%; min-height: 160px;max-height: 150px; background-position: center; background-image: url('{{  STATIC_URL }}{{ e.image }}'); background-size: cover;">
+                                <div class="img card-img-top" align="center" style="border-radius: 0px; min-width: 100%; min-height: 160px;max-height: 150px; background-position: center; background-image: url('{{ e.image }}'); background-size: cover;">
                                 </div>
                                 <div class="card-body">
                                     <h5 class="card-title">{{ e.name }}</h5>

@@ -2,9 +2,9 @@
 from django.shortcuts import render
 from datetime import datetime as datet
 from datetime import timezone
-from main.models import Company, News, JobOrder, UserType
+from main.models import Company, News, JobOrder, UserType, Attacment
 from expo.DataSet import refreshLastOnline
-from expo.DataGet import getCityListFull
+from expo.DataGet import getCityListFull, getProfessionList
 from django.http import HttpResponseForbidden, Http404, HttpResponse, JsonResponse
 import json
 
@@ -23,8 +23,8 @@ def company(request):
     for e in query:
         companyList.append({'name': e.name,
                 'id': e.id,
-                'fotourl': '/static/main/media/' + str(e.foto) if e.foto else '',
-                'resizefotourl': '/static/main/media/resize' + str(e.foto) if e.foto else '',
+                'fotourl': Attacment.getlink(e.image),
+                'resizefotourl': Attacment.getresizelink(e.image),
                 'isonline': True if (datet.now(timezone.utc) - e.lastOnline).seconds / 60 < 5 else False,
                 'lastonline': e.lastOnline,
                 'description': e.description
@@ -65,7 +65,7 @@ def newjobs(request):
 
         userType = UserType.GetUserType(request.user)
 
-        return render(request, 'NewJob.html', {'userType': userType, 'citylist': getCityListFull()})
+        return render(request, 'NewJob.html', {'userType': userType, 'citylist': getCityListFull(), 'professionsList': getProfessionList()})
 
     else:
 

@@ -12,7 +12,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-menu" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  style="">
                             {% if user.usertype.worker.foto %}
-                                <img src="/static/main/media/resize{{user.usertype.worker.foto}}" class="rounded-circle z-depth-0" alt="avatar image" style="max-height: 30px">
+                                <img src="{{user.usertype.worker|getresizelink}}" class="rounded-circle z-depth-0" alt="avatar image" style="max-height: 30px">
                                 {{user.usertype.worker.name|title}}
                             {% else %}
                                 <span class="fa fa-user"></span> Профиль
