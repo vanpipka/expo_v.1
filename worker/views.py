@@ -7,6 +7,7 @@ from expo.DataSet import setWorker, refreshLastOnline
 from django.views.decorators.csrf import csrf_exempt
 from django.middleware import csrf
 import json
+from django.conf import settings
 
 
 # Create your views here.
@@ -49,7 +50,12 @@ def saveSettings(request):
 
                     setWorker(request.user, data)
 
-                return HttpResponse('http://py.itoe.ru:56503/worker/settings/')
+                if request.is_ajax():
+
+                    return JsonResponse({'status': True, 'csrfmiddlewaretoken': csrf.get_token(request)})
+
+                else:
+                    return HttpResponse(settings.HOME_PAGE + 'worker/settings/')
 
             elif userType == 2:
 
@@ -63,17 +69,42 @@ def saveSettings(request):
 
                     Company.UpdateCompany(user=request.user, data=data)
 
-                return HttpResponse('http://py.itoe.ru:56503/worker/settings/')
+                if request.is_ajax():
+
+                    return JsonResponse({'status': True, 'csrfmiddlewaretoken': csrf.get_token(request)})
+
+                else:
+
+                    return HttpResponse(settings.HOME_PAGE + 'worker/settings/')
 
             else:
 
-                HttpResponse('Что то пощло не так')
+                if request.is_ajax():
+
+                    return JsonResponse({'status': False, 'csrfmiddlewaretoken': csrf.get_token(request)})
+
+                else:
+
+                    HttpResponse('Что то пощло не так')
 
         else:
 
-            return HttpResponse('404: Страница не найдена')
+            if request.is_ajax():
+
+                return JsonResponse({'status': False, 'csrfmiddlewaretoken': csrf.get_token(request)})
+
+            else:
+
+                return HttpResponse('404: Страница не найдена')
     else:
-        return HttpResponse('403: Доступ запрещен')
+
+        if request.is_ajax():
+
+            return JsonResponse({'status': False, 'csrfmiddlewaretoken': csrf.get_token(request)})
+
+        else:
+
+            return HttpResponse('403: Доступ запрещен')
 
 def showSettings(request):
 
@@ -380,9 +411,9 @@ def saveComments(request):
                 Comment.idProf   = get_object_or_404(Professions, id=data.get("idprofession"))
                 Comment.save()
 
-                return HttpResponse("http://py.itoe.ru:56503/worker/info/?id=" + str(data.get("idworker")))
+                return HttpResponse(settings.HOME_PAGE + "/worker/info/?id=" + str(data.get("idworker")))
 
-            return HttpResponse('http://py.itoe.ru:56503/')
+            return HttpResponse(settings.HOME_PAGE)
 
         else:
 

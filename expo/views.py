@@ -8,6 +8,7 @@ from expo.DataGet import getCityListFull, getProfessionList
 from django.http import HttpResponseForbidden, Http404, HttpResponse, JsonResponse
 import json
 
+
 # Create your views here.
 def company(request):
 

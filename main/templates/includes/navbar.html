@@ -9,14 +9,11 @@
             <ul class="navbar-nav ml-auto">
 
                 {% if user.is_active %}
-                    <li class="nav-item dropdown">
+                    <a class="nav-link ml-4 mt-1 text-menu" style="color: #1e1e1e;" href="#">Сообщения <span class="badge badge-pill badge-danger">{{user|getactualmessage}}</span></a>
+                    <li class="nav-item dropdown mt-1">
                         <a class="nav-link dropdown-toggle text-menu" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  style="">
-                            {% if user.usertype.worker.foto %}
-                                <img src="{{user.usertype.worker|getresizelink}}" class="rounded-circle z-depth-0" alt="avatar image" style="max-height: 30px">
-                                {{user.usertype.worker.name|title}}
-                            {% else %}
-                                <span class="fa fa-user"></span> Профиль
-                            {% endif %}
+                            <img src="{{user|getresizelink}}" class="rounded-circle z-depth-0" alt="avatar image" style="max-height: 30px">
+                            {{user|getname}}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             {% if user.is_active %}

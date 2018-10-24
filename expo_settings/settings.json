@@ -2,5 +2,9 @@
   "SECRET_KEY":"6i0a)qi2!4&^(c7ie2@_v1y2w^sq##9+ilw)3^v!d5&xuh)=3a",
   "DEBUG": true,
   "ALLOWED_HOSTS": ["10.10.48.201", "vpn2.contrail.ru", "cs.itoe.ru", "py.itoe.ru"],
-  "HOME_PAGE": "http://py.itoe.ru:56503/"
+  "HOME_PAGE": "http://py.itoe.ru:56503/",
+  "STATIC_HOST": "/static/",
+  "STATIC": "static/",
+  "MEDIA_HOST": "/media/",
+  "MEDIA": "main\\media\\main"
 }

@@ -548,6 +548,8 @@ class JobResponse(models.Model):
         self.jobOrder.responseCount = len(JobResponse.objects.filter(jobOrder = self.jobOrder).values('id'))
         self.jobOrder.save()
 
+        Message.SaveJobResponse(self)
+
 class UserType(models.Model):
 
     id      = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -608,6 +610,34 @@ class UserType(models.Model):
 
             return None
 
+    def GetUserFromWorker(worker):
+
+        user = None
+
+        try:
+
+            user = UserType.objects.get(worker=worker).user
+
+        except:
+
+            print('не удалось получить пользователя по работнику')
+
+        return user
+
+    def GetUserFromCompany(company):
+
+        user = None
+
+        try:
+
+            user = UserType.objects.get(company=company).user
+
+        except:
+
+            print('не удалось получить пользователя по компании')
+
+        return user
+
     def GetElementByUser(user):
 
         elem = None
@@ -655,6 +685,7 @@ class Comments(models.Model):
     def save(self, *args, **kwargs):
         super(Comments, self).save(*args, **kwargs)  # Call the "real" save() method.
         Comments.setRating(self)
+        Message.SaveComment(self)
 
     def setRating(comment):
         rating = Comments.objects.all().filter(idWorker=comment.idWorker).aggregate(models.Avg('rating'), models.Count('id'))
@@ -680,6 +711,60 @@ class Comments(models.Model):
             e['idWorker__image'] = Attacment.getresizelink(Attacment.objects.get(id = e['idWorker__image']))
 
         return objects
+
+class Message(models.Model):
+
+    id              = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    sender          = models.ForeignKey(User, related_name= "Отправитель", verbose_name="Отправитель", on_delete=models.CASCADE)
+    recipient       = models.ForeignKey(User, related_name= "Получатель", verbose_name="Получатель", on_delete=models.CASCADE)
+    text            = models.TextField("Текст")
+    read            = models.BooleanField("Прочитано", default=False)
+    created         = models.DateTimeField("Дата добавления", auto_now_add=True, null=True)
+    comment         = models.ForeignKey(Comments, verbose_name="ссылка на комментарий", on_delete=models.CASCADE, null=True)
+    jobresponse     = models.ForeignKey(JobResponse, verbose_name="ссылка на отклик", on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return self.id
+
+    def GetActualCount(user):
+
+        count = 0
+
+        if user.is_authenticated:
+
+            count = Message.objects.all().filter(recipient=user).filter(read=False).aggregate(models.Avg('recipient'), models.Count('id')).get('id__count', 0)
+
+        return count
+
+    def SaveComment(Comment):
+
+        recipient = UserType.GetUserFromWorker(worker=Comment.idWorker)
+
+        if recipient != None:
+
+            message = Message()
+
+            message.sender      = Comment.idUser
+            message.recipient   = recipient
+            message.text        = 'Добавлен новый отзыв'
+            message.comment     = Comment
+
+            message.save()
+
+    def SaveJobResponse(Jobresponse):
+
+        sender = UserType.GetUserFromWorker(worker=Jobresponse.worker)
+
+        if sender != None:
+
+            message = Message()
+
+            message.sender      = sender
+            message.recipient   = UserType.GetUserFromCompany(company=Jobresponse.jobOrder.company)
+            message.text        = 'Добавлен новый отклик на заказ'
+            message.jobresponse = Jobresponse
+
+            message.save()
 
 class WorkerRating(models.Model):
 

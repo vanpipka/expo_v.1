@@ -143,9 +143,9 @@ def setWorker(id, data):
             worker.workpermit = False
 
     # Обработаем национальность
-    if data.__contains__('nationality'):
+    if data.__contains__('country'):
 
-        country = Country.objects.get(id=data.__getitem__('nationality'))
+        country = Country.objects.get(id=data.__getitem__('country'))
 
         worker.nationality = country
 
@@ -155,22 +155,44 @@ def setWorker(id, data):
     if data.__contains__('fotourl'):
         strOne = data.__getitem__('fotourl')
 
-        fileurl = Attacment.savefile(base64data=strOne, src='foto', resizeit=True)
+        if strOne != None:
 
-        if fileurl:
-            worker.image = fileurl
+            fileurl = Attacment.savefile(base64data=strOne, src='foto', resizeit=True)
+
+            if fileurl:
+                worker.image = fileurl
+
+        else:
+
+            try:
+
+                img = Attacment.objects.get(id='00000000000000000000000000000000')
+
+            except:
+
+                img = Attacment()
+
+                img.id = '00000000000000000000000000000000'
+
+                img.save()
+
+            worker.image = img
 
     #Сохраним
     worker.save()
 
     # Обработаем выбранные профессии
-    worker.professions.clear()
+    if data.__contains__('professions'):
 
-    if data.__contains__('proflist'):
-        professions = list(data.__getitem__('proflist'))
+        worker.professions.clear()
+
+        professions = list(data.__getitem__('professions'))
 
         for id_prof in professions:
-            worker.professions.add(Professions.objects.get(id=id_prof))
+            try:
+                worker.professions.add(Professions.objects.get(id=id_prof))
+            except:
+                print("не удалось сохранить профессию")
 
     if data.__contains__('delattachments'):
         delattachments = list(data.__getitem__('delattachments'))
@@ -197,9 +219,9 @@ def setWorker(id, data):
       #          worker.WorkerAttachment.add(attach)
 
     #обработаем указанные цены
-    CostOfService.objects.filter(idWorker=worker).delete()
-    if data.__contains__('servicelist'):
 
+    if data.__contains__('servicelist'):
+        CostOfService.objects.filter(idWorker=worker).delete()
         servicelist = list(data.__getitem__('servicelist'))
         for service in servicelist:
 
