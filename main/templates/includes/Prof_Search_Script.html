@@ -1,3 +1,4 @@
+{% load home_extras %}
 <script>
     var prof_tags = [];
     var city_tags = [];
@@ -8,7 +9,7 @@
             if (prof_tags.length == 0) {
 
                 $.ajax({
-                    url: "http://py.itoe.ru:56503/m/professionlist/",
+                    url: "{% get_attribute 'HOME_PAGE' %}m/professionlist/",
                     dataType: "json",
                       // параметры запроса, передаваемые на сервер (последний - подстрока для поиска):
                     data:{
@@ -36,7 +37,7 @@
             if (city_tags.length == 0) {
 
                 $.ajax({
-                    url: "http://py.itoe.ru:56503/m/citylist/",
+                    url: "{% get_attribute 'HOME_PAGE' %}m/citylist/",
                     dataType: "json",
                       // параметры запроса, передаваемые на сервер (последний - подстрока для поиска):
                     data:{

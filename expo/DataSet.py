@@ -78,7 +78,7 @@ def setWorker(id, data):
     # Обработаем пол
     if data.__contains__('sex'):
         sex = data.__getitem__('sex')
-        if sex == '1':
+        if sex == '1' or sex == 1:
             worker.sex = True
         else:
             worker.sex = False
@@ -220,9 +220,9 @@ def setWorker(id, data):
 
     #обработаем указанные цены
 
-    if data.__contains__('servicelist'):
+    if data.__contains__('services'):
         CostOfService.objects.filter(idWorker=worker).delete()
-        servicelist = list(data.__getitem__('servicelist'))
+        servicelist = list(data.__getitem__('services'))
         for service in servicelist:
 
             price       = service['price']

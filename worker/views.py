@@ -204,6 +204,7 @@ def showSettingsJson(request):
                     {"columnname": "emailaddress", "label": "Электронная почтка", "type": "string", "subtype": "email", "value": worker.get('emailaddress', '')},
                     {"columnname": "haveip", "label": "Я зарегистрирован как ИП", "type": "boolean", "value": worker.get('haveip', False)},
                     {"columnname": "haveinstrument", "label": "Есть свои инструменты", "type": "boolean", "value": worker.get('haveinstrument', False)},
+                    {"columnname": "experiencedate", "label": "Работаю на выставках с", "type": "year", "min": 1990, "max": 2020, "value": worker.get('experiencedate', False)},
                     {"columnname": "experience", "label": "Опыт работы на выставках", "type": "text", "value": worker.get('experience', '')}
                 ]},
                 {"name": "Командировки", "items": [
