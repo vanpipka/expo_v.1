@@ -24,111 +24,104 @@
             </div>
 
         </div>
-        <div class="row" style="margin-top: -20px">
-            <div class="col ml-3 mr-3">
-                <hr class="bg-color-dark-grey" style="border: none; height: 1px;">
-            </div>
-        </div>
 
-        {% for n in jobsList %}
+        <table class="table table-hover">
+            <tbody>
+            {% for n in jobsList %}
+                <tr>
+                    <td scope="row">
 
-            <div id="div_{{ n.id }}">
+                        <div id="div_{{ n.id }}">
 
-                <div class="row pt-3 mr-3" style="margin: 5px">
-                    <div class="col col-4 col-md-4">
-                        <span class="text-menu-grey">Место проведения</span>
-                    </div>
-                    <div class="col col-6 col-md-4">
-                        <span class="text-menu txt-bold" id="job_city_{{ n.id }}">{{ n.city__name }}</span>
-                    </div>
+                            <div class="row pt-3 mr-3" style="margin: 5px">
+                                <div class="col col-4 col-md-4">
+                                    <span class="text-menu-grey">Место проведения</span>
+                                </div>
+                                <div class="col col-6 col-md-4">
+                                    <span class="text-menu txt-bold" id="job_city_{{ n.id }}">{{ n.city__name }}</span>
+                                </div>
 
-                    {% if user.is_active and userType == 1%}
-                    <div class="col col-2 col-md-4">
-                        {% if n.response_is_available %}
-                            <button class="btn btn-danger container-fluid" type="button" onclick="get_job_data(this)" style=" border-radius: 0px; margin-top: -13px" data-toggle="modal" data-target="#addResponse" id = '{{ n.id }}'>Откликнуться</button>
-                        {% else %}
-                            <button class="btn btn-secondary bg-white text-dark container-fluid" type="button" style="margin-top: -13px; border-radius: 0px" id = '{{ n.id }}'>Отклик отправлен</button>
-                        {% endif %}
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="row pt-3 mr-3" style="margin: 5px">
-                    <div class="col col-4">
-                        <span class="text-menu-grey">Дата проведения</span>
-                    </div>
-                    <div class="col col-8">
-                        <span class="text-menu txt-bold" id ="job_date_{{ n.id }}">{{ n.date|date:"d M Y" }}</span>
-                    </div>
-                </div>
+                                {% if user.is_active and userType == 1%}
+                                <div class="col col-2 col-md-4">
+                                    {% if n.response_is_available %}
+                                        <button class="btn btn-danger container-fluid" type="button" onclick="get_job_data(this)" style=" border-radius: 0px; margin-top: -13px" data-toggle="modal" data-target="#addResponse" id = '{{ n.id }}'>Откликнуться</button>
+                                    {% else %}
+                                        <button class="btn btn-secondary bg-white text-dark container-fluid" type="button" style="margin-top: -13px; border-radius: 0px" id = '{{ n.id }}'>Отклик отправлен</button>
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="row pt-3 mr-3" style="margin: 5px">
+                                <div class="col col-4">
+                                    <span class="text-menu-grey">Дата проведения</span>
+                                </div>
+                                <div class="col col-8">
+                                    <span class="text-menu txt-bold" id ="job_date_{{ n.id }}">{{ n.date|date:"d M Y" }}</span>
+                                </div>
+                            </div>
 
-                <div class="row pt-3 mr-3" style="margin: 5px">
-                    <div class="col col-4">
-                        <span class="text-menu-grey">Описание</span>
-                    </div>
-                    <div class="col col-8">
-                        <span>{{ n.description }}</span>
-                    </div>
-                </div>
+                            <div class="row pt-3 mr-3" style="margin: 5px">
+                                <div class="col col-4">
+                                    <span class="text-menu-grey">Описание</span>
+                                </div>
+                                <div class="col col-8">
+                                    <span>{{ n.description }}</span>
+                                </div>
+                            </div>
 
-                {% if  n.job_composition %}
+                            {% if  n.job_composition %}
 
-                <div class="row pt-3 mr-3" style="margin: 5px">
-                    <div class="col col-4">
-                        <span class="text-menu-grey">Требуются</span>
-                    </div>
-                    <div class="col col-8">
+                            <div class="row pt-3 mr-3" style="margin: 5px">
+                                <div class="col col-4">
+                                    <span class="text-menu-grey">Требуются</span>
+                                </div>
+                                <div class="col col-8">
 
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th><span class="text-menu txt-bold">Профессия</span></th>
-                                    <th><span class="text-menu txt-bold">Количество</span></th>
-                                    <th><span class="text-menu txt-bold">Ставка (руб./ч)</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th><span class="text-menu txt-bold">Профессия</span></th>
+                                                <th><span class="text-menu txt-bold">Количество</span></th>
+                                                <th><span class="text-menu txt-bold">Ставка (руб./ч)</span></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
 
-                                {% for e in n.job_composition %}
-                                <tr>
-                                    <td>{{ e.profession__name }}</td>
-                                    <td>{{ e.count }}</td>
-                                    <td>{{ e.price }}</td>
-                                </tr>
-                                {% endfor %}
+                                            {% for e in n.job_composition %}
+                                            <tr>
+                                                <td>{{ e.profession__name }}</td>
+                                                <td>{{ e.count }}</td>
+                                                <td>{{ e.price }}</td>
+                                            </tr>
+                                            {% endfor %}
 
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
 
-                {% endif %}
+                            {% endif %}
 
-                <div class="row color-dark-grey mb-3 pr-4">
-                    <div class="col col-4">
-                    </div>
-                    <div class="col col-4 text-right" id ="job_company_{{ n.id }}">
-                        {{ n.company__name }}
-                    </div>
-                    <div class="col col-2 text-right" >
-                        {{ n.created|date:"d M Y" }}
-                    </div>
-                    <div class="col col-2 text-right pr-4" >
-                        <span class="badge {% if n.responseCount %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">{% if n.responseCount %}{{ n.responseCount }} отклик(а){% else %}Откликов нет{% endif %}</span>
-                    </div>
-                </div>
+                            <div class="row color-dark-grey mb-3 pr-4">
+                                <div class="col col-4">
+                                </div>
+                                <div class="col col-4 text-right" id ="job_company_{{ n.id }}">
+                                    {{ n.company__name }}
+                                </div>
+                                <div class="col col-2 text-right" >
+                                    {{ n.created|date:"d M Y" }}
+                                </div>
+                                <div class="col col-2 text-right pr-4" >
+                                    <span class="badge {% if n.responseCount %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">{% if n.responseCount %}{{ n.responseCount }} отклик(а){% else %}Откликов нет{% endif %}</span>
+                                </div>
+                            </div>
 
-
-
-
-            </div>
-
-            <div class="row ">
-                <div class="col ml-3 mr-3">
-                    <hr class="bg-color-dark-grey" style="border: none; height: 1px;">
-                </div>
-            </div>
-
-        {% endfor %}
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 
     </div>
 
@@ -243,7 +236,7 @@
                                                         }
                                                     }
 
-                                                    xhr.open("POST", settings.HOME_PAGE + "v/jobs/save/", true);
+                                                    xhr.open("POST", "{% get_attribute 'HOME_PAGE' %}jobs/save/", true);
                                                     xhr.send(formData);
                                                 }
                                             </script>

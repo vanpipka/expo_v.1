@@ -646,7 +646,7 @@
                         span.innerText = JSON.parse(xhr.responseText).count;
                     }
                 }
-                xhr.open("POST", settings.HOME_PAGE + \"/worker/m/searchcount/", true);
+                xhr.open("POST", "{% get_attribute 'HOME_PAGE' %}worker/m/searchcount/", true);
                 xhr.send(formData);
             }
         }
@@ -693,7 +693,7 @@
                     workercontainer.innerHTML = workercontainer.innerHTML + xhr.responseText;
                 }
             }
-            xhr.open("POST", settings.HOME_PAGE + "/worker/searchnext/", true);
+            xhr.open("POST", "{% get_attribute 'HOME_PAGE' %}/worker/searchnext/", true);
             xhr.send(formData);
 
         }

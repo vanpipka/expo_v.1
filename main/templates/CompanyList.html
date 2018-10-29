@@ -24,52 +24,46 @@
             </div>
 
         </div>
-        <div class="row" style="margin-top: -20px">
-            <div class="col ml-3 mr-3">
-                <hr class="bg-color-dark-grey" style="border: none; height: 1px;">
-            </div>
-        </div>
 
-    {% for company in companyList %}
+        <table class="table table-hover">
+            <tbody>
+                {% for company in companyList %}
+                <tr>
+                    <td scope="row">
+                        <div class="row pl-3">
 
-        <div class="row pl-3">
+                            <div class="col col-3">
+                                <div class="img" align="center" style="min-width: 100%; min-height: 160px;max-height: 160px; border-radius: 4px; background-position: center; background-image: url('{{ company.resizefotourl }}'); background-size: cover;">
 
-            <div class="col col-3">
-                <div class="img" align="center" style="min-width: 100%; min-height: 160px;max-height: 160px; border-radius: 4px; background-position: center; background-image: url('{{ company.resizefotourl }}'); background-size: cover;">
+                                </div>
 
-                </div>
-
-            </div>
-
-            <div class="col col-9">
-                <div class="row">
-                    <div class="col col-8">
-                        <span class="text-menu txt-bold">{{ company.name }}</span>
-                        <div>
-                            {{ company.description }}
-                        </div>
-                    </div>
-                    <div class="col col-4">
-                        {% if company.isonline %}
-                            <span class="badge badge-primary float-right mt-3" style="font-family: sans-serif;">Онлайн</span>
-                        {% else %}
-                            <div class="pt-2 text-right">
-                                <span style="color: #4e555b">был в сети {{ company.lastonline|date:"d M" }}</span>
                             </div>
-                        {% endif %}
-                    </div>
-                </div>
 
-            </div>
-        </div>
+                            <div class="col col-9">
+                                <div class="row">
+                                    <div class="col col-8">
+                                        <span class="text-menu txt-bold">{{ company.name }}</span>
+                                        <div>
+                                            {{ company.description }}
+                                        </div>
+                                    </div>
+                                    <div class="col col-4">
+                                        {% if company.isonline %}
+                                            <span class="badge badge-primary float-right mt-3" style="font-family: sans-serif;">Онлайн</span>
+                                        {% else %}
+                                            <div class="pt-2 text-right">
+                                                <span style="color: #4e555b">был в сети {{ company.lastonline|date:"d M" }}</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
 
-        <div class="row">
-            <div class="col">
-                <hr class="bg-color-grey" style="border: none; height: 2px;">
-            </div>
-        </div>
-
-    {% endfor %}
-
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 {% endblock %}

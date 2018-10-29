@@ -131,7 +131,7 @@ def showSettings(request):
                 worker          = {}
 
             context = {'worker': worker,
-                       'city': getCityList(),
+                       #'city': getCityList(),
                        'citylist': getCityListFull(),
                        'serviceList': getServiceList(),
                        'countryList': getCountryList(),
@@ -220,21 +220,22 @@ def showSettingsJson(request):
                     {"columnname": "salary", "label": "Постоянная работа", "type": "int", "value": worker['works'].get('salary', 0)},
                 ]},
                 {"name": "Дополнительно", "items": [
-                    {"columnname": "personaldataisallowed", "label": "Даю согласие на обработку персональных данных", "type": "boolean", "value": worker.get('personaldataisallowed', False), "backgroundcolor": "#dc3545"},
-                    {"columnname": "publishdata", "label": "Опубликовать анкету в общий доступ", "type": "boolean", "value": worker.get('publishdata', False), "backgroundcolor": "#20c997"},
+                    {"columnname": "personaldataisallowed", "label": "Даю согласие на обработку персональных данных", "labelposition": "right", "width": "100%", "type": "boolean", "value": worker.get('personaldataisallowed', False), "backgroundcolor": "#f8d7da"},
+                    {"columnname": "publishdata", "label": "Опубликовать анкету в общий доступ", "labelposition": "right", "width": "100%", "type": "boolean", "value": worker.get('publishdata', False), "backgroundcolor": "#d4edda"},
                 ]}
             ]
         }
 
         context = {'worker': struct,
-                       #'city': getCityList(),
+                       'status': True,
                        #'serviceList': getServiceList(),
                        #'professionList': getProfessionListWithGroup(selectedList=selectedList),
                        'csrfmiddlewaretoken': token}
 
         #return render(request, 'WorkerSettings.html', context)
     else:
-        context["message"] = '403: Доступ запрещен'
+        context["message"]  = '403: Доступ запрещен'
+        context["status"]   = False
 
     return JsonResponse(context)
 

@@ -2,7 +2,7 @@
 from django.shortcuts import render
 from datetime import datetime as datet
 from datetime import timezone
-from main.models import Company, News, JobOrder, UserType, Attacment
+from main.models import Company, News, JobOrder, UserType, Attacment, Message
 from expo.DataSet import refreshLastOnline
 from expo.DataGet import getCityListFull, getProfessionList
 from django.http import HttpResponseForbidden, Http404, HttpResponse, JsonResponse
@@ -41,6 +41,19 @@ def news(request):
         refreshLastOnline(request.user)
 
     return render(request, 'NewsList.html', {"newsList": News.GetActual(News)})
+
+def messages(request):
+
+    userAauthorized = request.user.is_authenticated
+
+    if userAauthorized:
+        refreshLastOnline(request.user)
+
+    messagelist = Message.GetAll(request.user)
+
+    print(messagelist)
+
+    return render(request, 'MessageList.html', {"messageList": messagelist})
 
 def jobs(request):
 

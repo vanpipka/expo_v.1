@@ -174,7 +174,7 @@
                                             }
                                         }
 
-                                        xhr.open("POST", settings.HOME_PAGE + "/jobs/saveorder/", true);
+                                        xhr.open("POST", "{% get_attribute 'HOME_PAGE' %}jobs/saveorder/", true);
                                         xhr.send(formData);
                                     }
 

@@ -1,3 +1,5 @@
+from typing import Type
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.contrib.auth.models import User
@@ -487,7 +489,13 @@ class JobOrder(models.Model):
 
                 jobOrder.company        = UserType.GetElementByUser(user)
                 jobOrder.description    = data.get('job_description', '')
-                jobOrder.city           = City.objects.get(id=data.get('job_city', '00000000000000000000000000000000'))
+
+                id_city = data.get('job_city', '00000000000000000000000000000000')
+
+                if id_city == '':
+                    id_city = '00000000000000000000000000000000'
+
+                jobOrder.city = City.objects.get(id=id_city)
 
                 try:
                     jobOrder.date = datetime.datetime.strptime(data.get('job_date', "1960-01-01"), "%Y-%m-%d")
@@ -642,18 +650,20 @@ class UserType(models.Model):
 
         elem = None
 
-        #try:
-        element = UserType.objects.get(user=user)
+        print(user)
 
-        print(element)
+        try:
+            element = UserType.objects.get(user=user)
 
-        if element.type == 1:
-            elem = element.worker
-        else:
-            elem = element.company
+            print(element)
 
-        #except ObjectDoesNotExist:
-        print('не удалось получить запись userType')
+            if element.type == 1:
+                elem = element.worker
+            else:
+                elem = element.company
+
+        except ObjectDoesNotExist:
+            print('не удалось получить запись userType')
 
         return elem
 
@@ -735,6 +745,31 @@ class Message(models.Model):
             count = Message.objects.all().filter(recipient=user).filter(read=False).aggregate(models.Avg('recipient'), models.Count('id')).get('id__count', 0)
 
         return count
+
+    def GetAll(user):
+
+        messageList = []
+
+        messageQuery = Message.objects.all().filter(recipient=user).order_by("-created")
+
+        for e in messageQuery:
+
+            sender = UserType.GetElementByUser(e.sender)
+
+            #print(type(sender))
+
+            if type(sender) == Worker:
+                url = '/worker/info?id='+str(sender.id)
+            else:
+                url = '#'
+
+            messageList.append({'id': e.id, 'text': e.text, 'sender': {'name': sender.name, 'foto': Attacment.getresizelink(sender.image), 'url': url}})
+
+            if e.read == False:
+                e.read = True
+                e.save()
+
+        return messageList
 
     def SaveComment(Comment):
 

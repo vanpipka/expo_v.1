@@ -250,7 +250,7 @@ def getCityList():
 
   for e in querySet:
 
-      cityList.append({'id': e.id, 'name': e.name, 'region': str(e.region), 'country': str(e.country)})
+      cityList.append({'id': e.id, 'name': e.name})
 
   return cityList
 

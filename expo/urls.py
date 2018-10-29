@@ -23,6 +23,7 @@ urlpatterns = [
     path('', include('main.urls')),
     path('worker/', include('worker.urls')),
     path('company/', views.company),
+    path('messages/', views.messages),
     path('news/', views.news),
     path('jobs/save/', views.savejobs),
     path('jobs/saveorder/', views.saveorder),

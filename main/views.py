@@ -1,6 +1,6 @@
 from django.http import  JsonResponse
 from django.shortcuts import render
-from expo.DataGet import  getProfessionList, getAllProfessionsAndGroups, getCityListFull, getServiceList, getCountryList
+from expo.DataGet import  getProfessionList, getAllProfessionsAndGroups, getCityListFull, getServiceList, getCountryList, getCityList
 from expo.DataSet import refreshLastOnline
 from main.models import UserType, News, Comments, Attacment
 
@@ -195,8 +195,8 @@ def jsonCityList(request):
     if request.user.is_authenticated:
         refreshLastOnline(request.user)
 
-    #context = getCityList()
-    context = getCityListFull()
+    context = getCityList()
+    #context = getCityListFull()
 
     response = JsonResponse({'dataset': context})
     response['Access-Control-Allow-Origin'] = "*"
