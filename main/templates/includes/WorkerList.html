@@ -1,141 +1,144 @@
 {% load home_extras %}
 {% load i18n %}
-{% for worker in dataset %}
 
-    <div class="row mb-3">
+<table class="table table-hover">
+    <tbody>
+    {% for worker in dataset %}
+        <tr>
+            <td scope="row">
 
-        <div class="col col-4 col-sm-5 col-md-4 col-lg-3">
+                <div class="row mb-3">
 
-            <img class="mr-3" src="{{ worker.resizefotourl }}" style="width: 100%;">
+                    <div class="col col-4 col-sm-5 col-md-4 col-lg-3">
 
-            <div class="row mt-1">
+                        <img class="mr-3" src="{{ worker.resizefotourl }}" style="width: 100%;">
 
-                <div class="col col-4" >
-                    <div class="bg-color-grey" style="height: 40px; width: 40px; border-radius: 4px;" align="center">
-                        <span class="article article-sm">{{ worker.rating|floatformat:1}} </span>
-                    </div>
-                </div>
+                        <div class="row mt-1">
 
-                <div class="col col-8">
-                    <div class="stars stars-example-css mt-3">
-                        <div class="br-wrapper br-theme-css-stars">
-                            <div class="br-widget">
-                                <a {% if worker.rating >= 0.5 %} class="br-selected" {% endif %}></a>
-                                <a {% if worker.rating >= 1.5 %} class="br-selected" {% endif %}></a>
-                                <a {% if worker.rating >= 2.5 %} class="br-selected" {% endif %}></a>
-                                <a {% if worker.rating >= 3.5 %} class="br-selected" {% endif %}></a>
-                                <a {% if worker.rating >= 4.5 %} class="br-selected" {% endif %}></a>
+                            <div class="col col-4" >
+                                <div class="bg-color-grey" style="height: 40px; width: 40px; border-radius: 4px;" align="center">
+                                    <span class="article article-sm">{{ worker.rating|floatformat:1}} </span>
+                                </div>
+                            </div>
+
+                            <div class="col col-8">
+                                <div class="stars stars-example-css mt-3">
+                                    <div class="br-wrapper br-theme-css-stars">
+                                        <div class="br-widget">
+                                            <a {% if worker.rating >= 0.5 %} class="br-selected" {% endif %}></a>
+                                            <a {% if worker.rating >= 1.5 %} class="br-selected" {% endif %}></a>
+                                            <a {% if worker.rating >= 2.5 %} class="br-selected" {% endif %}></a>
+                                            <a {% if worker.rating >= 3.5 %} class="br-selected" {% endif %}></a>
+                                            <a {% if worker.rating >= 4.5 %} class="br-selected" {% endif %}></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="margin-top: -18px">
+                                    <label class="col-xs-2 control-label input-medium color-dark-grey">{{worker.commentscount}} оценок</label>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div style="margin-top: -18px">
-                        <label class="col-xs-2 control-label input-medium color-dark-grey">{{worker.commentscount}} оценок</label>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="col col-8 col-sm-7 col-md-8 col-lg-9">
-            <div class="row">
-                <div class="col col-12 col-sm-12 col-md-12 col-lg-8 ">
-                    <a href="{{ worker.url }}" class="text-danger article-sm" style="text-decoration: none">{{ worker.name|title }} {{ worker.surname|title }}</a>
-                    {% if worker.age %}
-                        <span class="color-dark-grey article-sm">, {{ worker.age }} {{ worker.age|decline }}
-                        </span>
-                    {% endif %}
-                </div>
-                <div class="col col-12 col-sm-12 col-md-12 col-lg-4">
-                    {% if worker.isonline %}
-                        <span class="badge badge-primary float-right mt-3" style="font-family: sans-serif;">Онлайн</span>
-                    {% else %}
-                        <div class="pt-2 text-right">
-                            <label for="onlyfoto" class="col-xs-2 control-label input-medium">был в сети {{ worker.lastonline|date:"d M" }}</label>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col col-sm-12 col-md-12 col-lg-7">
-                    <div class="row mb-2">
-                        <div class="col">
-                            <span class="text-menu txt-bold">{{ worker.city.name }}</span>
-                        </div>
-                    </div>
-                    {% if worker.proflist %}
+                    <div class="col col-8 col-sm-7 col-md-8 col-lg-9">
                         <div class="row">
-                            <div class="col col-7">
-                                <span class="text-menu-grey">Специализация</span>
+                            <div class="col col-12 col-sm-12 col-md-12 col-lg-8 ">
+                                <a href="{{ worker.url }}" class="text-danger article-sm" style="text-decoration: none">{{ worker.name|title }} {{ worker.surname|title }}</a>
+                                {% if worker.age %}
+                                    <span class="color-dark-grey article-sm">, {{ worker.age }} {{ worker.age|decline }}
+                                    </span>
+                                {% endif %}
                             </div>
-                            <div class="col col-5 text-right">
-                                {% if worker.experienceyear %}
-                                    <span class="text-menu" style="font-size: 14px">Опыт {{ worker.experienceyear }} {{ worker.experienceyear|decline }}</span>
+                            <div class="col col-12 col-sm-12 col-md-12 col-lg-4">
+                                {% if worker.isonline %}
+                                    <span class="badge badge-primary float-right mt-3" style="font-family: sans-serif;">Онлайн</span>
+                                {% else %}
+                                    <div class="pt-2 text-right">
+                                        <label for="onlyfoto" class="col-xs-2 control-label input-medium">был в сети {{ worker.lastonline|date:"d M" }}</label>
+                                    </div>
                                 {% endif %}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col pl-5 text-right">
-                                <span class="text-menu" style="font-size: 14px">
-                                    {% for prof in worker.proflist %}
-                                        {% if forloop.counter0 != 0 %}, {% endif %}{{prof.name}}
+                            <div class="col col-sm-12 col-md-12 col-lg-7">
+                                <div class="row mb-2">
+                                    <div class="col">
+                                        <span class="text-menu txt-bold">{{ worker.city.name }}</span>
+                                    </div>
+                                </div>
+                                {% if worker.proflist %}
+                                    <div class="row">
+                                        <div class="col col-7">
+                                            <span class="text-menu-grey">Специализация</span>
+                                        </div>
+                                        <div class="col col-5 text-right">
+                                            {% if worker.experienceyear %}
+                                                <span class="text-menu" style="font-size: 14px">Опыт {{ worker.experienceyear }} {{ worker.experienceyear|decline }}</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col pl-5 text-right">
+                                            <span class="text-menu" style="font-size: 14px">
+                                                {% for prof in worker.proflist %}
+                                                    {% if forloop.counter0 != 0 %}, {% endif %}{{prof.name}}
+                                                {% endfor %}
+                                            </span>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% if worker.works.salary %}
+                                    <div class="row">
+                                        <div class="col col-7">
+                                            <span class="text-menu-grey">Постоянная работа</span>
+                                        </div>
+                                        <div class="col col-5 text-right">
+                                            <span class="text-menu" style="font-size: 14px"> {{ worker.works.salary }} &#8381 </span>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% if worker.works.servicelist %}
+                                    <div class="row">
+                                        <div class="col">
+                                            <span class="text-menu-grey">Проектная работа</span>
+                                        </div>
+                                    </div>
+
+                                    {% for e in worker.works.servicelist %}
+                                        <div class="row">
+                                            <div class="col col-7 pl-5">
+                                                <span class="text-menu" style="font-size: 14px"> {{ e.service }}</span>
+                                            </div>
+                                            <div class="col col-5 text-right">
+                                                <span class="text-menu" style="font-size: 14px"> {{ e.price }} &#8381 </span>
+                                            </div>
+                                        </div>
+
                                     {% endfor %}
-                                </span>
+                                {% endif %}
+
+                            </div>
+
+                            <div class="col col-sm-12 col-md-12 col-lg-5">
+                                <span class="badge container-fluid {% if worker.fsocheck %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Проверка ФСО пройдена</span>
+                                <span class="badge container-fluid {% if worker.workpermit %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Есть разрешение на работу</span>
+                                <span class="badge container-fluid {% if worker.datacheck %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Данные проверены</span>
+                                <span class="badge container-fluid {% if worker.haveip %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Зарегистрирован как ИП</span>
+                                <span class="badge container-fluid {% if worker.haveinstrument %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Есть инструмент</span>
+                                <span class="badge container-fluid {% if worker.readytotravel %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Готов к командировкам</span>
                             </div>
                         </div>
-                    {% endif %}
-
-                    {% if worker.works.salary %}
-                        <div class="row">
-                            <div class="col col-7">
-                                <span class="text-menu-grey">Постоянная работа</span>
-                            </div>
-                            <div class="col col-5 text-right">
-                                <span class="text-menu" style="font-size: 14px"> {{ worker.works.salary }} &#8381 </span>
-                            </div>
-                        </div>
-                    {% endif %}
-
-                    {% if worker.works.servicelist %}
-                        <div class="row">
-                            <div class="col">
-                                <span class="text-menu-grey">Проектная работа</span>
-                            </div>
-                        </div>
-
-                        {% for e in worker.works.servicelist %}
-                            <div class="row">
-                                <div class="col col-7 pl-5">
-                                    <span class="text-menu" style="font-size: 14px"> {{ e.service }}</span>
-                                </div>
-                                <div class="col col-5 text-right">
-                                    <span class="text-menu" style="font-size: 14px"> {{ e.price }} &#8381 </span>
-                                </div>
-                            </div>
-
-                        {% endfor %}
-                    {% endif %}
+                    </div>
 
                 </div>
+            </td>
 
-                <div class="col col-sm-12 col-md-12 col-lg-5">
-                    <span class="badge container-fluid {% if worker.fsocheck %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Проверка ФСО пройдена</span>
-                    <span class="badge container-fluid {% if worker.workpermit %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Есть разрешение на работу</span>
-                    <span class="badge container-fluid {% if worker.datacheck %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Данные проверены</span>
-                    <span class="badge container-fluid {% if worker.haveip %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Зарегистрирован как ИП</span>
-                    <span class="badge container-fluid {% if worker.haveinstrument %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Есть инструмент</span>
-                    <span class="badge container-fluid {% if worker.readytotravel %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Готов к командировкам</span>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="row">
-        <div class="col">
-            <hr class="bg-color-grey" style="border: none; height: 2px;">
-        </div>
-    </div>
-
-{% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
 
 {% if count == 5 %}
     <a onclick="downloadnext(this)" id="{{ nextposition }}">

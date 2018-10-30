@@ -693,7 +693,7 @@
                     workercontainer.innerHTML = workercontainer.innerHTML + xhr.responseText;
                 }
             }
-            xhr.open("POST", "{% get_attribute 'HOME_PAGE' %}/worker/searchnext/", true);
+            xhr.open("POST", "{% get_attribute 'HOME_PAGE' %}worker/searchnext/", true);
             xhr.send(formData);
 
         }

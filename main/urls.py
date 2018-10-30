@@ -25,6 +25,7 @@ urlpatterns = [
     path('m/servicelist/', views.jsonServicesList),
     path('m/selectionparameters/', views.jsonSelectionParameters),
     path('m/citylist/', views.jsonCityList),
+    path('m/citylistgroup/', views.jsonCityListGroup),
     path('m/countrylist/', views.jsonCountryList),
     path('m/checklogin/', views.checkLogin),
     path('m/checkserver/', views.checkServer),

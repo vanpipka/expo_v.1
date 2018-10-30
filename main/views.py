@@ -203,6 +203,20 @@ def jsonCityList(request):
 
     return response
 
+
+def jsonCityListGroup(request):
+
+    if request.user.is_authenticated:
+        refreshLastOnline(request.user)
+
+    #context = getCityList()
+    context = getCityListFull()
+
+    response = JsonResponse({'dataset': context})
+    response['Access-Control-Allow-Origin'] = "*"
+
+    return response
+
 def jsonCountryList(request):
 
     if request.user.is_authenticated:
