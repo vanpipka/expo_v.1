@@ -188,6 +188,11 @@
                                                 </div>
                                             </div>
 
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                                                <button type="submit" class="btn btn-danger">Отправить</button>
+                                            </div>
+
                                             <script>
 
                                                 $('#form').validate({
@@ -229,9 +234,8 @@
                                                         if (xhr.readyState != 4) return;
 
                                                         if (xhr.status != 200) {
-                                                            alert(xhr.status + ': ' + xhr.statusText);
+                                                            location.href = (xhr.responseText);
                                                         } else {
-                                                            alert("Данные сохранены");
                                                             location.href = (xhr.responseText);
                                                         }
                                                     }
@@ -245,10 +249,7 @@
 
                             </div>
 
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-                                <button type="submit" class="btn btn-danger">Отправить</button>
-                            </div>
+
                         </form>
                     {% endif %}
 

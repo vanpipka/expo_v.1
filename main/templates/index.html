@@ -320,7 +320,7 @@
                                 </div>
                                 <div class="card-body">
                                     <h5 class="card-title">{{ e.name }}</h5>
-                                    <p class="card-text" style="height: 150px">{{ e.description }}</p>
+                                    <p class="card-text" style="height: 150px">{{ e.description|truncatechars:200 }}</p>
                                     <a href="{{ e.link }}" target="_blank" class="btn btn-danger-white">Перейти на сайт</a>
                                 </div>
                             </div>

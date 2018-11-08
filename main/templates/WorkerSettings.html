@@ -511,14 +511,13 @@
                 </div>
             </div>-->
 
-            <div class="alert alert-danger mb-3">
-                <label class="checkbox-container">
-                    <input class="" id="id_personaldataisallowed" value="True" type="checkbox" name="personaldataisallowed" {% if worker.personaldataisallowed %}checked{% endif %}>
+            <!--<div class="alert alert-danger mb-3">
+                <label class="checkbox-container" readonly>
+                    <input class="" id="id_personaldataisallowed" value="True" type="checkbox" name="personaldataisallowed" checked>
                     <span class="checkmark"></span>
                     <label for="id_personaldataisallowed" class="col-xs-2 control-label input-medium">Я даю согласие на обработку персональных данных и понимаю, что мои данные будут переданы третьей стороне для проверки</label>
                 </label>
-
-            </div>
+            </div>-->
 
             <div class="alert alert-success">
                 <label class="checkbox-container">
@@ -778,7 +777,7 @@
             country: document.getElementById("id_nationality").value,
             birthday: document.getElementById("id_birthday").value,
             haveinstrument: document.getElementById("id_haveinstrument").checked,
-            personaldataisallowed: document.getElementById("id_personaldataisallowed").checked,
+            //personaldataisallowed: document.getElementById("id_personaldataisallowed").checked,
             publishdata: document.getElementById("id_publishdata").checked,
             fotourl: document.getElementById("fotourl").src,
             attachments: newfiles,
@@ -802,9 +801,11 @@
             if (xhr.readyState != 4) return;
 
             if (xhr.status != 200) {
-                alert(xhr.status + ': ' + xhr.statusText);
+                //console.log(xhr);
+                //alert(xhr.status + ': ' + xhr.statusText);
+                location.href = (xhr.responseText);
             } else {
-                alert("Данные сохранены");
+                //alert("Данные сохранены");
                 location.href = (xhr.responseText);
             }
         }

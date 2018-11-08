@@ -23,7 +23,7 @@ def saveSettings(request):
     if request.user.is_authenticated:
         refreshLastOnline(request.user)
 
-    if request.user.is_authenticated:
+    if request.user.is_authenticated: # != True:
 
         if request.method == "POST":
 
@@ -55,7 +55,7 @@ def saveSettings(request):
                     return JsonResponse({'status': True, 'csrfmiddlewaretoken': csrf.get_token(request)})
 
                 else:
-                    return HttpResponse(settings.HOME_PAGE + 'worker/settings/')
+                    return HttpResponse(settings.HOME_PAGE + 'success/')
 
             elif userType == 2:
 
@@ -75,7 +75,7 @@ def saveSettings(request):
 
                 else:
 
-                    return HttpResponse(settings.HOME_PAGE + 'worker/settings/')
+                    return HttpResponse(settings.HOME_PAGE + 'success/')
 
             else:
 
@@ -85,7 +85,7 @@ def saveSettings(request):
 
                 else:
 
-                    HttpResponse('Что то пощло не так')
+                    return HttpResponse(settings.HOME_PAGE + 'servererror/', status=500)
 
         else:
 
@@ -95,7 +95,7 @@ def saveSettings(request):
 
             else:
 
-                return HttpResponse('404: Страница не найдена')
+                return HttpResponse(settings.HOME_PAGE + 'notfound/', status=404)
     else:
 
         if request.is_ajax():
@@ -104,7 +104,7 @@ def saveSettings(request):
 
         else:
 
-            return HttpResponse('403: Доступ запрещен')
+            return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)
 
 def showSettings(request):
 
@@ -150,9 +150,9 @@ def showSettings(request):
             return render(request, 'CompanySettings.html', context)
 
         else:
-            return HttpResponse('Что то пошло не так')
+            return render(request, 'errors/500.html', None, None, status=500)
     else:
-        return HttpResponse('403: Доступ запрещен')
+        return render(request, 'errors/403.html', None, None, status=403)
 
 def showSettingsJson(request):
 
@@ -397,7 +397,7 @@ def saveComments(request):
     if request.user.is_authenticated:
         refreshLastOnline(request.user)
 
-    if request.user.is_authenticated:
+    if request.user.is_authenticated:# != True:
         if request.method == "POST":
 
             if request.POST.__contains__('data'):
@@ -413,15 +413,14 @@ def saveComments(request):
                 Comment.idProf   = get_object_or_404(Professions, id=data.get("idprofession"))
                 Comment.save()
 
-                return HttpResponse(settings.HOME_PAGE + "/worker/info/?id=" + str(data.get("idworker")))
+                return HttpResponse(settings.HOME_PAGE + 'success/')
 
-            return HttpResponse(settings.HOME_PAGE)
+            return HttpResponse(settings.HOME_PAGE + 'servererror/', status=500)
 
         else:
-
-            return HttpResponse('404: Страница не найдена')
+            return render(request, 'errors/404.html', None, None, status=404)
     else:
-        return HttpResponse('403: Доступ запрещен')
+        return render(request, 'errors/403.html', None, None, status=403)
 
 @csrf_exempt
 def my_view(request):

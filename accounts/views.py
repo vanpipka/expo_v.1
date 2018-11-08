@@ -121,7 +121,7 @@ def signup(request, type):
 
                     else:
 
-                        return render(request, signup_url, {'form': form, 'username': username, 'password1': password, 'password2': password, 'confirmphone': True})
+                        return render(request, signup_url, {'form': form, 'username': username, 'password1': password, 'password2': password, 'confirmphone': True, 'personaldataisallowed': True})
 
                 else:
 

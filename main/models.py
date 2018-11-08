@@ -248,6 +248,7 @@ class Worker(models.Model):
         if workerQuerySet.count() == 0:
             worker = Worker()
             worker.phonenumber = user.username
+            worker.personaldataisallowed = True
             worker.save()
             UserType.AddUserType(worker = worker, user=user, type=type, company=None)
             return worker
@@ -371,6 +372,7 @@ class News(models.Model):
     created     = models.DateTimeField("Дата добавления", auto_now_add=True)
     link        = models.CharField(max_length=100)
     image       = models.CharField(max_length=100)
+    imagelink   = models.ForeignKey(Attacment, on_delete=models.CASCADE, default="00000000000000000000000000000000")
 
     def __str__(self):
         return self.name
@@ -382,14 +384,62 @@ class News(models.Model):
         if position_begin != None and position_end != None:
             objects = objects[position_begin: position_end]
 
-        objects = list(objects.values('id', 'name', 'description', 'link', 'image', 'created'))
+        objects = list(objects.values('id', 'name', 'description', 'link', 'imagelink', 'created'))
 
         for e in objects:
 
-            if e['image']:
-                e['image'] = str(settings.MEDIA_URL) + str(e['image'])
+            print(e['imagelink'])
+
+            if e['imagelink']:
+                e['image'] = Attacment.getresizelink(Attacment.objects.get(id=e['imagelink']))
 
         return objects
+
+    def SaveResponse(user, data):
+
+        if user.is_superuser:
+            #try:
+                news = News()
+
+                news.name           = data.get('name', '')
+                news.description    = data.get('description', '')
+                news.link           = data.get('link', '')
+
+                if data.__contains__('fotourl'):
+                    strOne = data.__getitem__('fotourl')
+
+                    if strOne != None:
+
+                        fileurl = Attacment.savefile(base64data=strOne, src='foto', resizeit=True)
+
+                        if fileurl:
+                            news.imagelink = fileurl
+
+                    else:
+
+                        try:
+
+                            img = Attacment.objects.get(id='00000000000000000000000000000000')
+
+                        except:
+
+                            img = Attacment()
+
+                            img.id = '00000000000000000000000000000000'
+
+                            img.save()
+
+                            news.image = img
+
+                news.save()
+
+            #except:
+            #    print('не удалось сохранить новость')
+            #    return False
+        else:
+            return False
+
+        return True
 
 class JobOrder(models.Model):
 
@@ -447,8 +497,6 @@ class JobOrder(models.Model):
                 if j['jobOrder_id'] == e['id']:
                     e['job_composition'].append(j)
 
-
-
         return objects
 
     def SaveResponse(user, data):
@@ -483,7 +531,7 @@ class JobOrder(models.Model):
 
         if userType == 2:
 
-            #try:
+            try:
 
                 jobOrder = JobOrder()
 
@@ -500,8 +548,7 @@ class JobOrder(models.Model):
                 try:
                     jobOrder.date = datetime.datetime.strptime(data.get('job_date', "1960-01-01"), "%Y-%m-%d")
                 except:
-                     print('ошибка при сохранении даты рождения: ' + str(jobOrder) + '/1960-01-01')
-
+                    print('ошибка при сохранении даты рождения: ' + str(jobOrder) + '/1960-01-01')
 
                 jobOrder.save()
 
@@ -520,11 +567,11 @@ class JobOrder(models.Model):
 
                         Composition.save()
 
-            #except:
+            except:
 
                 return False
 
-            #return True
+            return True
 
         else:
 

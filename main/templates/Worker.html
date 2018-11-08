@@ -13,13 +13,13 @@
 
                 <div class="col col-3">
 
-                   <div class="row mb-2">
+                    <div class="row mb-2">
                        <div class="col">
                            <div class="product-img" style="height: 150px;">
                                <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:150px" src="{{  worker.resizefotourl }}" alt="">
                            </div>
                        </div>
-                   </div>
+                    </div>
 
                     <div class="row mt-2">
 
@@ -47,6 +47,12 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col  pb-2 pt-2">
+                            <a href="" type="" class="btn btn-danger container-fluid">Написать</a>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="col col-6">
@@ -56,7 +62,7 @@
                             <label for="id_name" class="col-xs-2 control-label input-medium">Имя</label>
                         </div>
                         <div class="col col-9">
-                            <input type="text" name = "name" class="form-control" id="id_name" readonly placeholder="Имя" value="{{worker.name}}">
+                            <span  name = "name" class="text-menu txt-bold" id="id_name" placeholder="Имя" value="">{{worker.name}}</span>
                         </div>
                     </div>
 
@@ -65,7 +71,7 @@
                             <label for="id_surname" class="col-xs-2 control-label input-medium">Фамилия</label>
                         </div>
                         <div class="col col-9">
-                            <input type="text" name="surname" class="form-control" id="id_surname" readonly  placeholder="Фамилия" value="{{worker.surname}}" required>
+                            <span  name = "name" class="text-menu txt-bold" id="id_name" placeholder="Имя" value="">{{worker.surname}}</span>
                         </div>
                     </div>
 
@@ -74,7 +80,7 @@
                             <label for="id_surname" class="col-xs-2 control-label input-medium">Отчество</label>
                         </div>
                         <div class="col col-9">
-                            <input type="text" name = "lastname" class="form-control" id="id_lastname" readonly  placeholder="Отчество" value="{{worker.lastname}}">
+                            <span  name = "name" class="text-menu txt-bold" id="id_name" placeholder="Имя" value="">{{worker.lastname}}</span>
                         </div>
                     </div>
 
@@ -83,7 +89,7 @@
                             <label for="City" class="col-xs-2 control-label input-medium">Город</label>
                         </div>
                         <div class="col col-9">
-                            <input type="text" name="id_City" class="form-control" id="id_City"  placeholder="Город" value="{{worker.city.name}}" readonly>
+                            <span  name = "name" class="text-menu txt-bold" id="id_name" placeholder="Имя" value="">{{worker.city.name}}</span>
                         </div>
                     </div>
 
@@ -112,17 +118,12 @@
                         <label for="id_sex" class="col-xs-2 control-label input-medium">Пол</label>
                     </div>
                     <div class="col col-9">
-                        <div class="radios-as-buttons" id = 'id_sex'>
-                            <div>
-                                {% if worker.sex == True %}
-                                    <input type="radio" name="sexradio" id="sex1" checked>
-                                    <label for="sex1">Мужской</label>
-                                {% else %}
-                                    <input type="radio" name="sexradio" id="sex0" checked>
-                                    <label for="sex0">Женский</label>
-                                {% endif %}
-                            </div>
-                        </div>
+                        {% if worker.sex == True %}
+                            <span  name = "name" class="text-menu txt-bold" id="id_name" placeholder="Имя" value="">Мужской</span>
+                        {% else %}
+                            <span  name = "name" class="text-menu txt-bold" id="id_name" placeholder="Имя" value="">Женский</span>
+                        {% endif %}
+
                     </div>
                 </div>
 
@@ -131,7 +132,7 @@
                         <label for="id_birthday" class="col-xs-2 control-label input-medium">День рождения</label>
                     </div>
                     <div class="col col-3">
-                        <input type="text" name="birthday" class="form-control" id="id_birthday"  placeholder="День рождения" value="{{worker.birthday|date:"Y-m-d"}}" readonly>
+                        <span  name = "name" class="text-menu txt-bold" id="id_name" placeholder="Имя" value="">{{worker.birthday|date:"d-M-Y"}}</span>
                     </div>
                 </div>
 
@@ -140,7 +141,7 @@
                         <label for="id_nationality" class="col-xs-2 control-label input-medium">Гражданство</label>
                     </div>
                     <div class="col col-3">
-                        <input type="text" name="nationality" class="form-control" id="id_nationality"  placeholder="Гражданство" value="{{worker.nationality.name}}" readonly>
+                        <span  name = "name" class="text-menu txt-bold" id="id_name" placeholder="Имя" value="">{{worker.nationality.name}}</span>
                     </div>
                 </div>
 
@@ -149,7 +150,7 @@
                         <label for="id_emailaddress" class="col-xs-2 control-label input-medium">Электронная почта</label>
                     </div>
                     <div class="col col-3">
-                        <input type="text" name = "emailaddress" class="form-control" id="id_emailaddress" placeholder="Электронная почта" value="{{worker.emailaddress}}" readonly>
+                        <span  name = "name" class="text-menu txt-bold" id="id_name" placeholder="Имя" value="">{{worker.emailaddress}}</span>
                     </div>
                 </div>
 
@@ -158,7 +159,7 @@
                         <label for="id_phonenumber" class="col-xs-2 control-label input-medium">Телефон</label>
                     </div>
                     <div class="col col-3">
-                        <input type="text" name = "phonenumber" class="form-control" id="id_phonenumber" placeholder="Номер телефона" value="{{worker.phonenumber}}" readonly>
+                        <span  name = "name" class="text-menu txt-bold" id="id_name" placeholder="Имя" value="">{{worker.phonenumber}}</span>
                     </div>
                 </div>
 
@@ -167,7 +168,7 @@
                         <label for="id_Experiencewith" class="col-xs-2 control-label input-medium">Опыт работы на выставках</label>
                     </div>
                     <div class="col col-3">
-                        <input type="text" name = "phonenumber" class="form-control" id="id_phonenumber" placeholder="Номер телефона" value="{{ worker.experienceyear }} {{ worker.experienceyear|decline }}" readonly>
+                        <span  name = "name" class="text-menu txt-bold" id="id_name" placeholder="Имя" value="">{{ worker.experienceyear }} {{ worker.experienceyear|decline }}</span>
                     </div>
                 </div>
 
@@ -176,7 +177,7 @@
                         <label for="id_experience" class="col-xs-2 control-label input-medium"></label>
                     </div>
                     <div class="col col-9">
-                        <textarea name="experience" class="form-control" rows="5" placeholder="Когда и в каких выставках участвовал, что делал" id="id_experience" readonly>{{worker.experience}}</textarea>
+                        <span  name = "name" class="text-menu txt-bold" id="id_name" placeholder="Имя" value="">{{worker.experience}}</span>
                     </div>
                 </div>
 
@@ -191,7 +192,7 @@
                         <label for="id_Professions" class="col-xs-2 control-label input-medium">Профессия</label>
                     </div>
                     <div class="col col-9">
-                        <input type="text" name = "phonenumber" class="form-control" id="id_phonenumber" placeholder="Номер телефона" value="{% for prof in worker.proflist %}{{ prof.name }}, {% endfor %}" readonly>
+                        <span  name = "name" class="text-menu txt-bold" id="id_name" placeholder="Имя" value="">{% for prof in worker.proflist %}{{ prof.name }}, {% endfor %}</span>
                     </div>
                 </div>
             </div>
@@ -240,7 +241,7 @@
                             <label for="id_Services" class="col-xs-2 control-label input-medium">Постоянная работа</label>
                         </div>
                         <div class="col col-2">
-                            <input type="number" name = "salary" class="form-control" id="id_salary" placeholder="Зарплата" value="{{worker.works.salary}}" readonly>
+                            <span  name = "name" class="text-menu txt-bold" id="id_name" placeholder="Имя" value="">{{worker.works.salary}}</span>
                         </div>
                         <div class="col col-1 mt-1">
                             руб.
@@ -252,7 +253,7 @@
                             <label for="freelance" class="col-xs-2 control-label input-medium">Фриланс</label>
                         </div>
                         <div class="col col-3">
-                            <input type="number" name = "freelance" class="form-control" id="id_freelance" placeholder="" value="" readonly>
+                            <span  name = "name" class="text-menu txt-bold" id="id_name" placeholder="Имя" value=""></span>
                         </div>
 
                     </div>
@@ -350,7 +351,7 @@
                                 <div class = "col">
 
                                     {% if user.is_active %}
-                                        <form action="" method="post">
+                                        <form action="" name="commentsform" id="commentsform" method="post">
                                             {% csrf_token %}
 
                                             <div class="form-group">
@@ -381,9 +382,21 @@
                                                 </div>
                                             </div>
 
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-danger" onclick="">Сохранить</button>
+                                            </div>
+
                                             <script>
 
                                                         var workerid = "{{ worker.id }}";
+
+                                                        $('#commentsform').validate({
+
+                                                            submitHandler: function(form) {
+                                                                saveComment();
+                                                                }
+                                                            }
+                                                        );
 
                                                         function saveComment() {
 
@@ -411,15 +424,13 @@
 
 
                                                                 if (xhr.status != 200) {
-                                                                    alert(xhr.status + ': ' + xhr.statusText);
+                                                                    location.href = (xhr.responseText);
                                                                 } else {
-                                                                    alert("Данные сохранены");
-                                                                    alert(xhr.responseText);
                                                                     location.href = (xhr.responseText);
                                                                 }
                                                             }
 
-                                                            xhr.open("POST", settings.HOME_PAGE + "/worker/comments/save/", true);
+                                                            xhr.open("POST", "{% get_attribute 'HOME_PAGE' %}worker/comments/save/", true);
                                                             xhr.send(formData);
                                                         }
                                                     </script>
@@ -431,9 +442,7 @@
                             </div>
 
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="saveComment()">Сохранить</button>
-                    </div>
+
                 </div>
             </div>
         </div>

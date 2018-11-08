@@ -3,6 +3,40 @@
 {% load i18n %}
 
 {% block content%}
+
+    <style>
+
+        .file-upload {
+             position: relative; /* Даем возможность делать позиционирование, внутри данного элемента */
+             overflow: hidden; /* Все что выходит за пределы - скрываем */
+             /*width: 20%; /* Задаем ширину кнопки выбора файла */
+             height: 40px; /* Задаем высоту кнопки выбора файла */
+             /*background: #6da047;*/
+             border-radius: 3px;
+             padding: 8px 4px;
+             /*color: #fff;*/
+             text-align: center;
+        }
+
+        .file-upload input[type="file"]{
+            display: none; /* Обязательно скрываем настоящий Input File */
+        }
+        .file-upload label {
+             /* Растягиваем label на всю возможную площадь блока .file-upload */
+             display: block;
+             position: absolute;
+             top: 0;
+             left: 0;
+             width: 100%;
+             height: 100%;
+             cursor: pointer;
+        }
+        .file-upload span {
+             line-height: 36px; /* Делаем вертикальное выравнивание текста, который написан на кнопке */
+        }
+
+    </style>
+
     <div class="container mt-3">
 
         <div class="row mb-1 pl-3">
@@ -52,7 +86,12 @@
                                         {{ n.description }}
                                     </div>
                                 </div>
-
+                                <div class="row">
+                                    <div class="col">
+                                        <p>&nbsp;</p>
+                                        <p>&nbsp;</p>
+                                    </div>
+                                </div>
                                 <div class="row" style="position: absolute; bottom: 0px; width: 100%">
                                     <div class="col col-4">
                                         <a href="{{ n.link }}" target="_blank" class="btn btn-danger-white">Перейти на сайт</a>
@@ -72,4 +111,152 @@
         </table>
 
     </div>
+
+    {% if user.is_superuser %}
+        <!--+7 926 042-92-07-->
+
+        <div style="position: fixed; bottom: 50px; right: 50px; z-index: 10;">
+            <button class="btn btn-danger btn-lg fa fa-plus-circle" style="height: 50px" type="button" data-toggle="modal" data-target="#addNews">Добавить новость</button>
+        </div>
+        <div class="modal fade" id="addNews" tabindex="-1" role="dialog" aria-labelledby="addNewsLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="article">Новая новость</span>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="width: 100%; overflow: auto">
+
+                        <div class="row">
+
+                                <div class = "col">
+
+                                    {% if user.is_superuser %}
+                                        <form action="" method="post" name = "NewsForm" id = "NewsForm">
+                                            {% csrf_token %}
+
+                                            <div class="form-group">
+                                                <div>
+                                                    <label class="article">Картинка</label>
+
+                                                    <div class="row">
+
+                                                        <div class="col col-3">
+
+                                                            <div class="row mb-2">
+                                                                <div class="col">
+                                                                    <div class="product-img" style="height: 150px;">
+                                                                        <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:150px" src="" alt="">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="file-upload btn btn-danger" style="width: 200px">
+                                                                <label style="width: 200px">
+                                                                    <input id = "finput_foto" type="file" name="file" onchange="setlocalfoto(this)" accept="image/jpg,image/jpeg,image/png">
+                                                                    <span style="color: white">Добавить картинку</span>
+                                                                </label>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="row"  style="padding-top: 5px">
+                                                    <div class="col">
+                                                        <input required name="news_name" class="form-control" placeholder="Заголовок" id="news_name"></input>
+                                                    </div>
+                                                </div>
+                                                <div class="row"  style="padding-top: 5px">
+                                                    <div class="col">
+                                                        <input required name="news_link" class="form-control" placeholder="Ссылка на сайт" id="news_link"></input>
+                                                    </div>
+                                                </div>
+                                                <div class="row"  style="padding-top: 5px">
+                                                    <div class="col">
+                                                        <textarea required name="news_description" class="form-control" rows="5" placeholder="Описание" id="news_description"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-danger" onclick="">Сохранить</button>
+                                            </div>
+
+                                            <script>
+
+                                                $('#NewsForm').validate({
+                                                    submitHandler: function(form) {
+                                                        saveNews();
+                                                        }
+                                                    }
+                                                );
+
+                                                function setlocalfoto(e) {
+                                                    console.log(e.id)
+                                                    var input = document.getElementById(e.id);
+                                                    var fReader = new FileReader();
+                                                    fReader.readAsDataURL(input.files[0]);
+                                                    fReader.onloadend = function(event){
+
+                                                        if(e.id=="finput_foto"){
+                                                            var img = document.getElementById("fotourl");
+                                                            img.src = event.target.result;
+                                                        }
+
+                                                    }
+                                                }
+
+                                                function saveNews() {
+
+                                                    var formData = new FormData();
+
+                                                    //Собираем конечный JSON
+
+                                                    var json = JSON.stringify({
+                                                        name: document.getElementById("news_name").value,
+                                                        description: document.getElementById("news_description").value,
+                                                        link: document.getElementById("news_link").value,
+                                                        fotourl: document.getElementById("fotourl").src,
+                                                    });
+
+                                                    // добавить к пересылке ещё пару ключ - значение
+                                                    formData.append("data", json);
+                                                    formData.append("csrfmiddlewaretoken", document.getElementsByName("csrfmiddlewaretoken")[0].value);
+
+                                                    // отослать
+                                                    var xhr = new XMLHttpRequest();
+
+                                                    xhr.onreadystatechange = function() { // (3)
+                                                        if (xhr.readyState != 4) return;
+
+
+                                                        if (xhr.status != 200) {
+                                                            alert(xhr.status + ': ' + xhr.statusText);
+                                                        } else {
+                                                            alert("Данные сохранены");
+                                                            location.href = (xhr.responseText);
+                                                        }
+                                                    }
+
+                                                    xhr.open("POST", "{% get_attribute 'HOME_PAGE' %}news/save/", true);
+                                                    xhr.send(formData);
+                                                }
+                                            </script>
+
+                                        </form>
+                                    {% endif %}
+
+                                </div>
+                            </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
 {% endblock %}

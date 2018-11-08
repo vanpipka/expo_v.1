@@ -107,6 +107,8 @@ def setWorker(id, data):
             worker.personaldataisallowed = True
         else:
             worker.personaldataisallowed = False
+    else:
+        worker.personaldataisallowed = True
 
     # Обработаем разрешение на публикацию анкеты
     if data.__contains__('publishdata'):
