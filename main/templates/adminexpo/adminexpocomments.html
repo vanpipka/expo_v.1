@@ -13,31 +13,31 @@
                 <thead class="thead-default">
                 <tr>
                     <th style="width: 5px"></th>
-                    <th>ФИО</th>
-                    <th>Номер телефона</th>
-                    <th>Email</th>
-                    <th>Проверка пройдена</th>
-                    <th>Проверка ФСО</th>
-                    <th>Заблокирован</th>
+                    <th>Кто писал</th>
+                    <th>Кому писал</th>
+                    <th>Текст</th>
+                    <th>Оценка</th>
+                    <th>Профессия</th>
+                    <th>Опубликовать</th>
                     <th>Действия</th>
                 </tr>
                 </thead>
                 <tbody id = 'tbodyServices'>
-                {% for worker in dataset %}
+                {% for comment in dataset %}
                         <tr id="tr_{{ forloop.counter }}">
                             <td style="width: 5px">{{ forloop.counter }} </td>
-                            <td><a href="{{ worker.url }}" class="text-danger"> {{worker.name}} {{worker.surname}}</a></td>
-                            <td>{{worker.phonenumber}}</td>
-                            <td>{{worker.emailaddress}}</td>
-                            <td><input id = "datacheck_{{worker.id}}" type="checkbox" {% if worker.datacheck %}checked{% endif %} hidden>{% if worker.datacheck %}<i id = "i_datacheck_{{worker.id}}" class="text-success fa fa-check" aria-hidden="true"></i>{% endif %}</td>
-                            <td><input id = "fsocheck_{{worker.id}}" type="checkbox" {% if worker.fsocheck %}checked{% endif %} hidden>{% if worker.fsocheck %}<i id = "i_fsocheck_{{worker.id}}" class="text-success fa fa-check" aria-hidden="true"></i>{% endif %}</td>
-                            <td><input id = "block_{{worker.id}}" type="checkbox" {% if worker.block %}checked{% endif %} hidden>{% if worker.block %}<i id = "i_fsocheck_{{worker.id}}" class="text-danger fa fa-check" aria-hidden="true"></i>{% endif %}</td>
+                            <td><a href="{{ comment.user.url }}" class="text-danger"> {{comment.user.name}}</a></td>
+                            <td><a href="{{ comment.worker.url }}" class="text-danger"> {{comment.worker.name}}</a></td>
+                            <td>{{ comment.text }}</td>
+                            <td>{{ comment.rating }}</td>
+                            <td>{{ comment.profession }}</td>
+                            <td><input id = "block_{{comment.id}}" type="checkbox" {% if comment.moderation %}checked{% endif %} hidden>{% if comment.moderation %}<i id = "i_fsocheck_{{comment.id}}" class="text-success fa fa-check" aria-hidden="true"></i>{% endif %}</td>
                             <td>
-                                <button type="button" id = "edit_{{worker.id}}" onclick=edit_tr("{{ worker.id }}")>
+                                <button type="button" id = "edit_{{comment.id}}" onclick=edit_tr("{{ comment.id }}")>
                                     <i class="fa fa-pencil" aria-hidden="true">
                                     </i>
                                 </button>
-                                <button type="button" id = "save_{{worker.id}}" onclick=save_tr("{{ worker.id }}")>
+                                <button type="button" id = "save_{{comment.id}}" onclick=save_tr("{{ comment.id }}")>
                                     <i class="fa fa-check" aria-hidden="true"></i>
                                 </button>
                             </td>
@@ -53,17 +53,9 @@
     function edit_tr(id) {
 
         var id          = id;
-        var datacheck   = document.getElementById("datacheck_"+id);
-        var i_datacheck = document.getElementById("i_datacheck_"+id);
-        var fsocheck   = document.getElementById("fsocheck_"+id);
-        var i_fsocheck = document.getElementById("i_fsocheck_"+id);
         var block   = document.getElementById("block_"+id);
         var i_block = document.getElementById("i_block_"+id);
 
-        if (datacheck != null) {datacheck.hidden    = !datacheck.hidden;}
-        if (i_datacheck != null) {i_datacheck.hidden    = !i_datacheck.hidden;}
-        if (fsocheck != null) {fsocheck.hidden    = !fsocheck.hidden;}
-        if (i_fsocheck != null) {i_fsocheck.hidden    = !i_fsocheck.hidden;}
         if (block != null) {block.hidden    = !block.hidden;}
         if (i_block != null) {i_block.hidden    = !i_block.hidden;}
 
@@ -75,9 +67,7 @@
 
         var json = JSON.stringify({
             id: id,
-            datacheck: document.getElementById("datacheck_"+id).checked,
-            fsocheck: document.getElementById("fsocheck_"+id).checked,
-            block: document.getElementById("block_"+id).checked,
+            moderation: document.getElementById("block_"+id).checked,
         });
         formsave(json)
     }

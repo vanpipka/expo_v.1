@@ -104,6 +104,14 @@ def jsonSelectionParameters(request):
             "columnname": 'sex',
             "values": ['Не имеет значения', 'Мужской', 'Женский']
         },
+
+        {
+            "title": 'Стаж работы',
+            "type": 'list',
+            "columnname": 'experience',
+            "values": ['Не имеет значения', 'до 1 года', '1-3 года', '3-7 лет', 'более 7 лет']
+        },
+
         {
             "title": 'Свой инструмент',
             "type": 'boolean',
@@ -146,18 +154,6 @@ def jsonSelectionParameters(request):
         },
 
         {
-            "title": 'Рейтинг',
-            "type": 'rating',
-            "columnname": 'inputrating',
-        },
-
-        {
-            "title": 'Стаж работы',
-            "type": 'list',
-            "columnname": 'experience',
-            "values": ['Не имеет значения', 'до 1 года', '1-3 года', '3-7 лет', 'более 7 лет']
-        },
-        {
             "title": 'Только с фото',
             "type": 'boolean',
             "columnname": 'onlyfoto',
@@ -168,6 +164,14 @@ def jsonSelectionParameters(request):
             "type": 'boolean',
             "columnname": 'readytotravel',
         },
+
+        {
+            "title": 'Рейтинг',
+            "type": 'rating',
+            "columnname": 'inputrating',
+        },
+
+
 
         {
             "title": 'Возраст',

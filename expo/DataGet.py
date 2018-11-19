@@ -65,7 +65,7 @@ def getProfessionListWithGroup(count = None, selectedList=[]):
 
     return context
 
-def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, user_id = None, itsSettings = False, groupAttribute = False):
+def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, user_id = None, itsSettings = False, groupAttribute = False, its_superuser=False):
 
     nowDate  = timezone.now()
     WorkList = []
@@ -89,6 +89,9 @@ def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, 
 
     if itsSettings != True:
         querySet = querySet.filter(publishdata=True)
+
+    if its_superuser != True and itsSettings != True:
+        querySet = querySet.filter(block=False)
 
     querySet = querySet.select_related('idCity').select_related('nationality')
 
@@ -130,6 +133,9 @@ def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, 
         #    WorkerInfo["city"] = e.idCity.name
         #else:
         #    WorkerInfo["city"] = ""
+
+        if its_superuser:
+            WorkerInfo["block"] = e.block
 
         if groupAttribute:
 
@@ -214,7 +220,7 @@ def getMinWorkerList():
 def getComments(idWorker):
 
     commentsList = []
-    query = Comments.objects.filter(idWorker=idWorker).order_by("-created").select_related('idWorker').select_related('idProf')
+    query = Comments.objects.filter(idWorker=idWorker).filter(moderation=True).order_by("-created").select_related('idWorker').select_related('idProf')
 
     for e in query:
 
@@ -300,7 +306,7 @@ def getCityListFull():
 
     return fullList
 
-def searchWorker(searchList, userAauthorized=False, returnCount = False, groupAttribute=False):
+def searchWorker(user, searchList, userAauthorized=False, returnCount = False, groupAttribute=False):
 
     print(searchList)
 
@@ -350,7 +356,7 @@ def searchWorker(searchList, userAauthorized=False, returnCount = False, groupAt
 
             print("Только с комментариями: Истина")
             searchProperty["onlycomments"] = True
-            queryRating = WorkerRating.objects.all().values('idWorker').distinct()
+            queryRating = Comments.objects.all().filter(moderation=True).values('idWorker').distinct()
 
         if isRating:
             print("Рейтинг более: "+str(rating))
@@ -508,6 +514,8 @@ def searchWorker(searchList, userAauthorized=False, returnCount = False, groupAt
 
         searchquery = searchquery.filter(publishdata=True)
 
+        searchquery = searchquery.filter(block=False)
+
         if positionfrom != None and positionto!=None and returnCount!=True:
             searchquery = searchquery[positionfrom:positionto]
 
@@ -521,7 +529,7 @@ def searchWorker(searchList, userAauthorized=False, returnCount = False, groupAt
             for elem in searchquery:
                 workerid.append(elem.id)
 
-            workerList = gerWorkList(idWorker=workerid, userAauthorized=userAauthorized, groupAttribute=groupAttribute)
+            workerList = gerWorkList(idWorker=workerid, userAauthorized=userAauthorized, groupAttribute=groupAttribute, its_superuser=user.is_superuser)
 
             context["dataset"] = workerList
             context["searchproperty"] = searchProperty

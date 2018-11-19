@@ -5,6 +5,7 @@ from django.views.generic.base import View
 from main.models import UserType, Attacment
 import json
 from django.middleware import csrf
+from django.conf import settings
 
 # Опять же, спасибо django за готовую форму аутентификации.
 from django.contrib.auth.forms import AuthenticationForm
@@ -194,6 +195,70 @@ def signup(request, type):
 
     else:
         return HttpResponseRedirect('/')
+
+def LoginExpo(request):
+
+        login_url = 'accounts/loginExpo.html'
+
+        if request.method == 'GET':
+
+            if request.user.is_authenticated:
+
+                return HttpResponseRedirect('/')
+
+            else:
+
+                return render(request, login_url, {'form': AuthenticationForm()})
+
+        elif request.method == 'POST':
+
+            # Блять здесь скопируем пост, для того, чтобы преобразовать юзернейм
+            # Я хз как по другому сделать
+            print(request.POST)
+            username = request.POST['username']
+
+            post_copy = request.POST.copy()
+
+            print(username)
+
+            post_copy['username'] = username
+            form = AuthenticationForm(request, data=post_copy)
+
+            if form.is_valid():
+
+                username = form.cleaned_data.get('username')
+                password = form.cleaned_data.get('password')
+
+                # Выполняем аутентификацию пользователя.
+                user = authenticate(username=username, password=password)
+
+                if user is not None:
+
+                    if user.is_active:
+
+                        auth_login(request, user)
+
+                        return HttpResponseRedirect(settings.HOME_PAGE + 'adminexpo/workers/')
+
+                    else:
+
+                        return HttpResponseRedirect('/')
+
+            else:
+
+                username = form.data.get('username', '')
+
+                error_dict = []
+
+                for key, value in form.errors.as_data().items():
+                    error_dict.append(str(value[0].message))
+
+                return render(request, login_url,
+                                  {'form': form, 'username': username, 'errors': error_dict})
+
+        else:
+
+            return HttpResponseRedirect('/')
 
 def Login(request):
 

@@ -18,6 +18,11 @@ from django.urls import path, include
 from expo import views
 
 urlpatterns = [
+    path('adminexpo/workers/', views.adminexpoworkers),
+    path('adminexpo/comments/', views.adminexpocomments),
+    path('adminexpo/companys/', views.adminexpocompanys),
+    path('adminexpo/save/', views.adminexposave),
+    path('adminexpo/', views.adminexpo),
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('', include('main.urls')),

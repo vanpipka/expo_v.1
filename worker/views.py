@@ -250,17 +250,20 @@ def showWorker(request):
 
     if id == None:
 
-        return render(request, 'SearchWorker.html', {})
+        return render(request, 'errors/404.html', status=404)
 
     if request.method == "GET":
 
         commentForm = CommentForm()
 
-    workerList  = gerWorkList(idWorker=[id], userAauthorized=userAauthorized)
+    workerList  = gerWorkList(idWorker=[id], userAauthorized=userAauthorized, its_superuser=request.user.is_superuser)
     comments    = getComments(idWorker=id)
 
     print("Ответ:" + str(len(workerList)))
-    return render(request, 'Worker.html', {"worker": workerList[0], "commentForm": commentForm, "comments": comments, "userAauthorized": userAauthorized})
+    if len(workerList) == 0:
+        return render(request, 'errors/404.html', status=404)
+    else:
+        return render(request, 'Worker.html', {"worker": workerList[0], "commentForm": commentForm, "comments": comments, "userAauthorized": userAauthorized})
 
 def showWorkersJson(request):
 
@@ -311,14 +314,14 @@ def showSearchJson(request):
 
         dictPost = dict(json.loads(request.POST.__getitem__('data')))
         print('шоу серч: '+ str(dictPost))
-        context = searchWorker(searchList=dictPost, groupAttribute=True)
+        context = searchWorker(user = request.user, searchList=dictPost, groupAttribute=True)
 
     elif request.method == "GET":
 
         category    = request.GET.get("profession", "")
         city        = request.GET.get("city", "")
 
-        context = searchWorker(searchList={'Profession': [category], 'City': [city]}, userAauthorized=request.user.is_authenticated, groupAttribute=True)
+        context = searchWorker(user = request.user,searchList={'Profession': [category], 'City': [city]}, userAauthorized=request.user.is_authenticated, groupAttribute=True)
 
     return JsonResponse(context)
 
@@ -334,16 +337,19 @@ def showSearch(request):
     if request.method == "POST":
 
         dictPost = dict(json.loads(request.POST.__getitem__('data')))
-        context = searchWorker(searchList=dictPost)
+        context = searchWorker(user = request.user, searchList=dictPost)
 
     elif request.method == "GET":
 
         category    = request.GET.get("profession", '')
         city        = request.GET.get("city", '')
 
-        context = searchWorker(searchList={'profession': category, 'city': city}, userAauthorized=request.user.is_authenticated)
+        context = searchWorker(user = request.user, searchList={'profession': category, 'city': city}, userAauthorized=request.user.is_authenticated)
 
     context["count"] = len(context.get('dataset'))
+
+    print("Количество: "+ str(context["count"]))
+
     context['citylist'] = getCityListFull()
     context['servicelist'] = getServiceList()
 
@@ -355,7 +361,7 @@ def showWorkersList(request):
 
     if request.method == "POST":
         dictPost = dict(json.loads(request.POST.__getitem__('data')))
-        context = searchWorker(searchList=dictPost)
+        context = searchWorker(user = request.user, searchList=dictPost)
 
         context["count"] = len(context.get('dataset'))
 
@@ -371,7 +377,7 @@ def showSearchTest(request):
     if request.method == "POST":
 
         dictPost = dict(json.loads(request.POST.__getitem__('data')))
-        context = searchWorker(searchList=dictPost, userAauthorized = request.user.is_authenticated, returnCount = True)
+        context = searchWorker(user = request.user, searchList=dictPost, userAauthorized = request.user.is_authenticated, returnCount = True)
 
     return JsonResponse(context)
 
@@ -435,7 +441,7 @@ def my_view(request):
         print('Запрос: ' + str(request.POST))
         print('Куки: ' + str(request.COOKIES))
         dictPost = dict(request.POST)
-        context = searchWorker(dictPost)
+        context = searchWorker(user = request.user, searchList=dictPost)
 
     elif request.method == "GET":
 

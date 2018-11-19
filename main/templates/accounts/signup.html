@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div style="left: 50%; top: 50%; position: absolute; margin: -250px 0 0 -250px;">
+<div style="left: 50%; top: 50%; position: absolute; margin: -350px 0 0 -250px;">
 
     <div class="card" style="width: 500px; border-radius: 0px">
         <div class="card-header text-center">
@@ -17,14 +17,12 @@
                 <div class="form-group row">
                     <label for="id_username" class="col-sm-4 col-form-label">Телефон</label>
                     <div class="col-sm-8">
-                        <input style="border-radius: 0px" name="username" type="text" class="form-control" id="id_username" placeholder="Номер телефона" value="{{ username }}" required>
+                        <input style="border-radius: 0px" name="username" type="text" class="form-control" id="id_username" placeholder="Номер телефона" value="{{ username }}" required {% if confirmphone %} readonly {% endif %}>
                         {% if errors.username %}
                             <span style="color: red; font-size: 10px">{{ errors.username }}</span>
                         {% endif %}
                     </div>
                 </div>
-
-
 
                 {% if confirmphone %}
                     <div class="form-group row">
@@ -56,6 +54,18 @@
                             <span style="color: red; font-size: 10px">{{ errors.password2 }}</span>
                         {% endif %}
                     </div>
+                </div>
+
+                <div class="form-group row" {% if confirmphone %} hidden {% endif %}>
+                    <label class="ml-3 checkbox-container">
+                        <input class="" id="id_personaldataisallowed" value="True" required type="checkbox" name="personaldataisallowed" {% if personaldataisallowed %}checked{% endif %}>
+                        <span class="checkmark"></span>
+                        <label for="id_personaldataisallowed" class="col-xs-2 control-label input-medium">
+                            <span class="ui-checkbox__content">
+                                Ознакомлен и согласен с условиями <a style="color: #d21c43; text-decoration: none" href="/documents/repetitor/" target="_blank">Публичной&nbsp;оферты</a>,<!-- --> <a style="color: #d21c43; text-decoration: none" href="/documents/terms-of-use/" target="_blank">Условиями&nbsp;использования</a> <!-- -->в полном объеме.
+                            </span>
+                        </label>
+                    </label>
                 </div>
 
                 <div class="form-group row">

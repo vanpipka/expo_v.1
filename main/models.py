@@ -199,7 +199,7 @@ class Worker(models.Model):
     id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     #user_id     = models.ForeignKey(User, on_delete=models.CASCADE)
     #user_id     = models.OneToOneField(User, on_delete=models.CASCADE)
-    #user_id     = models.IntegerField()
+    block       = models.BooleanField(default=False) #Заблокирован
     name        = models.CharField(max_length=100)
     surname     = models.CharField(max_length=100)
     nationality = models.ForeignKey(Country, on_delete=models.CASCADE, default="00000000000000000000000000000000")
@@ -232,6 +232,24 @@ class Worker(models.Model):
 
     def __str__(self):
         return self.name
+
+    def SetAdminData(data):
+
+        try:
+            worker = Worker.objects.get(id = data.get("id"))
+
+            worker.block = data.get("block")
+            worker.fsocheck = data.get("fsocheck")
+            worker.datacheck = data.get("datacheck")
+
+            worker.save()
+
+        except:
+            print('не удалось сохранить работника')
+
+    # < QueryDict: {'data': [
+    #     '{"id":"29beee02-7b25-4314-b110-3042c67db300","datacheck":true,"fsocheck":false,"block":true}'],
+    #               'csrfmiddlewaretoken': ['NpjIHZBxP1EDbEzjtaQ1XwBZRN4DJrDbDc5d98ic0eMgkjDpoas6TtDyOTZN4imR']} >
 
     def getWorkerQueryByUser(user):
         userList = UserType.objects.all().filter(user=user, type=1).values('worker')
@@ -280,6 +298,7 @@ class Company(models.Model):
     emailaddress    = models.CharField(max_length=100)
     description     = models.TextField()
     idCity          = models.ForeignKey(City, on_delete=models.CASCADE, default="00000000000000000000000000000000")
+    block           = models.BooleanField(default=False)
 
     lastOnline      = models.DateTimeField("Последний онлайн", auto_now_add=True, null=True)
 
@@ -363,6 +382,18 @@ class Company(models.Model):
             return company
         else:
             return companyQuerySet[0]
+
+    def SetAdminData(data):
+
+        try:
+            company = Company.objects.get(id = data.get("id"))
+
+            company.block = data.get("block")
+
+            company.save()
+
+        except:
+            print('не удалось сохранить компанию')
 
 class News(models.Model):
 
@@ -745,15 +776,15 @@ class Comments(models.Model):
         Message.SaveComment(self)
 
     def setRating(comment):
-        rating = Comments.objects.all().filter(idWorker=comment.idWorker).aggregate(models.Avg('rating'), models.Count('id'))
-
+        rating = Comments.objects.all().filter(idWorker=comment.idWorker).filter(moderation=True).aggregate(models.Avg('rating'), models.Count('id'))
+        print("рейтинг: "+str(rating))
         WorkerRating.updateRating(comment.idWorker, rating)
 
         #print("Количество:" +str(commentCount)+ " среднее:" + str(rating))
 
     def GetActual(self, position_begin=None, position_end=None):
 
-        objects = Comments.objects.all().select_related("Worker").filter(moderation=True).filter(rating__gte=3).order_by("-created")
+        objects = Comments.objects.all().filter(moderation=True).select_related("Worker").filter(rating__gte=3).order_by("-created")
 
         if position_begin != None and position_end != None:
             objects = objects[position_begin: position_end]
@@ -768,6 +799,18 @@ class Comments(models.Model):
             e['idWorker__image'] = Attacment.getresizelink(Attacment.objects.get(id = e['idWorker__image']))
 
         return objects
+
+    def SetAdminData(data):
+
+        try:
+            comment = Comments.objects.get(id = data.get("id"))
+
+            comment.moderation = data.get("moderation")
+
+            comment.save()
+
+        except:
+            print('не удалось сохранить компанию')
 
 class Message(models.Model):
 
@@ -872,6 +915,8 @@ def professions_changed(sender, **kwargs):
     print("Действие с мэни ту мэни")
     if kwargs['action'] == "post_clear" or kwargs['action'] == "post_add":
         Professions.setWorkerCount(sender)
+
+
 
 m2m_changed.connect(professions_changed, sender=Worker.professions.through)
 
