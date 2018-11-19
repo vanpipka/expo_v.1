@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8" >
+    <title>EXPO</title>
+    {% load staticfiles %}
+    {% load home_extras %}
+    {% include "includes/Links.html" %}
+    {% include "includes/meter.html" %}
+</head>
+<body>
+
+<style>
+
+    html,
+    body {
+          height: 100%;
+    }
+
+
+
+    :root {
+        --bg-color-grey: #EFEFEF;
+        --text-color-dark: rgba(0,0,0,0.87);
+        --color-dark-grey: #8E959C;
+    }
+
+    input{
+        border-radius: 0px
+    }
+
+    .form-group, .custom-select, .btn, .form-control{
+        border-radius: 0px
+    }
+
+    .popup-block{
+        position: relative;
+    }
+
+    .bg-color-grey{
+        background-color: #EFEFEF;
+        color: #EFEFEF;;
+    }
+    .bg-color-dark-grey{
+        background-color: #8E959C;
+    }
+    .txt-color-grey{
+        color: #EFEFEF;
+    }
+
+    .color-dark-grey{
+        color: #8E959C;
+    }
+
+    .txt-color-dark{
+        color: rgba(0,0,0,0.87);
+    }
+
+    .btn-danger, .btn-danger-hover-white{
+        background-color: #d21c43;/*#c82333;*/
+        color: white;
+        border-radius: 0px;
+        font-weight: bold;
+
+    }
+
+    .text-danger{
+        color: #d21c43;
+    }
+
+    .selector-div:hover{
+        background-color: #d21c43;
+        color: white;
+    }
+
+    .badge-danger{
+        background-color: #d21c43;
+    }
+
+    .nav-item-footer:hover{
+        border-bottom: 1px solid #d21c43;
+    }
+
+    .nav-item-footer-active{
+        border-bottom: 1px solid #d21c43;
+    }
+
+    .nav-item-expo-active {
+        border-bottom: 4px solid #d21c43/*#c82333;*/; /* Параметры рамки */
+    }
+
+    .selector-link{
+        color: #313131;
+    }
+
+    .selector-link:hover{
+        color: white;
+    }
+
+    .btn-danger-white{
+        background-color: white;/*#c82333;*/
+        color: #d21c43;
+        border-radius: 0px;
+        font-weight: bold;
+        border-color: #d21c43;
+    }
+
+    .btn-danger-white:hover{
+        color: #313131;/*#c82333;*/
+        border-color: #313131;
+    }
+
+    .btn-danger:hover{
+        background-color: #575759;/*#c82333;*/
+        border-color: #313131;
+    }
+
+    .btn-danger-hover-white:hover{
+        background-color: white/*#c82333;*/;
+        color: #d21c43;
+        border-color: #313131;
+    }
+
+    .txt-bold{
+        font-weight: bold;
+    }
+
+    a.article:hover{
+        color: #d21c43;
+    }
+
+    a.article{
+        color: #1e1e1e;
+        font-family: 'PT Sans', serif;
+    }
+
+    .nav-item-header:hover{
+        background-color: #3b3b3b;
+    }
+
+    .nav-item-hover-white:hover{
+        background-color: white;
+    }
+    span.article{
+        color: #313131;
+        font-weight: bold;
+        font-family: 'PT Sans', serif;
+    }
+    label, .text-menu{
+        color: var(--text-color-dark);
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    .text-menu-grey{
+        color: #8E959C;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    @media (min-width: 576px){
+        .search-down {
+            visibility: visible;
+            height: 100%;
+        }
+        .search-down-div{
+            visibility: hidden;
+            height: 0px;
+        }
+    }
+
+    @media (min-width: 768px) {
+        label,.text-menu {
+            font-size: 12px;
+          }
+        .article{
+            font-size: 20px;
+        }
+        .article-sm{
+            font-size: 16px;
+        }
+        .search-down {
+            visibility: hidden;
+            height: 0px;
+        }
+        .search-down-div{
+            visibility: visible;
+            height: 100%;
+        }
+
+    }
+    @media (min-width: 992px) {
+        label,.text-menu {
+            font-size: 14px;
+        }
+        .article{
+            font-size: 26px;
+        }
+        .article-sm{
+            font-size: 20px;
+        }
+        .search-down {
+            visibility: hidden;
+            height: 0px;
+        }
+        .search-down-div{
+            visibility: visible;
+            height: 100%;
+        }
+    }
+    @media (min-width: 1200px) {
+        label, .text-menu {
+            font-size: 16px;
+        }
+        .article {
+            font-size: 32px;
+        }
+        .article-sm{
+            font-size: 24px;
+        }
+        .search-down {
+            visibility: hidden;
+            height: 0px;
+        }
+        .search-down-div{
+            visibility: visible;
+            height: 100%;
+        }
+    }
+
+    .badge-grey {
+        color: #8E959C;
+        background-color: #EFEFEF;
+    }
+
+    /* ЧЕКБОКСЫ */
+
+    .checkbox-container {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .checkmark-radio {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 50%;
+    }
+
+    .checkbox-container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .checkbox-container:hover input ~ .checkmark {
+        background-color: #ccc;
+    }
+
+    .checkbox-container:hover input ~ .checkmark-radio {
+        background-color: #ccc;
+    }
+
+    /* When the checkbox is checked, add a blue background */
+    .checkbox-container input:checked ~ .checkmark {
+        background-color: #d21c43;
+
+    }
+
+    .checkbox-container input:checked ~ .checkmark-radio {
+        background-color: #d21c43;
+
+    }
+
+    /* Create the checkmark/indicator (hidden when not checked) */
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    .checkmark-radio:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    /* Show the checkmark when checked */
+    .checkbox-container input:checked ~ .checkmark:after {
+        display: block;
+    }
+
+    .checkbox-container input:checked ~ .checkmark-radio:after {
+        display: block;
+    }
+
+    /* Style the checkmark/indicator */
+    .checkbox-container .checkmark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+
+    .checkbox-container .checkmark-radio:after {
+        top: 6px;
+        left: 6px;
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        background: white;
+    }
+
+    /* РАДИОБАТТОНС КАК КНОПКИ */
+
+    .radios-as-buttons {
+        /*margin: 20px;*/
+        font-family: 'Open Sans', sans-serif;
+        font-size: 14px;
+    }
+    .radios-as-buttons div {
+        float: left;
+    }
+    .radios-as-buttons input {
+        position: absolute;
+        left: -9999px;
+    }
+    .radios-as-buttons label {
+        display: block;
+        margin: 0 0 0 -1px;
+        padding: 5px 10px;
+        border: 1px solid #BBBBBB;
+        /*background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, .12);*/
+        cursor: pointer;
+    }
+    .radios-as-buttons input:checked + label {
+        background: #d21c43;
+        color: white;
+        /*box-shadow: inset 0 3px 6px rgba(0, 0, 0, .2);*/
+    }
+    .radios-as-buttons div:first-child label {
+        margin-left: 0;
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+    }
+    .radios-as-buttons div:last-child label {
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }
+
+    /*ПРИЖИМАЕМ ФУТЕР К НИЗУ СТРАНИЦЫ*/
+    #wrap {
+        min-height: 100%;
+    }
+    main {
+        padding-bottom: 350px;
+        /*Высота футера*/
+    }
+    footer {
+        margin-top: -350px;
+        /*Минус Высота футера*/
+        height: 350px;
+        /*Высота футера*/
+    }
+
+
+
+</style>
+
+    <div class="" id="wrap">
+        <header>
+            <div class="" style=" background-color: #edeef0">
+                <div class="container">
+                    <nav class="navbar navbar-expand-lg">
+                        <a href="{% get_attribute 'HOME_PAGE' %}" class="article txt-bold" style="margin-left: -12pt">vseEXPO</a>
+                        <a class="nav-link ml-4 mt-1 text-menu" style="color: #1e1e1e;"><i class="fa fa-phone" aria-hidden="true"></i>{% get_attribute 'COMPANY_PHONE' %}</a>
+                        <a class="nav-link ml-4 mt-1 text-menu" style="color: #1e1e1e;"><i class="fa fa-envelope" aria-hidden="true"></i>{% get_attribute 'COMPANY_EMAIL' %}</a>
+                    </nav>
+
+                </div>
+            </div>
+            <div class="nav" style="background-color: #575759">
+                <div class="container">
+                    <ul class="nav"><!--ml-3-->
+                        <li class="nav-item pt-2 nav-item-header">
+                            <a class="txt-bold nav-link text-white text-menu {% if request.path == '/'%}nav-item-expo-active{% endif %}" href="{% get_attribute 'HOME_PAGE' %}adminexpo/" role="button">Данные об организации</a>
+                        </li>
+                        <li class="nav-item pt-2 nav-item-header">
+                            <a class="txt-bold nav-link text-white text-menu {% if request.path == '/worker/search/'%}nav-item-expo-active{% endif %}" href="{% get_attribute 'HOME_PAGE' %}adminexpo/workers/" role="button">Специалисты</a>
+                        </li>
+                        <li class="nav-item pt-2 nav-item-header">
+                            <a class="txt-bold nav-link text-white text-menu {% if request.path == '/company/'%}nav-item-expo-active{% endif %}" href="{% get_attribute 'HOME_PAGE' %}adminexpo/companys/" role="button">Компании</a>
+                        </li>
+                        <li class="nav-item pt-2 nav-item-header">
+                            <a class="txt-bold nav-link text-white text-menu {% if request.path == '/jobs/'%}nav-item-expo-active{% endif %}" href="{% get_attribute 'HOME_PAGE' %}adminexpo/comments/" role="button">Комментарии</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div>
+    {% include "includes/footer.html" %}
+
+</body>
+</html>

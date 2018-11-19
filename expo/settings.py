@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 import json
+#from main.models import CompanySettings
 
 USE_I18N = True
 USE_L10N = False
@@ -170,7 +171,18 @@ SITE_ID = 2
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
+with open(os.path.join(SETTINGS_DIR, 'companysettings.json'), 'r') as f:
 
+    try:
+        struct = json.loads(f.read())
+        COMPANY_ADDRESS = struct.get('address', '')  # "117452 г.Москва, ул.Азовская, 24/3"
+        COMPANY_PHONE   = struct.get('phone', '')  # "8 8 (800) 555-55-55"
+        COMPANY_EMAIL   = struct.get('email', '')  # "info@vseexpo.ru"
+
+    except json.JSONDecodeError:
+        COMPANY_ADDRESS = ''  # "117452 г.Москва, ул.Азовская, 24/3"
+        COMPANY_PHONE   = ''  # "8 8 (800) 555-55-55"
+        COMPANY_EMAIL   = ''  # "info@vseexpo.ru"
 
 #MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 #MEDIA_URL = '/media/'

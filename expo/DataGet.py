@@ -502,7 +502,7 @@ def searchWorker(searchList, userAauthorized=False, returnCount = False, groupAt
     if onlyfoto != None and onlyfoto == True:
         print("Только с фото: Истина")
         searchProperty["onlyfoto"] = True
-        searchquery = searchquery.exclude(foto='')
+        searchquery = searchquery.exclude(image__id='00000000000000000000000000000000')
 
     if searchquery != None:
 
