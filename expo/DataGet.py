@@ -4,6 +4,8 @@ from main.models import *
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
+
+
 def getAllProfessionsAndGroups(count = None):
 
     all_workGroups = []

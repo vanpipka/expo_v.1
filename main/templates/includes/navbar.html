@@ -4,8 +4,8 @@
     <div class="container">
         <nav class="navbar navbar-expand-lg">
             <a href="{% get_attribute 'HOME_PAGE' %}" class="article txt-bold" style="margin-left: -12pt">vseEXPO</a>
-            <a class="nav-link ml-4 mt-1 text-menu" style="color: #1e1e1e;"><i class="fa fa-phone" aria-hidden="true"></i>&nbsp;8 8 (800) 555-55-55</a>
-            <a class="nav-link ml-4 mt-1 text-menu" style="color: #1e1e1e;"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;info@vseexpo.ru</a>
+            <a class="nav-link ml-4 mt-1 text-menu" style="color: #1e1e1e;"><i class="fa fa-phone" aria-hidden="true"></i>&nbsp;{% get_attribute 'COMPANY_PHONE' %} </a>
+            <a class="nav-link ml-4 mt-1 text-menu" style="color: #1e1e1e;"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;{% get_attribute 'COMPANY_EMAIL' %} </a>
             <ul class="navbar-nav ml-auto">
 
                 {% if user.is_active %}

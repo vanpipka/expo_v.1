@@ -34,15 +34,15 @@
                     </div>
 
                     <div class="txt-bold text-menu mt-3" style="color: #313131">
-                        <i class="fa fa-location-arrow" aria-hidden="true"></i>&nbsp;Москва, ул. Народная д. 66 оф. 666</a>
+                        <i class="fa fa-location-arrow" aria-hidden="true"></i>&nbsp;{% get_attribute 'COMPANY_ADDRESS' %} </a>
                     </div>
 
                     <div class="txt-bold text-menu mt-2" style="color: #313131">
-                        <i class="fa fa-phone" aria-hidden="true"></i>&nbsp;8 8 (800) 555-55-55</a>
+                        <i class="fa fa-phone" aria-hidden="true"></i>&nbsp;{% get_attribute 'COMPANY_PHONE' %} </a>
                     </div>
 
                     <div class="txt-bold text-menu mt-2" style="color: #313131">
-                        <i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;info@vseexpo.ru</a>
+                        <i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;{% get_attribute 'COMPANY_EMAIL' %} </a>
                     </div>
 
                 </div>
@@ -51,7 +51,7 @@
         </div>
 
         <div class="container text-dark mt-2" style="">
-            Компания "ВсеЭкспо" — Какой то текст о компании © vseEXPO 2018 Все права защищены. <a style="color: #d21c43; text-decoration: none" href=""> Политика обработки персональных данных.</a>
+            Компания "ВсеЭкспо" — Какой то текст о компании © vseEXPO 2018 Все права защищены. <a style="color: #d21c43; text-decoration: none" href="{% get_attribute 'HOME_PAGE' %}privacy-policy/"> Политика обработки персональных данных.</a>
         </div>
 
 

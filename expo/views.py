@@ -2,9 +2,10 @@
 from django.shortcuts import render
 from datetime import datetime as datet
 from datetime import timezone
-from main.models import Company, News, JobOrder, UserType, Attacment, Message, Worker, Comments
+from main.models import Company, News, JobOrder, UserType, Attacment, Message, Worker, Comments, ConfirmCodes
 from expo.DataSet import refreshLastOnline
 from expo.DataGet import getCityListFull, getProfessionList, gerWorkList
+from expo.Balance import getBalance
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 import json
@@ -28,9 +29,34 @@ def adminexpo(request):
         refreshLastOnline(request.user)
 
     if request.user.is_superuser:
-        return render(request, 'adminexpo/adminexpo.html', {})
+
+        context = {'balance': getBalance()}
+
+        return render(request, 'adminexpo/adminexpo.html', context)
     else:
         return render(request, 'errors/403.html', None, None, status='403')
+
+def sendsms(request):
+
+    userAauthorized = request.user.is_authenticated
+
+    if userAauthorized:
+        refreshLastOnline(request.user)
+
+    if userAauthorized:
+
+        phone = request.GET.get("phone", "")
+
+        print(phone)
+
+        if phone != "":
+
+            ConfirmCodes.AddCode(phoneNumber=phone)#, sendMessage=True)
+
+        return HttpResponse(settings.HOME_PAGE + 'success/', status=200)
+
+    else:
+        return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)
 
 
 def adminexpocompanys(request):

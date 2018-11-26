@@ -11,6 +11,8 @@ import base64
 from PIL import Image
 from django.conf import settings
 from os import path
+import random
+from expo.Balance import sendMessage
 
 from django.dispatch import receiver
 
@@ -744,6 +746,39 @@ class UserType(models.Model):
             print('не удалось получить запись userType')
 
         return elem
+
+class ConfirmCodes(models.Model):
+
+    id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    phoneNumber = models.CharField(max_length=100)
+    code        = models.CharField(max_length=4)
+
+    def GetCode(phoneNumber):
+
+        try:
+
+            code = ConfirmCodes.objects.all().get(phoneNumber=phoneNumber).code
+
+        except:
+
+            code = str(random.randint(10000, 99999))
+
+        return code
+
+    def AddCode(phoneNumber, sendMessage = False):
+
+        confirmcode = str(random.randint(1000, 9999))
+
+        obj, created = ConfirmCodes.objects.all().get_or_create(phoneNumber=phoneNumber, defaults={'phoneNumber': phoneNumber, 'code': confirmcode})
+
+        if created != True:
+
+            obj.code = confirmcode
+            obj.save()
+
+            if sendMessage:
+                text = 'Код подтверждения для завершения регистрации: ' + confirmcode
+                dd = sendMessage(phone=phoneNumber, text=text)
 
 class CostOfService(models.Model):
 

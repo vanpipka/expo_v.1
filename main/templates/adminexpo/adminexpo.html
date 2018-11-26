@@ -2,6 +2,17 @@
 {% load home_extras %}
 {% block content%}
             <div class="container">
+
+                <h3 class="mt-5">Баланс</h3>
+                    {{ balance }} руб. <a style="color: #d21c43;" href="https://www.aramba.ru" target="_blank">Перейти на сайт</a>
+                    <div class="row mt-2">
+                        <div class="col col-3">
+                            <input type="text" name = "smsphone" class="form-control" id="smsphone" placeholder="Номер телефона" value="">
+                        </div>
+                        <div class="col col-3">
+                            <button type="button" class="container-fluid btn btn-danger" onclick="sendSMS()">Отправить тестовую СМС</button>
+                        </div>
+                    </div>
                 <form name="settingsform" id="settingsform">
 
                     {% csrf_token %}
@@ -91,6 +102,23 @@
 
         xhr.open("POST", "save/", true);
         xhr.send(formData);
+    }
+
+    function sendSMS() {
+        var xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = function() { // (3)
+            if (xhr.readyState != 4) return;
+
+            if (xhr.status != 200) {
+                location.href = (xhr.responseText);
+            } else {
+                location.href = (xhr.responseText);
+            }
+        }
+
+        xhr.open("GET", "/sendsms/?phone="+document.getElementById("smsphone").value, true);
+        xhr.send();
     }
 
 </script>

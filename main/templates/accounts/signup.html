@@ -29,7 +29,7 @@
                         <label for="id_confirmphone" class="col-sm-4 col-form-label">Код подтверждения</label>
                         <div class="col-sm-8">
                             <input style="border-radius: 0px" name="confirmphone" type="text" class="form-control" id="id_confirmphone" placeholder="Код подтверждения" required>
-                           {% if errors.confirmphone %}
+                            {% if errors.confirmphone %}
                                 <span style="color: red; font-size: 10px">{{ errors.confirmphone }}</span>
                             {% endif %}
                         </div>
@@ -74,13 +74,6 @@
                         <button type="submit" class="btn btn-danger container-fluid">Зарегистрироваться</button>
                     </div>
                 </div>
-                <script>
-
-                    $(function(){
-                      //2. Получить элемент, к которому необходимо добавить маску
-                      $("#id_username").mask("8(999) 999-9999");
-                    });
-                </script>
             </form>
 
         </div>
@@ -88,5 +81,32 @@
 
 </div>
 
+    <script>
+
+        $(function(){
+                      //2. Получить элемент, к которому необходимо добавить маску
+                      $("#id_username").mask("8(999) 999-9999");
+                    });
+
+        {% if confirmphone %}
+        /*function sendSMS() {
+            var xhr = new XMLHttpRequest();
+
+            xhr.onreadystatechange = function () { // (3)
+                if (xhr.readyState != 4) return;
+
+                if (xhr.status != 200) {
+                    location.href = (xhr.responseText);
+                } else {
+                    location.href = (xhr.responseText);
+                }
+            }
+
+            xhr.open("GET", "/sendsms/?phone=" + document.getElementById("smsphone").value, true);
+            xhr.send();
+        }*/
+        {% endif %}
+
+    </script>
 
 {% endblock %}

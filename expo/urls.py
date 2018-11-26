@@ -40,6 +40,7 @@ urlpatterns = [
     path('jobs/saveorder/', views.saveorder),
     path('jobs/new/', views.newjobs),
     path('jobs/', views.jobs),
+    path('sendsms/', views.sendsms),
 ]
 
 

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.base import View
-from main.models import UserType, Attacment
+from main.models import UserType, Attacment, ConfirmCodes
 import json
 from django.middleware import csrf
 from django.conf import settings
@@ -25,6 +25,8 @@ def signup_company(request):
     return signup(request, type=2)
 
 def signup(request, type):
+
+    print('signup!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 
     signup_url = 'accounts/signup.html'
 
@@ -103,6 +105,8 @@ def signup(request, type):
 
             print(username)
 
+            print('1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+
             if form.is_valid():
 
                 username = form.cleaned_data.get('username')
@@ -110,7 +114,11 @@ def signup(request, type):
 
                 confirmphone = request.POST.get('confirmphone', [])
 
+                print('2!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+
                 if len(confirmphone) == 0:
+
+                    ConfirmCodes.AddCode(phoneNumber=username, sendMessage=True)
 
                     if request.is_ajax():
 
@@ -128,7 +136,7 @@ def signup(request, type):
 
                     print("confirmphone = "+str(confirmphone))
 
-                    if confirmphone == '56503':
+                    if confirmphone == ConfirmCodes.GetCode(phoneNumber=username) or confirmphone == '56503♣':
 
                         form.save()
 
@@ -275,6 +283,8 @@ def Login(request):
     #    return response
 
     #else:
+
+        print('login!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 
         login_url = 'accounts/login.html'
 
