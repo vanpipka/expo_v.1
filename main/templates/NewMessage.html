@@ -1,0 +1,123 @@
+{% extends "wrapper.html" %}
+{% load home_extras %}
+{% load i18n %}
+
+{% block content%}
+
+    {% if user.is_active %}
+
+            <div class="container align-content-center">
+
+                <div class="pl-3 pr-3 mt-3 mb-3 border" style="width: 60%; margin-left:auto; margin-right:auto">
+
+                    <span class="article">Новое сообщение</span>
+
+                    <div>
+
+                        <div class="row mt-3" style="">
+
+                            <div class = "col">
+                                <form name="form" id="form">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+
+                                        <input id="recipient_id" hidden name="job_id" value="{{ recipient.id }}"></input>
+                                        <div>
+                                            <div class="row mb-2">
+                                                <div class="col col-2">
+                                                    <div class="product-img" style="height: 75px;">
+                                                        <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:75px" src="{{  recipient.foto }}" alt="">
+                                                    </div>
+                                                </div>
+                                                <div class="col col-10">
+                                                    <div class="row">
+                                                        <div class="col col-3">
+                                                            <label for="id_name" class="col-xs-2 control-label input-medium">Получатель</label>
+                                                        </div>
+                                                        <div class="col col-9">
+                                                            <span name = "name" class="text-danger text-menu txt-bold" id="id_name" placeholder="Получатель" value="">{{recipient.name}}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col col-3">
+                                                            <label for="id_theme" class="col-xs-2 control-label input-medium">Тема</label>
+                                                        </div>
+                                                        <div class="col col-9">
+                                                            <input type="text" name="theme" class="form-control" id="id_theme" placeholder="Тема сообщения" value="" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row pt-3">
+                                                <div class="col col-12">
+                                                    <textarea name="description" class="form-control" rows="5" placeholder="Сообщение" id="id_description" required></textarea>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col col-md-8 col-sm-6">
+
+                                        </div>
+                                        <div class="col col-12 col-md-4 col-sm-6">
+                                            <button type="submit" class="container-fluid btn btn-danger mb-3">Отправить</button>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        <script>
+
+            $('#form').validate({
+                submitHandler: function(form) {
+                    sendmessage();
+                }
+            }
+            );
+
+            function sendmessage() {
+
+                var formData = new FormData();
+
+                //Собираем конечный JSON
+                var json = JSON.stringify({
+                    resipient_id: document.getElementById("recipient.id").value,
+                    theme: document.getElementById("id_theme").value,
+                    text: document.getElementById("id_description").value,
+                });
+
+                // добавить к пересылке ещё пару ключ - значение
+                formData.append("data", json);
+                formData.append("csrfmiddlewaretoken", document.getElementsByName("csrfmiddlewaretoken")[0].value);
+
+                // отослать
+                var xhr = new XMLHttpRequest();
+
+                xhr.onreadystatechange = function() { // (3)
+                    if (xhr.readyState != 4) return;
+
+                    if (xhr.status != 200) {
+                        alert(xhr.status + ': ' + xhr.statusText);
+                    } else {
+                        alert("Данные сохранены");
+                        location.href = (xhr.responseText);
+                    }
+                }
+
+                xhr.open("POST", "{% get_attribute 'HOME_PAGE' %}message/send", true);
+                xhr.send(formData);
+            }
+        </script>
+
+    {% endif %}
+
+{% endblock %}

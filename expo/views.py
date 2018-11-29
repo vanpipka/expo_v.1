@@ -261,7 +261,7 @@ def success(request):
 
     return render(request, 'errors/success.html', context, None, status='200')
 
-def company(request):
+def companys(request):
 
     userAauthorized = request.user.is_authenticated
 
@@ -275,6 +275,7 @@ def company(request):
     for e in query:
         companyList.append({'name': e.name,
                 'id': e.id,
+                'url': '/company?id=' + str(e.id),
                 'fotourl': Attacment.getlink(e.image),
                 'resizefotourl': Attacment.getresizelink(e.image),
                 'isonline': True if (datet.now(timezone.utc) - e.lastOnline).seconds / 60 < 5 else False,
@@ -283,6 +284,41 @@ def company(request):
                })
 
     return render(request, 'CompanyList.html', {"companyList": companyList})
+
+def company(request):
+
+    userAauthorized = request.user.is_authenticated
+
+    if userAauthorized:
+        refreshLastOnline(request.user)
+
+    id = request.GET.get("id", None)
+
+    if id == None:
+        return render(request, 'errors/404.html', status=404)
+
+    query = Company.objects.all().filter(block=False).filter(id=id).select_related('idCity')
+
+    if len(query) == 0:
+        return render(request, 'errors/404.html', status=404)
+    else:
+
+        for e in query:
+            company = {'name': e.name,
+                                'id': e.id,
+                                'url': '/company?id='+str(e.id),
+                                'phonenumber': e.phonenumber,
+                                'email': e.emailaddress,
+                                'city': e.idCity.name,
+                                'fotourl': Attacment.getlink(e.image),
+                                'resizefotourl': Attacment.getresizelink(e.image),
+                                'isonline': True if (datet.now(timezone.utc) - e.lastOnline).seconds / 60 < 5 else False,
+                                'lastonline': e.lastOnline,
+                                'description': e.description
+                                }
+
+        return render(request, 'Company.html', {"worker": company, "userAauthorized": userAauthorized})
+
 
 def news(request):
 
@@ -392,6 +428,41 @@ def newjobs(request):
     else:
 
         return render(request, 'errors/403.html', None, None, status=403)
+
+def newmessage(request):
+
+    userAauthorized = request.user.is_authenticated
+
+    if userAauthorized:
+        refreshLastOnline(request.user)
+
+    else:
+
+        return render(request, 'errors/403.html', None, None, status=403)
+
+    id      = request.GET.get("id", None)
+    type    = request.GET.get("type", None)
+
+    if id == None or type == None:
+        return render(request, 'errors/404.html', status=404)
+
+    if type == '1':
+        recipient = Worker.GetElement(id = id)
+    elif type == '2':
+        recipient = Company.GetElement(id = id)
+    else:
+        return render(request, 'errors/404.html', status=404)
+
+    if recipient == None:
+        return render(request, 'errors/404.html', status=404)
+
+    userType = UserType.GetUserType(request.user)
+
+    content = {'recipient': {'name': recipient.name, 'id': recipient.id, 'foto': Attacment.getresizelink(recipient.image)}}
+
+    return render(request, 'NewMessage.html', content)
+
+
 
 def savejobs(request):
 

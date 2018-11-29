@@ -167,9 +167,8 @@
                                             if (xhr.readyState != 4) return;
 
                                             if (xhr.status != 200) {
-                                                alert(xhr.status + ': ' + xhr.statusText);
+                                                location.href = (xhr.responseText);
                                             } else {
-                                                alert("Данные сохранены");
                                                 location.href = (xhr.responseText);
                                             }
                                         }

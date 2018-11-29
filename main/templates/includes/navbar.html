@@ -9,7 +9,9 @@
             <ul class="navbar-nav ml-auto">
 
                 {% if user.is_active %}
-                    <a class="nav-link ml-4 mt-1 text-menu" style="color: #1e1e1e;" href="/messages">Сообщения <span class="badge badge-pill badge-danger">{{user|getactualmessage}}</span></a>
+                    <a class="nav-link ml-4 mt-1 text-menu" style="color: #1e1e1e;" href="/messages">
+                        Сообщения <span class="badge badge-pill badge-danger">{{user|getactualmessage}}</span>
+                    </a>
                     <li class="nav-item dropdown mt-1">
                         <a class="nav-link dropdown-toggle text-menu" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  style="">
                             <img src="{{user|getresizelink}}" class="rounded-circle z-depth-0" alt="avatar image" style="max-height: 30px">
@@ -45,7 +47,7 @@
                 <a class="txt-bold nav-link text-white text-menu {% if request.path == '/worker/search/'%}nav-item-expo-active{% endif %}" href="{% get_attribute 'HOME_PAGE' %}worker/search/" role="button">СПЕЦИАЛИСТЫ</a>
             </li>
             <li class="nav-item pt-2 nav-item-header">
-                <a class="txt-bold nav-link text-white text-menu {% if request.path == '/company/'%}nav-item-expo-active{% endif %}" href="{% get_attribute 'HOME_PAGE' %}company/" role="button">КОМПАНИИ</a>
+                <a class="txt-bold nav-link text-white text-menu {% if request.path == '/companys/'%}nav-item-expo-active{% endif %}" href="{% get_attribute 'HOME_PAGE' %}companys/" role="button">КОМПАНИИ</a>
             </li>
             <li class="nav-item pt-2 nav-item-header">
                 <a class="txt-bold nav-link text-white text-menu {% if request.path == '/jobs/'%}nav-item-expo-active{% endif %}" href="{% get_attribute 'HOME_PAGE' %}jobs/" role="button">ЗАКАЗЫ</a>

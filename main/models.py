@@ -289,6 +289,21 @@ class Worker(models.Model):
 
         return ratingList
 
+    def GetElement(id):
+
+        elem = None
+
+        try:
+
+            elem = Worker.objects.get(id=id)
+
+        except:
+
+            print('не удалось получить работника по id')
+
+        return elem
+
+
 class Company(models.Model):
 
     id              = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -396,6 +411,20 @@ class Company(models.Model):
 
         except:
             print('не удалось сохранить компанию')
+
+    def GetElement(id):
+
+        elem = None
+
+        try:
+
+            elem = Company.objects.get(id=id)
+
+        except:
+
+            print('не удалось получить работника по id')
+
+        return elem
 
 class News(models.Model):
 
@@ -875,7 +904,7 @@ class Message(models.Model):
 
         messageList = []
 
-        messageQuery = Message.objects.all().filter(recipient=user).order_by("-created")
+        messageQuery = Message.objects.all().filter(recipient=user).select_related('comment').select_related('jobresponse').order_by("-created")
 
         for e in messageQuery:
 
@@ -886,9 +915,16 @@ class Message(models.Model):
             if type(sender) == Worker:
                 url = '/worker/info?id='+str(sender.id)
             else:
-                url = '#'
+                url = '/company?id='+str(sender.id)
 
-            messageList.append({'id': e.id, 'text': e.text, 'sender': {'name': sender.name, 'foto': Attacment.getresizelink(sender.image), 'url': url}})
+            message = {'id': e.id, 'date': e.created, 'theme': e.text, 'sender': {'name': sender.name, 'foto': Attacment.getresizelink(sender.image), 'url': url}}
+
+            if e.comment != None:
+                message['text'] = e.comment.text
+            elif e.jobresponse != None:
+                message['text'] = e.jobresponse.answer
+
+            messageList.append(message)
 
             if e.read == False:
                 e.read = True

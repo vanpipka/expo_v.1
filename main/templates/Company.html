@@ -1,0 +1,90 @@
+{% extends "wrapper.html" %}
+{% load home_extras %}
+
+{% block content%}
+
+    <div class="container pt-3">
+
+        <!-- ФОТО -->
+        <div class="ml-3">
+            <label class="article"></label>
+
+            <div class="row">
+
+                <div class="col col-3">
+
+                    <div class="row mb-2">
+                       <div class="col">
+                           <div class="product-img" style="height: 150px;">
+                               <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:150px" src="{{  worker.resizefotourl }}" alt="">
+                           </div>
+                       </div>
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="col  pb-2 pt-2">
+                            <a href="/messages/new?id={{worker.id}}&type=2" type="" class="btn btn-danger container-fluid">Написать</a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col col-9">
+
+                    <div class="row mb-3">
+                        <div class="col col-3">
+                            <label for="id_name" class="col-xs-2 control-label input-medium">Имя</label>
+                        </div>
+                        <div class="col col-9">
+                            <span  name = "name" class="text-menu txt-bold" id="id_name" placeholder="Имя" value="">{{worker.name}}</span>
+                        </div>
+                    </div>
+
+
+
+                    <div class="row mb-3">
+                        <div class="col col-3">
+                            <label for="City" class="col-xs-2 control-label input-medium">Город</label>
+                        </div>
+                        <div class="col col-9">
+                            <span  name = "name" class="text-menu txt-bold" id="id_name" placeholder="Имя" value="">{{worker.city}}</span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col col-3">
+                            <label for="id_emailaddress" class="col-xs-2 control-label input-medium">Электронная почта</label>
+                        </div>
+                        <div class="col col-9">
+                            <span  name = "name" class="text-menu txt-bold" id="id_name" placeholder="Имя" value="">{{worker.emailaddress}}</span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col col-3">
+                            <label for="id_phonenumber" class="col-xs-2 control-label input-medium">Телефон</label>
+                        </div>
+                        <div class="col col-9">
+                            <span  name = "name" class="text-menu txt-bold" id="id_name" placeholder="Имя" value="">{{worker.phonenumber}}</span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col col-3">
+                            <label for="id_description" class="col-xs-2 control-label input-medium">Описание</label>
+                        </div>
+                        <div class="col col-9">
+                            <span name = "description" class="text-menu txt-bold" id="id_description" placeholder="Описание" value="">{{worker.description}}</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
