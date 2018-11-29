@@ -21,7 +21,8 @@
                                     {% csrf_token %}
                                     <div class="form-group">
 
-                                        <input id="recipient_id" hidden name="job_id" value="{{ recipient.id }}"></input>
+                                        <input id="recipient_id" hidden name="" value="{{ recipient.id }}"></input>
+                                        <input id="recipient_type" hidden name="" value="{{ recipient.type }}"></input>
                                         <div>
                                             <div class="row mb-2">
                                                 <div class="col col-2">
@@ -90,7 +91,8 @@
 
                 //Собираем конечный JSON
                 var json = JSON.stringify({
-                    resipient_id: document.getElementById("recipient.id").value,
+                    resipient_type: document.getElementById("recipient_type").value,
+                    resipient_id: document.getElementById("recipient_id").value,
                     theme: document.getElementById("id_theme").value,
                     text: document.getElementById("id_description").value,
                 });
@@ -113,7 +115,7 @@
                     }
                 }
 
-                xhr.open("POST", "{% get_attribute 'HOME_PAGE' %}message/send", true);
+                xhr.open("POST", "{% get_attribute 'HOME_PAGE' %}messages/send/", true);
                 xhr.send(formData);
             }
         </script>

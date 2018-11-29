@@ -322,7 +322,6 @@ class Company(models.Model):
     def __str__(self):
         return self.name
 
-
     def getCompanyQueryByUser(user):
 
         userList = UserType.objects.all().filter(user=user, type=2).select_related('idCity').values('company')
@@ -639,7 +638,6 @@ class JobOrder(models.Model):
 
             return False
 
-
 class JobComposition(models.Model):
 
     id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -882,6 +880,7 @@ class Message(models.Model):
     sender          = models.ForeignKey(User, related_name= "Отправитель", verbose_name="Отправитель", on_delete=models.CASCADE)
     recipient       = models.ForeignKey(User, related_name= "Получатель", verbose_name="Получатель", on_delete=models.CASCADE)
     text            = models.TextField("Текст")
+    subject         = models.TextField("Тема")
     read            = models.BooleanField("Прочитано", default=False)
     created         = models.DateTimeField("Дата добавления", auto_now_add=True, null=True)
     comment         = models.ForeignKey(Comments, verbose_name="ссылка на комментарий", on_delete=models.CASCADE, null=True)
@@ -917,12 +916,14 @@ class Message(models.Model):
             else:
                 url = '/company?id='+str(sender.id)
 
-            message = {'id': e.id, 'date': e.created, 'theme': e.text, 'sender': {'name': sender.name, 'foto': Attacment.getresizelink(sender.image), 'url': url}}
+            message = {'id': e.id, 'date': e.created, 'theme': e.subject, 'sender': {'name': sender.name, 'foto': Attacment.getresizelink(sender.image), 'url': url}}
 
             if e.comment != None:
                 message['text'] = e.comment.text
             elif e.jobresponse != None:
                 message['text'] = e.jobresponse.answer
+            else:
+                message['text'] = e.text
 
             messageList.append(message)
 
@@ -931,6 +932,33 @@ class Message(models.Model):
                 e.save()
 
         return messageList
+
+    def SaveNewMessage(Content, User):
+
+        print(Content)
+
+        message = Message()
+
+        recipient_type = Content.get('resipient_type')
+
+        if recipient_type == '1':
+            message.recipient   = UserType.GetUserFromWorker(Worker.GetElement(Content.get('resipient_id')))
+        elif recipient_type == '2':
+            message.recipient   = UserType.GetUserFromCompany(Company.GetElement(Content.get('resipient_id')))
+        else:
+            return False
+
+        if message.recipient != None:
+
+            message.sender      = User
+            message.text        = Content.get('text')
+            message.subject     = Content.get('theme')
+
+            message.save()
+
+            return True
+
+        return False
 
     def SaveComment(Comment):
 
@@ -942,7 +970,7 @@ class Message(models.Model):
 
             message.sender      = Comment.idUser
             message.recipient   = recipient
-            message.text        = 'Добавлен новый отзыв'
+            message.subject     = 'Добавлен новый отзыв'
             message.comment     = Comment
 
             message.save()
@@ -957,7 +985,7 @@ class Message(models.Model):
 
             message.sender      = sender
             message.recipient   = UserType.GetUserFromCompany(company=Jobresponse.jobOrder.company)
-            message.text        = 'Добавлен новый отклик на заказ'
+            message.subject     = 'Добавлен новый отклик на заказ'
             message.jobresponse = Jobresponse
 
             message.save()

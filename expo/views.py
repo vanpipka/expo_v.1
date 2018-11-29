@@ -386,6 +386,68 @@ def savenews(request):
         else:
             return render(request, 'errors/403.html', None, None, status=403)
 
+def messagesend(request):
+
+    print('!!!!!!!!!')
+
+    userAauthorized = request.user.is_authenticated
+
+    if userAauthorized:
+        refreshLastOnline(request.user)
+
+    if request.method == 'GET':
+
+        if request.is_ajax():
+            return HttpResponse(
+                json.dumps({'Access-Control-Allow-Origin': "*", 'status': False, 'errors': ''}),
+                status=403,
+                content_type='application/json')
+        else:
+            return render(request, 'errors/403.html', None, None, status=403)
+
+    else:
+
+        if userAauthorized:
+
+            result = Message.SaveNewMessage(Content = dict(json.loads(request.POST.__getitem__('data'))), User = request.user)
+
+            if request.is_ajax():
+
+                if result == True:
+
+                    HttpResponse(
+                        json.dumps({'Access-Control-Allow-Origin': "*", 'status': True, 'errors': ''}),
+                        status=200,
+                        content_type='application/json')
+
+                else:
+
+                    HttpResponse(
+                        json.dumps({'Access-Control-Allow-Origin': "*", 'status': False, 'errors': ''}),
+                        status=500,
+                        content_type='application/json')
+
+            else:
+
+                if result == True:
+
+                    return HttpResponse(settings.HOME_PAGE + 'success/')
+
+                else:
+
+                    return HttpResponse(settings.HOME_PAGE + 'servererror/')
+
+        else:
+
+            if request.is_ajax():
+                return HttpResponse(
+                    json.dumps({'Access-Control-Allow-Origin': "*", 'status': False, 'errors': ''}),
+                    status=403,
+                    content_type='application/json')
+            else:
+                return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)
+
+
 def messages(request):
 
     userAauthorized = request.user.is_authenticated
@@ -458,7 +520,7 @@ def newmessage(request):
 
     userType = UserType.GetUserType(request.user)
 
-    content = {'recipient': {'name': recipient.name, 'id': recipient.id, 'foto': Attacment.getresizelink(recipient.image)}}
+    content = {'recipient': {'type': type,'name': recipient.name, 'id': recipient.id, 'foto': Attacment.getresizelink(recipient.image)}}
 
     return render(request, 'NewMessage.html', content)
 
