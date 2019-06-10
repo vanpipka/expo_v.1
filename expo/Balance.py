@@ -25,7 +25,7 @@ def sendMessage(phone, text):
 
     formData['SenderId']                = 'VSEEXPO'
     formData['UseRecepientTimeZone']    = False
-    formData['PhoneNumber']             = phone
+    formData['PhoneNumber']             = phone #'89219563264'
     formData['Text']                    = text
     formData['SendDateTime']            = None
     formData['apiKey'] = getApi()
@@ -36,6 +36,8 @@ def sendMessage(phone, text):
 
     url = 'https://api.aramba.ru/singleSms'
     res = requests.post(url, data=json.dumps(formData), headers=headers)
+
+    print('ОТПРАВКА СЕТЬ')
 
     print(res.status_code)
     print(res.text)

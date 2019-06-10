@@ -125,13 +125,21 @@ ACCOUNT_USERNAME_REQUIRED = False
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_URL = "/accounts/login/"
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#    }
+#}
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'ENGINE': 'django.db.backends.mysql',
+		'NAME': 'vseexpo',
+        'USER': 'django',
+        'PASSWORD': 'Io89yHP>',
+        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+    },
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators

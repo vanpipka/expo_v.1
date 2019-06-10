@@ -1,0 +1,65 @@
+﻿{% load staticfiles %}
+{% load home_extras %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Все выставки и персонал здесь">
+
+  <title>vseExpo</title>
+
+  <!-- Bootstrap -->
+  <link href="{% get_attribute 'STATIC_URL' %}main/css/bootstrap.css" rel="stylesheet">
+  <link href="{% get_attribute 'STATIC_URL' %}main/css/bootstrap-theme.css" rel="stylesheet">
+  <link href="{% get_attribute 'STATIC_URL' %}main/css/font-awesome.css" rel="stylesheet">
+
+  <!-- siimple style -->
+  <link href="{% get_attribute 'STATIC_URL' %}main/css/style.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <div id="wrapper">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1>Сайт находится в разработке</h1>
+          <h2 class="subtitle">Все выставки и персонал здесь</h2>
+          <div id="countdown"></div>
+          <h1>&nbsp</h1>
+          <h1>&nbsp</h1>
+          <h1>&nbsp</h1>
+
+
+          <div class="social">
+            <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+            <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+            <a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a>
+            <a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-6 col-lg-offset-3">
+          <p class="copyright">&copy; Сайт в разработке</p>
+          <div class="credits">
+            vseExpo.ru
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="{% get_attribute 'STATIC_URL' %}main/js/bootstrap.min.js"></script>
+  <script src="{% get_attribute 'STATIC_URL' %}main/js/jquery.countdown.min.js"></script>
+
+  <script src="contactform/contactform.js"></script>
+
+</body>
+
+</html>

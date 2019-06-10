@@ -7,7 +7,7 @@
         <div class="col-8">
             <span class="article">Все специалисты</span>
         </div>
-        <div class="col-4">
+        <!--<div class="col-4">
             <div class="row" style="margin-right: -2em">
                 <div class="col-4" style="line-height: 3.4em;">
                     <label for="inputsorting" class="text-menu">Сортировка</label>
@@ -16,7 +16,7 @@
                     <input id="inputsorting" class="form-control container-fluid" style="margin-top: 0.5em" placeholder="Рейтинг, сначала высокий">
                 </div>
             </div>
-        </div>
+        </div>-->
     </div>
 
     <div class="row pl-3">
@@ -36,9 +36,9 @@
                     </div>
                 </div>
                 <div class="ml-4 mr-4 mt-3">
-                    <label for="profession" class="text-menu txt-bold">Профессия</label>
+                    <label for="profession" class="text-menu txt-bold">Специалист</label>
                     <div class="input-group">
-                        <input type="text" data-toggle="dropdown" class="input-medium search-query form-control" id="profession" name="profession" placeholder="Все профессии..." value="{{ searchproperty.profession }}">
+                        <input type="text" data-toggle="dropdown" class="input-medium search-query form-control" id="profession" name="profession" placeholder="Все специалисты..." value="{{ searchproperty.profession }}">
                     </div>
                 </div>
                 <div class="search-down text-center mt-3 pt-2" id="search-down" style="background-color: #edeef0">
@@ -53,6 +53,17 @@
                                 С фотографией
                             </label>
                         </div>-->
+                        <div class = "row popup-block" >
+                            <div class="col col-2" >
+                                <label class="checkbox-container">
+                                    <input class="" id="datacheck" value="True" type="checkbox" name="datacheck" {% if searchproperty.datacheck %}checked{% endif %}  onclick="setpopup(this)">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                            <div class="col col-10">
+                                <label for="datacheck" class="col-xs-2 control-label input-medium">Анкета проверена</label>
+                            </div>
+                        </div>
 
                         <div class = "row popup-block" >
 
@@ -103,7 +114,7 @@
                                 </label>
                             </div>
                             <div class="col col-10">
-                                <label for="haveip" class="col-xs-2 control-label input-medium">Зарегистрирован как ИП</label>
+                                <label for="haveip" class="col-xs-2 control-label input-medium">ИП/самозанятые</label>
                             </div>
                         </div>
 
@@ -124,7 +135,7 @@
                                 </label>
                             </div>
                             <div class="col col-10">
-                                <label for="workpermit" class="col-xs-2 control-label input-medium">Есть разрешение на работу</label>
+                                <label for="workpermit" class="col-xs-2 control-label input-medium">Разрешение на работу в РФ</label>
                             </div>
                         </div>
 
@@ -143,7 +154,7 @@
                                 </label>
                             </div>
                             <div class="col col-10">
-                                <label for="fsocheck" class="col-xs-2 control-label input-medium">Проверка ФСО пройдена</label>
+                                <label for="fsocheck" class="col-xs-2 control-label input-medium">Проверка ФСО</label>
                             </div>
                         </div>
 
@@ -154,17 +165,7 @@
                             </label>
                         </div>-->
 
-                        <div class = "row popup-block" >
-                            <div class="col col-2" >
-                                <label class="checkbox-container">
-                                    <input class="" id="datacheck" value="True" type="checkbox" name="datacheck" {% if searchproperty.datacheck %}checked{% endif %}  onclick="setpopup(this)">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                            <div class="col col-10">
-                                <label for="datacheck" class="col-xs-2 control-label input-medium">Данные проверены</label>
-                            </div>
-                        </div>
+                        
 
                         <!--<div class = "popup-block">
                             <input type="checkbox" name="haveinstrument" id="haveinstrument" value="True" {% if searchproperty.haveinstrument == True %}checked{% endif %} onclick="setpopup(this)">
@@ -181,7 +182,7 @@
                                 </label>
                             </div>
                             <div class="col col-10">
-                                <label for="haveinstrument" class="col-xs-2 control-label input-medium">Есть инструмент</label>
+                                <label for="haveinstrument" class="col-xs-2 control-label input-medium">Наличие инструмента</label>
                             </div>
                         </div>
 
@@ -311,7 +312,7 @@
                                 </label>
                             </div>
                             <div class="col col-10">
-                                <label for="readytotravel" class="col-xs-2 control-label input-medium">Готов к командировкам</label>
+                                <label for="readytotravel" class="col-xs-2 control-label input-medium">Готовность к командировкам</label>
                             </div>
                         </div>
 
@@ -330,7 +331,7 @@
                                 </label>
                             </div>
                             <div class="col col-10">
-                                <label for="haveintpass" class="col-xs-2 control-label input-medium">Есть загранпаспорт</label>
+                                <label for="haveintpass" class="col-xs-2 control-label input-medium">Наличие загранпаспорта</label>
                             </div>
                         </div>
 
@@ -349,7 +350,7 @@
                                 </label>
                             </div>
                             <div class="col col-10">
-                                <label for="haveshengen" class="col-xs-2 control-label input-medium">Есть шенгенская виза</label>
+                                <label for="haveshengen" class="col-xs-2 control-label input-medium">Наличие визы</label>
                             </div>
                         </div>
                     </div>

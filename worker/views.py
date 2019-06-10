@@ -161,78 +161,108 @@ def showSettingsJson(request):
 
     context = {}
 
-    print('Настройки: ' + str(request.POST))
-
-    print('showSettingsJson куки:' + str(request.COOKIES))
-
-    print('Настройки: '+ str(request.user))
-
     if request.user.is_authenticated:
 
-        struct = {
-            "group": {"name": "Личные данные", "items": [{"name": "Имя", "type": "String", "value": ""}]}
-        }
+        print('Настройки: ' + str(request.POST))
+        print('showSettingsJson куки:' + str(request.COOKIES))
+        print('Настройки: ' + str(request.user))
 
-        token = csrf.get_token(request)
+        userType = UserType.GetUserType(request.user)
 
-        worker          = gerWorkList(user_id=request.user, userAauthorized=request.user.is_authenticated, itsSettings=True)
-        selectedList    = []
+        if userType == 1:
 
-        if worker != None and len(worker) > 0:
-            worker          = worker[0]
-            selectedList    = worker.get('proflist')
-        else:
-            worker          = {"name": "", "surname": "", "lastname":""}
+            token = csrf.get_token(request)
 
-        struct = {
-            "group": [
-                {"name": "Фотография", "items": [
-                    {"columnname": "fotourl", "type": "base64", "value": worker.get('resizefotourl', '')},
-                    {"columnname": "rating", "type": "int", "value": worker.get('rating', 0), 'hidden': True},
-                    {"columnname": "commentscount", "type": "int", "value": worker.get('commentscount', 0), 'hidden': True},
-                ]},
-                {"name": "Личные данные", "items": [
-                    {"columnname": "surname", "label": "Фамилия", "type": "string", "value": worker.get('surname', ''), "required": True},
-                    {"columnname": "name","label": "Имя", "type": "string", "value": worker.get('name', ''), "required": True},
-                    {"columnname": "lastname", "label": "Отчество", "type": "string", "value": worker.get('lastname', '')},
-                    {"columnname": "sex", "label": "Пол", "type": "binaryswitch", "values": ["Женский", "Мужской"],"value": 1 if (worker.get('sex', True)) else 0},
-                    {"columnname": "birthday", "label": "Дата рождения", "type": "date", "value": worker.get('birthday', ''), "required": True},
-                    {"columnname": "country", "label": "Гражданство", "type": "ref", "value": worker.get('nationality', '')},
-                    {"columnname": "workpermit", "label": "Разрешение на работу", "type": "boolean", "value": worker.get('workpermit', False)},
-                    {"columnname": "city", "label": "Мой город, населенный пункт", "type": "ref", "value": worker.get('city', '')},
-                    {"columnname": "phonenumber", "label": "Телефон", "type": "string", "subtype": "phone", "value": worker.get('phonenumber', '')},
-                    {"columnname": "emailaddress", "label": "Электронная почтка", "type": "string", "subtype": "email", "value": worker.get('emailaddress', '')},
-                    {"columnname": "haveip", "label": "Я зарегистрирован как ИП", "type": "boolean", "value": worker.get('haveip', False)},
-                    {"columnname": "haveinstrument", "label": "Есть свои инструменты", "type": "boolean", "value": worker.get('haveinstrument', False)},
-                    {"columnname": "experiencedate", "label": "Работаю на выставках с", "type": "year", "min": 1990, "max": 2020, "value": worker.get('experiencedate', False)},
-                    {"columnname": "experience", "label": "Опыт работы на выставках", "type": "text", "value": worker.get('experience', '')}
-                ]},
-                {"name": "Командировки", "items": [
-                    {"columnname": "readytotravel", "label": "Готов к командировкам", "type": "boolean", "value": worker.get('readytotravel', False)},
-                    {"columnname": "haveintpass", "label": "Есть загранпаспорт", "type": "boolean", "value": worker.get('haveintpass', False)},
-                    {"columnname": "haveshengen", "label": "Есть шенгенская виза", "type": "boolean", "value": worker.get('haveshengen', False)},
-                ]},
-                {"name": "Мои умения и навыки", "items": [
-                    {"columnname": "professions", "label": "Профессия", "type": "multipleref", "value": worker.get('proflist', [])},
-                ]},
-                {"name": "Услуги и цены", "items": [
-                    {"columnname": "services", "label": "Проектная работа", "type": "table", "value": worker['works'].get('servicelist', [])},
-                    {"columnname": "salary", "label": "Постоянная работа", "type": "int", "value": worker['works'].get('salary', 0)},
-                ]},
-                {"name": "Дополнительно", "items": [
-                    {"columnname": "personaldataisallowed", "label": "Даю согласие на обработку персональных данных", "labelposition": "right", "width": "100%", "type": "boolean", "value": worker.get('personaldataisallowed', False), "backgroundcolor": "#f8d7da"},
-                    {"columnname": "publishdata", "label": "Опубликовать анкету в общий доступ", "labelposition": "right", "width": "100%", "type": "boolean", "value": worker.get('publishdata', False), "backgroundcolor": "#d4edda"},
-                ]}
-            ]
-        }
+            worker          = gerWorkList(user_id=request.user, userAauthorized=request.user.is_authenticated, itsSettings=True)
+            selectedList    = []
 
-        context = {'worker': struct,
+            if worker != None and len(worker) > 0:
+                worker          = worker[0]
+                selectedList    = worker.get('proflist')
+            else:
+                worker          = {"name": "", "surname": "", "lastname":""}
+
+            struct = {
+                "group": [
+                    {"name": "Фотография", "items": [
+                        {"columnname": "fotourl", "type": "base64", "value": worker.get('resizefotourl', ''),
+                            "additionaly":
+                                {"rating": {"type": "int", "value": worker.get('rating', 0), 'hidden': True},
+                                 "commentscount": {"type": "int", "value": worker.get('commentscount', 0), 'hidden': True}}
+                        },
+                    ]},
+                    {"name": "Личные данные", "items": [
+                        {"columnname": "surname", "label": "Фамилия", "type": "string", "value": worker.get('surname', ''), "required": True},
+                        {"columnname": "name","label": "Имя", "type": "string", "value": worker.get('name', ''), "required": True},
+                        {"columnname": "lastname", "label": "Отчество", "type": "string", "value": worker.get('lastname', '')},
+                        {"columnname": "sex", "label": "Пол", "type": "binaryswitch", "values": ["Женский", "Мужской"],"value": 1 if (worker.get('sex', True)) else 0},
+                        {"columnname": "birthday", "label": "Дата рождения", "type": "date", "value": worker.get('birthday', ''), "required": True},
+                        {"columnname": "country", "label": "Гражданство", "type": "ref", "value": worker.get('nationality', '')},
+                        {"columnname": "workpermit", "label": "Разрешение на работу в РФ", "type": "boolean", "value": worker.get('workpermit', False)},
+                        {"columnname": "city", "label": "Мой город, населенный пункт", "type": "ref", "value": worker.get('city', '')},
+                        {"columnname": "phonenumber", "label": "Телефон", "type": "string", "subtype": "phone", "value": worker.get('phonenumber', '')},
+                        {"columnname": "emailaddress", "label": "Электронная почта", "type": "string", "subtype": "email", "value": worker.get('emailaddress', '')},
+                        {"columnname": "haveip", "label": "ИП/Самозанятые", "type": "boolean", "value": worker.get('haveip', False)},
+                        {"columnname": "haveinstrument", "label": "Есть свои инструменты", "type": "boolean", "value": worker.get('haveinstrument', False)},
+                        {"columnname": "experiencedate", "label": "Работаю на выставках с", "type": "year", "min": 1990, "max": 2020, "value": worker.get('experiencedate', False)},
+                        {"columnname": "experience", "label": "Опыт работы на выставках", "type": "text", "value": worker.get('experience', '')}
+                    ]},
+                    {"name": "Командировки", "items": [
+                        {"columnname": "readytotravel", "label": "Готов к командировкам", "type": "boolean", "value": worker.get('readytotravel', False)},
+                        {"columnname": "haveintpass", "label": "Наличие загранпаспорта", "type": "boolean", "value": worker.get('haveintpass', False)},
+                        {"columnname": "haveshengen", "label": "Наличие визы", "type": "boolean", "value": worker.get('haveshengen', False)},
+                    ]},
+                    {"name": "Мои умения и навыки", "items": [
+                        {"columnname": "professions", "label": "Специальность", "type": "multipleref", "value": worker.get('proflist', [])},
+                    ]},
+                    {"name": "Услуги и цены", "items": [
+                        {"columnname": "salary", "label": "Должностной оклад (руб.)", "type": "int", "value": worker['works'].get('salary', 0)},
+                        {"columnname": "services", "label": "Проектная работа", "type": "table", "value": worker['works'].get('servicelist', [])},
+                    ]},
+                    {"name": "Дополнительно", "items": [
+                        {"columnname": "personaldataisallowed", "label": "Согласен на обработку персональных данных", "labelposition": "right", "width": "100%", "type": "boolean", "value": worker.get('personaldataisallowed', False), "backgroundcolor": "#f8d7da"},
+                        {"columnname": "publishdata", "label": "Опубликовать анкету в общий доступ", "labelposition": "right", "width": "100%", "type": "boolean", "value": worker.get('publishdata', False), "backgroundcolor": "#d4edda"},
+                    ]}
+                ]
+            }
+
+            context = {'worker': struct,
+                            'itsworker': True,
+                            'status': True,
+                            'csrfmiddlewaretoken': token,
+                            'userid': worker.get('id')}
+
+        elif userType == 2:
+
+            token = csrf.get_token(request)
+
+            company = Company.GetCompanyByUser(user=request.user)
+
+            worker = {"group": [
+                        {"name": "Фотография", "items":
+                            [{"columnname": "fotourl", "type": "base64", "value": company.get('resizefotourl', ''),},]
+                         },
+                        {"name": "Данные о компании", "items": [
+                            {"columnname": "name", "label": "Наименование", "type": "string", "value": company.get('name', ''), "required": True},
+                            {"columnname": "vatnumber", "label": "ИНН", "type": "string", "value": company.get('vatnumber', ''), "required": True},
+                            {"columnname": "city", "label": "Мой город, населенный пункт", "type": "ref", "value": company.get('city', '')},
+                            {"columnname": "phonenumber", "label": "Телефон", "type": "string", "subtype": "phone", "value": company.get('phonenumber', '')},
+                            {"columnname": "emailaddress", "label": "Электронная почта", "type": "string", "subtype": "email", "value": company.get('emailaddress', '')},
+                            {"columnname": "description", "label": "Описание", "type": "text", "value": company.get('description', '')}
+                        ]
+                         }
+                        ]
+                     }
+
+            context = {'worker': worker,
+                       'itsworker': False,
                        'status': True,
-                       #'serviceList': getServiceList(),
-                       #'professionList': getProfessionListWithGroup(selectedList=selectedList),
-                       'csrfmiddlewaretoken': token}
+                       'csrfmiddlewaretoken': token,
+                       'userid': company.get('id')}
 
-        #return render(request, 'WorkerSettings.html', context)
+        else:
+            context["message"] = '500: Внутренняя ошибка сервера'
+            context["status"] = False
     else:
         context["message"]  = '403: Доступ запрещен'
         context["status"]   = False
@@ -312,6 +342,10 @@ def showSearchJson(request):
 
     if request.method == "POST":
 
+        print("test csrf=====================================")
+        print('Запрос: ' + str(request.POST))
+        print('Куки: ' + str(request.COOKIES))
+
         dictPost = dict(json.loads(request.POST.__getitem__('data')))
         print('шоу серч: '+ str(dictPost))
         context = searchWorker(user = request.user, searchList=dictPost, groupAttribute=True)
@@ -321,7 +355,7 @@ def showSearchJson(request):
         category    = request.GET.get("profession", "")
         city        = request.GET.get("city", "")
 
-        context = searchWorker(user = request.user,searchList={'Profession': [category], 'City': [city]}, userAauthorized=request.user.is_authenticated, groupAttribute=True)
+        context = searchWorker(user = request.user,searchList={'profession': category, 'city': city}, userAauthorized=request.user.is_authenticated, groupAttribute=True)
 
     return JsonResponse(context)
 
@@ -335,6 +369,10 @@ def showSearch(request):
     print("Попали")
 
     if request.method == "POST":
+
+        print("test csrf=====================================")
+        print('Запрос: ' + str(request.POST))
+        print('Куки: ' + str(request.COOKIES))
 
         dictPost = dict(json.loads(request.POST.__getitem__('data')))
         context = searchWorker(user = request.user, searchList=dictPost)
@@ -360,6 +398,11 @@ def showWorkersList(request):
     context = {}
 
     if request.method == "POST":
+
+        print("test csrf=====================================")
+        print('Запрос: ' + str(request.POST))
+        print('Куки: ' + str(request.COOKIES))
+           
         dictPost = dict(json.loads(request.POST.__getitem__('data')))
         context = searchWorker(user = request.user, searchList=dictPost)
 
@@ -440,13 +483,22 @@ def my_view(request):
         print("test csrf=====================================")
         print('Запрос: ' + str(request.POST))
         print('Куки: ' + str(request.COOKIES))
-        dictPost = dict(request.POST)
-        context = searchWorker(user = request.user, searchList=dictPost)
+
+        #jsonString = json.loads(request.POST.__getitem__('data'))
+
+        print("test body=====================================")
+        #print(jsonString);
+        
+
+        #dictPost = dict(json.loads(request.POST.__getitem__('data')))
+        #context = searchWorker(user = request.user, searchList=dictPost)
+
+        #context["count"] = len(context.get('dataset'))
 
     elif request.method == "GET":
 
         category = request.GET.get("profession", "")
 
-        context = searchWorker({'Profession': [category]})
+        context = searchWorker({'Profession': category})
 
-    return render(request, 'SearchWorker.html', context)
+    return JsonResponse(context)

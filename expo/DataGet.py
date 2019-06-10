@@ -142,13 +142,13 @@ def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, 
         if groupAttribute:
 
             attributeArray = []
-            attributeArray.append({"name": "haveip", "label": "Зарегистрирован как ИП", "value": e.haveIP})
+            attributeArray.append({"name": "haveip", "label": "ИП/Самозанятый", "value": e.haveIP})
             attributeArray.append({"name": "fsocheck", "label": "Проверка ФСО", "value": e.fsocheck})
             attributeArray.append({"name": "haveinstrument", "label": "Есть инструмент", "value": e.haveInstrument})
-            attributeArray.append({"name": "workpermit", "label": "Есть разрешение на работу", "value": e.workpermit})
-            attributeArray.append({"name": "datacheck", "label": "Данные проверены", "value": e.datacheck})
-            attributeArray.append({"name": "haveshengen", "label": "Есть шенгенская виза", "value": e.haveShengen})
-            attributeArray.append({"name": "haveintpass", "label": "Есть загранпаспорт", "value": e.haveIntPass})
+            attributeArray.append({"name": "workpermit", "label": "Разрешение на работу РФ", "value": e.workpermit})
+            attributeArray.append({"name": "datacheck", "label": "Анкета проверена", "value": e.datacheck})
+            attributeArray.append({"name": "haveshengen", "label": "Наличие визы", "value": e.haveShengen})
+            attributeArray.append({"name": "haveintpass", "label": "Наличие загранпаспорта", "value": e.haveIntPass})
             attributeArray.append({"name": "readytotravel", "label": "Готов к командировкам", "value": e.readytotravel})
 
             WorkerInfo["attributes"] = attributeArray
@@ -198,7 +198,7 @@ def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, 
 
         #Цены на услуги
         for prof in CostOfService.objects.all().filter(idWorker=workerid).select_related('idService'):
-            priceList.append({"id": prof.idService.id, "service": prof.idService.name, "price": prof.price})
+            priceList.append({"id": prof.idService.id, "service": prof.idService.name, "price": prof.price, "unit": prof.idService.unit})
 
         works = {'salary': e.salary, 'servicelist': priceList}
         WorkerInfo['works'] = works
@@ -316,13 +316,13 @@ def searchWorker(user, searchList, userAauthorized=False, returnCount = False, g
     searchProperty  = {'WorkExperience': 'WorkExperience0'}
     profession      = searchList.get('profession')
     city            = searchList.get('city')
-    workexperience  = searchList.get('workexperience')
+    workexperience  = str(searchList.get('workexperience'))
     onlyfoto        = searchList.get('onlyfoto')
     onlycomments    = searchList.get('onlycomments')
     rating          = searchList.get('inputrating')
     fsocheck        = searchList.get('fsocheck')
     datacheck       = searchList.get('datacheck')
-    sex             = searchList.get('sex')
+    sex             = str(searchList.get('sex'))
     haveip          = searchList.get('haveip')
     haveshengen     = searchList.get('haveshengen')
     haveintpass     = searchList.get('haveintpass')
@@ -436,9 +436,9 @@ def searchWorker(user, searchList, userAauthorized=False, returnCount = False, g
         print("Пол:" + str(sex))
         searchProperty["sex"] = sex
 
-        if sex == 'M':
+        if sex == 'M' or sex == '1':
             searchquery     = searchquery.filter(sex=True)
-        elif sex == 'W':
+        elif sex == 'W' or sex == '2' :
             searchquery     = searchquery.filter(sex=False)
     else:
         searchProperty["sex"] = ''

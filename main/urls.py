@@ -26,6 +26,7 @@ handler404 = notfound
 urlpatterns = [
     path('', views.show),
     path('m/servicelist/', views.jsonServicesList),
+    #path('m/servicelist/save/', views.ServicesListSave),
     path('m/selectionparameters/', views.jsonSelectionParameters),
     path('m/citylist/', views.jsonCityList),
     path('m/citylistgroup/', views.jsonCityListGroup),
@@ -33,7 +34,9 @@ urlpatterns = [
     path('m/checklogin/', views.checkLogin),
     path('m/checkserver/', views.checkServer),
     path('m/professionlist/', views.jsonProfessionList),
+    #path('m/professionlist/save/', views.ProfessionsListSave),
     path('m/professionandgroups/', views.showJson),
+    path('m/companies/', views.jsonCompanyList)
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

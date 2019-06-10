@@ -1,0 +1,61 @@
+.br-theme-css-stars .br-widget {
+  height: 36px;
+  white-space: nowrap;
+  margin-top: -1em;
+}
+.br-theme-css-stars .br-widget a {
+  text-decoration: none;
+  float: left;
+
+}
+.br-theme-css-stars .br-widget a:after {
+  content: "\2605";
+  color: #d2d2d2;
+}
+.br-theme-css-stars .br-widget a.br-active:after {
+  color: #EDB867;
+}
+.br-theme-css-stars .br-widget a.br-selected:after {
+  color: #EDB867;
+}
+.br-theme-css-stars .br-widget .br-current-rating {
+  display: none;
+}
+.br-theme-css-stars .br-readonly a {
+  cursor: default;
+}
+@media print {
+  .br-theme-css-stars .br-widget a:after {
+    content: "\2606";
+    color: black;
+  }
+  .br-theme-css-stars .br-widget a.br-active:after,
+  .br-theme-css-stars .br-widget a.br-selected:after {
+    content: "\2605";
+    color: black;
+  }
+}
+
+
+@media (min-width: 768px) {
+  .br-theme-css-stars .br-widget a {
+      height: 12px;
+      width: 12px;
+      font-size: 12px;
+  }
+}
+
+@media (min-width: 992px) {
+  .br-theme-css-stars .br-widget a {
+      height: 13px;
+      width: 13px;
+      font-size: 13px;
+  }
+}
+@media (min-width: 1200px) {
+  .br-theme-css-stars .br-widget a {
+      height: 18px;
+      width: 18px;
+      font-size: 18px;
+  }
+}

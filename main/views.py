@@ -2,7 +2,8 @@ from django.http import  JsonResponse
 from django.shortcuts import render
 from expo.DataGet import  getProfessionList, getAllProfessionsAndGroups, getCityListFull, getServiceList, getCountryList, getCityList
 from expo.DataSet import refreshLastOnline
-from main.models import UserType, News, Comments, Attacment
+from main.models import Professions, Service, UserType, News, Comments, Company, Attacment, CostOfService, Worker
+import json
 
 from django.middleware import csrf
 # Create your views here.
@@ -57,6 +58,113 @@ def showtest(request):
 
     return render(request, 'index_ant.html', context)
 
+def ServicesListSave(request):
+
+    if request.user.is_authenticated:
+        refreshLastOnline(request.user)
+    
+    if request.user.is_authenticated: # != True:
+
+        if request.method == "POST":
+
+            print(request.POST)
+
+            if request.POST.__contains__('data'):
+
+                #print(request.POST.__getitem__('data'))
+
+                jsonString = json.loads(request.POST.__getitem__('data'))
+
+                worker = UserType.GetElementByUser(request.user);
+
+                if worker != None:
+                    print ('aaaa')
+                    print(jsonString)
+
+                    CostOfService.objects.filter(idWorker=worker).delete()
+  
+                    for service in jsonString:
+                        print ('ddddd')
+
+                        price       = service.get('price')
+                        idService   = service.get('id')
+
+                        if price != '' and price != '0' and price != 0 and price != None: 
+                            try:
+                                costofservice = CostOfService(idWorker=worker, idService = Service.objects.get(id=idService))
+                                costofservice.price = float(price)
+                                costofservice.save()
+                            except:
+                                print('ошибка при сохранении цены: '+str(worker)+'/'+str(idService))
+                        else:
+                            print('цена равна 0: '+str(worker)+'/'+str(idService))
+
+            if request.is_ajax():
+
+                return JsonResponse({'status': True, 'csrfmiddlewaretoken': csrf.get_token(request)})
+
+            else:
+                return HttpResponse(settings.HOME_PAGE + 'success/')
+
+        else:
+            if request.is_ajax():
+                return JsonResponse({'status': False, 'csrfmiddlewaretoken': csrf.get_token(request)})
+            else:
+                return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403) 
+    else:
+        if request.is_ajax():
+            return JsonResponse({'status': False, 'csrfmiddlewaretoken': csrf.get_token(request)})
+        else:
+            return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)  
+
+def ProfessionsListSave(request):
+
+    if request.user.is_authenticated:
+        refreshLastOnline(request.user)
+    
+    if request.user.is_authenticated: # != True:
+
+        if request.method == "POST":
+
+            print(request.POST)
+
+            if request.POST.__contains__('data'):
+
+                jsonString = json.loads(request.POST.__getitem__('data'))
+
+                worker = UserType.GetElementByUser(request.user);
+
+                if worker != None:
+                    print ('aaaa')
+                    print(jsonString)
+
+                    worker.professions.clear()
+
+                    for prof in jsonString:
+
+                        if prof.get('value') == True:
+                            try:
+                                worker.professions.add(Professions.objects.get(id=prof.get('id')))
+                            except:
+                                print("не удалось сохранить профессию")
+
+            if request.is_ajax():
+                return JsonResponse({'status': True, 'csrfmiddlewaretoken': csrf.get_token(request)})
+
+            else:
+                return HttpResponse(settings.HOME_PAGE + 'success/')
+
+        else:
+            if request.is_ajax():
+                return JsonResponse({'status': False, 'csrfmiddlewaretoken': csrf.get_token(request)})
+            else:
+                return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403) 
+    else:
+        if request.is_ajax():
+            return JsonResponse({'status': False, 'csrfmiddlewaretoken': csrf.get_token(request)})
+        else:
+            return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)  
+
 def jsonProfessionList(request):
 
     if request.user.is_authenticated:
@@ -88,48 +196,45 @@ def jsonSelectionParameters(request):
 
     token = csrf.get_token(request);
     searchparams = [
+
         {
-            "title": 'Профессия',
+            "title": 'Профессия для поиска',
             "type": 'ref',
             "columnname": 'profession',
         },
         {
-            "title": 'Город',
+            "title": 'Город для поиска',
             "type": 'ref',
             "columnname": 'city',
-        },
-        {
-            "title": 'Пол',
-            "type": 'list',
-            "columnname": 'sex',
-            "values": ['Не имеет значения', 'Мужской', 'Женский']
         },
 
         {
             "title": 'Стаж работы',
             "type": 'list',
-            "columnname": 'experience',
+            "columnname": 'workexperience',
             "values": ['Не имеет значения', 'до 1 года', '1-3 года', '3-7 лет', 'более 7 лет']
         },
 
+
         {
-            "title": 'Свой инструмент',
+            "title": 'Анкета проверена',
             "type": 'boolean',
-            "columnname": 'haveinstrument',
+            "columnname": 'datacheck',
         },
+
         {
-            "title": 'Есть ИП',
+            "title": 'ИП/Самозанятые',
             "type": 'boolean',
             "columnname": 'haveip',
         },
         {
-            "title": 'Шенгенская виза',
+            "title": 'Наличие визы',
             "type": 'boolean',
             "columnname": 'haveshengen',
         },
 
         {
-            "title": 'Есть загранпаспорт',
+            "title": 'Наличие загранпаспорта',
             "type": 'boolean',
             "columnname": 'haveintpass',
         },
@@ -140,18 +245,19 @@ def jsonSelectionParameters(request):
             "columnname": 'fsocheck',
         },
 
+
+        {
+            "title": 'Свой инструмент',
+            "type": 'boolean',
+            "columnname": 'haveinstrument',
+        },
+
         {
             "title": 'Только с отзывами',
             "type": 'boolean',
             "columnname": 'onlycomments',
         },
 
-
-        {
-            "title": 'Данные проверены',
-            "type": 'boolean',
-            "columnname": 'datacheck',
-        },
 
         {
             "title": 'Только с фото',
@@ -166,20 +272,26 @@ def jsonSelectionParameters(request):
         },
 
         {
-            "title": 'Рейтинг',
-            "type": 'rating',
-            "columnname": 'inputrating',
-        },
-
-
-
-        {
             "title": 'Возраст',
             "type": 'range',
             "min": 18,
             "max": 70,
             "columnname": 'age',
         },
+
+        {
+            "title": 'Рейтинг',
+            "type": 'rating',
+            "columnname": 'inputrating',
+        },
+
+        {
+            "title": 'Пол',
+            "type": 'list',
+            "columnname": 'sex',
+            "values": ['Не имеет значения', 'Мужской', 'Женский']
+        },
+
 
     ]
 
@@ -207,7 +319,6 @@ def jsonCityList(request):
 
     return response
 
-
 def jsonCityListGroup(request):
 
     if request.user.is_authenticated:
@@ -230,6 +341,30 @@ def jsonCountryList(request):
     context = getCountryList()
 
     response = JsonResponse({'dataset': context})
+    response['Access-Control-Allow-Origin'] = "*"
+
+    return response
+
+def jsonCompanyList(request):
+
+    if request.user.is_authenticated:
+        refreshLastOnline(request.user)
+
+    companyList = []
+
+    query = Company.objects.all().filter(block=False)
+
+    for e in query:
+        companyList.append({'name': e.name,
+                'id': e.id,
+                'url': '/company?id=' + str(e.id),
+                'fotourl': Attacment.getlink(e.image),
+                'resizefotourl': Attacment.getresizelink(e.image),
+                'lastonline': e.lastOnline,
+                'description': e.description
+               })
+
+    response = JsonResponse({'dataset': companyList})
     response['Access-Control-Allow-Origin'] = "*"
 
     return response

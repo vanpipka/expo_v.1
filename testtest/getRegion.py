@@ -4,10 +4,10 @@ import json
 import sqlite3
 import uuid
 
-path  = 'C:\\djangoprojects\\testtest\\regions.json'
-pathC = 'C:\\djangoprojects\\testtest\\city.json'
+path  = '/home/django/djangoprojects/testtest/regions.json'
+pathC = '/home/django/djangoprojects/testtest/city.json'
 
-conn = sqlite3.connect("C:\djangoprojects\db.sqlite3")  # или :memory: чтобы сохранить в RAM
+conn = sqlite3.connect("/home/django/djangoprojects/db.sqlite3")  # или :memory: чтобы сохранить в RAM
 cursor = conn.cursor()
 
 print(path)

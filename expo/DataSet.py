@@ -192,7 +192,10 @@ def setWorker(id, data):
 
         for id_prof in professions:
             try:
-                worker.professions.add(Professions.objects.get(id=id_prof))
+                if type(id_prof) == type({}):
+                    worker.professions.add(Professions.objects.get(id=id_prof.get('id')))
+                else:
+                    worker.professions.add(Professions.objects.get(id=id_prof))
             except:
                 print("не удалось сохранить профессию")
 
@@ -230,7 +233,7 @@ def setWorker(id, data):
             price       = service['price']
             idService   = service['id']
 
-            if price != '':
+            if price != '' and price != '0' and price != 0:
                 try:
                     costofservice = CostOfService(idWorker=worker, idService = Service.objects.get(id=idService))
                     costofservice.price = float(price)

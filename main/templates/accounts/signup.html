@@ -1,7 +1,7 @@
 
 
 {% extends "wrapper.html" %}
-
+{% load home_extras %}
 {% block content %}
 
 <div style="left: 50%; top: 50%; position: absolute; margin: -350px 0 0 -250px;">
@@ -62,7 +62,7 @@
                         <span class="checkmark"></span>
                         <label for="id_personaldataisallowed" class="col-xs-2 control-label input-medium">
                             <span class="ui-checkbox__content">
-                                Ознакомлен и согласен с условиями <a style="color: #d21c43; text-decoration: none" href="/documents/repetitor/" target="_blank">Публичной&nbsp;оферты</a>,<!-- --> <a style="color: #d21c43; text-decoration: none" href="/documents/terms-of-use/" target="_blank">Условиями&nbsp;использования</a> <!-- -->в полном объеме.
+                                Ознакомлен и согласен с условиями <a style="color: #d21c43; text-decoration: none" href="{% get_attribute 'HOME_PAGE' %}privacy-policy/" target="_blank">обработки&nbsp;персональных&nbsp;данных</a> <!-- -->в полном объеме.
                             </span>
                         </label>
                     </label>
@@ -89,22 +89,7 @@
                     });
 
         {% if confirmphone %}
-        /*function sendSMS() {
-            var xhr = new XMLHttpRequest();
 
-            xhr.onreadystatechange = function () { // (3)
-                if (xhr.readyState != 4) return;
-
-                if (xhr.status != 200) {
-                    location.href = (xhr.responseText);
-                } else {
-                    location.href = (xhr.responseText);
-                }
-            }
-
-            xhr.open("GET", "/sendsms/?phone=" + document.getElementById("smsphone").value, true);
-            xhr.send();
-        }*/
         {% endif %}
 
     </script>

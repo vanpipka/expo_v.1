@@ -13,6 +13,7 @@ from django.conf import settings
 from os import path
 import random
 from expo.Balance import sendMessage
+from django.db.models import Q
 
 from django.dispatch import receiver
 
@@ -53,6 +54,7 @@ class Service(models.Model):
 
     id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name        = models.CharField(max_length=100)
+    unit        = models.CharField(max_length=10)
 
     def __str__(self):
         return self.name
@@ -186,13 +188,28 @@ class Attacment(models.Model):
     def getresizelink(attach):
 
         if attach.resizePath:
-            return str(settings.MEDIA_URL) + str(attach.resizePath)
+
+            if str(attach.resizePath)[0:1] =='/':
+                img = str(settings.MEDIA_URL) + str(attach.resizePath)[1:]
+            else:
+                img = str(settings.MEDIA_URL) + str(attach.resizePath)
+
+            print(img)
+
+            return (img)
         else:
             return str(settings.STATIC_URL) + 'main/img/add-photo.png'
 
     def getlink(attach):
         if attach.path:
-            return str(settings.MEDIA_URL) + str(attach.path)
+
+            if str(attach.path)[0:1] =='/':
+                img = str(settings.MEDIA_URL) + str(attach.path)[1:]
+            else:
+                img = str(settings.MEDIA_URL) + str(attach.resizePath)
+
+            print(img)
+            return (img)
         else:
             return str(settings.STATIC_URL) + 'main/img/add-photo.png'
 
@@ -520,6 +537,7 @@ class JobOrder(models.Model):
     def GetActual(self, user=None):
 
         response_array = []
+        userType       = 0
 
         if User != None:
 
@@ -550,7 +568,12 @@ class JobOrder(models.Model):
 
         for e in objects:
 
-            e['response_is_available'] = response_array.count(e['id']) == 0
+            if (userType != 1):
+                e['response_is_available'] = 2      #ничего не выводить
+            elif (response_array.count(e['id'])) == 0:
+                e['response_is_available'] = 1      #Можно откликнуться
+            else:
+                e['response_is_available'] = 0      #уже откликнулся
 
             e['job_composition'] = []
 
@@ -706,7 +729,7 @@ class UserType(models.Model):
             userType = UserType.objects.get(user=user)
             userType.type = type
             userType.save()
-
+        
         except ObjectDoesNotExist:
 
             if type == 1 or type == None:
@@ -792,20 +815,22 @@ class ConfirmCodes(models.Model):
 
         return code
 
-    def AddCode(phoneNumber, sendMessage = False):
+    def AddCode(phoneNumber, send = False):
 
         confirmcode = str(random.randint(1000, 9999))
 
+        print("Отправляем смс: ")
+        print("Номер: "+str(phoneNumber))
+        print("Код: "+str(confirmcode))
+
         obj, created = ConfirmCodes.objects.all().get_or_create(phoneNumber=phoneNumber, defaults={'phoneNumber': phoneNumber, 'code': confirmcode})
 
-        if created != True:
+        obj.code = confirmcode
+        obj.save()
 
-            obj.code = confirmcode
-            obj.save()
-
-            if sendMessage:
-                text = 'Код подтверждения для завершения регистрации: ' + confirmcode
-                dd = sendMessage(phone=phoneNumber, text=text)
+        if send == True:
+            text = 'Код подтверждения для завершения регистрации: ' + str(confirmcode)
+            dd = sendMessage(phone=phoneNumber, text=text)
 
 class CostOfService(models.Model):
 
@@ -899,11 +924,34 @@ class Message(models.Model):
 
         return count
 
-    def GetAll(user):
+    def GetAll(user, who=''):
 
         messageList = []
 
-        messageQuery = Message.objects.all().filter(recipient=user).select_related('comment').select_related('jobresponse').order_by("-created")
+        print('RNJ:'+who)
+
+        #if who != '':
+
+        #    idList = []
+
+        #    message1 = Message.objects.all().filter(sender=user).filter(recipient=who).values('id')
+        #    message2 = Message.objects.all().filter(recipient=user).filter(sender=who).values('id')
+
+        #    for e in message1:
+        #        idList.append(e.get('id'))   
+        #    for e in message2:
+        #        idList.append(e.get('id'))  
+
+        #    print(idList)
+
+        #    messageQuery = Message.objects.all().filter(id__in = idList)
+
+        #else:
+
+        messageQuery = Message.objects.all().filter(Q(recipient=user) | Q(sender=user))
+
+        messageQuery = messageQuery.select_related('comment').select_related('jobresponse').order_by("-created")
+        #messageQuery = Message.objects.all().select_related('comment').select_related('jobresponse').order_by("-created")
 
         for e in messageQuery:
 
@@ -930,6 +978,55 @@ class Message(models.Model):
             if e.read == False:
                 e.read = True
                 e.save()
+
+        return messageList
+
+    def GetAllDialogs(user):
+
+        messageList = []
+        dialogList  = []
+
+        #messageQuery = Message.objects.all().filter(recipient=user).select_related('comment').select_related('jobresponse').order_by("-created")
+        #messageQuery = Message.objects..select_related('comment').select_related('jobresponse').order_by("-created")
+
+
+        recipient = Message.objects.all().filter(Q(recipient=user) | Q(sender=user)).values('recipient').distinct();
+        sender    = Message.objects.all().filter(Q(recipient=user) | Q(sender=user)).values('sender').distinct();
+
+        for r in recipient:
+
+            dialogList.append(r.get('recipient'))   
+
+        for s in sender:
+
+            if dialogList.count(s.get('sender')) == 0:
+                 dialogList.append(s.get('sender'))     
+
+        for e in dialogList:
+
+            sender = UserType.GetElementByUser(e)
+
+            #print(type(sender))
+
+            if type(sender) == Worker:
+                url = '/worker/info?id='+str(sender.id)
+            else:
+                url = '/company?id='+str(sender.id)
+
+            message = {'id': sender.id, 'name': sender.name, 'foto': Attacment.getresizelink(sender.image), 'url': url}
+
+            #if e.comment != None:
+            #    message['text'] = e.comment.text
+            #elif e.jobresponse != None:
+            #    message['text'] = e.jobresponse.answer
+            #else:
+            #    message['text'] = e.text
+
+            messageList.append(message)
+
+            #if e.read == False:
+            #    e.read = True
+            #    e.save()
 
         return messageList
 

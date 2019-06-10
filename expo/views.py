@@ -36,6 +36,9 @@ def adminexpo(request):
     else:
         return render(request, 'errors/403.html', None, None, status='403')
 
+def testtest(request):
+    return render(request, 'testtest.html', {})
+
 def sendsms(request):
 
     userAauthorized = request.user.is_authenticated
@@ -57,7 +60,6 @@ def sendsms(request):
 
     else:
         return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)
-
 
 def adminexpocompanys(request):
 
@@ -238,7 +240,6 @@ def notfound(request):
 
     return render(request, 'errors/404.html', None, None, status='404')
 
-
 def servererror(request):
 
     userAauthorized = request.user.is_authenticated
@@ -274,16 +275,25 @@ def companys(request):
 
     for e in query:
         companyList.append({'name': e.name,
-                'id': e.id,
+                'id': str(e.id),
                 'url': '/company?id=' + str(e.id),
                 'fotourl': Attacment.getlink(e.image),
                 'resizefotourl': Attacment.getresizelink(e.image),
                 'isonline': True if (datet.now(timezone.utc) - e.lastOnline).seconds / 60 < 5 else False,
-                'lastonline': e.lastOnline,
+                'lastonline': str(e.lastOnline),
                 'description': e.description
                })
 
-    return render(request, 'CompanyList.html', {"companyList": companyList})
+    if request.is_ajax():
+
+        return HttpResponse(
+            json.dumps({'Access-Control-Allow-Origin': "*", 'dataset': companyList}),
+            status=200,
+            content_type='application/json')
+
+    else:
+
+        return render(request, 'CompanyList.html', {"companyList": companyList})
 
 def company(request):
 
@@ -318,7 +328,6 @@ def company(request):
                                 }
 
         return render(request, 'Company.html', {"worker": company, "userAauthorized": userAauthorized})
-
 
 def news(request):
 
@@ -399,7 +408,7 @@ def messagesend(request):
 
         if request.is_ajax():
             return HttpResponse(
-                json.dumps({'Access-Control-Allow-Origin': "*", 'status': False, 'errors': ''}),
+                json.dumps({'Access-Control-Allow-Origin': "*", 'status': False, 'errors': ['Отправка невозможна']}),
                 status=403,
                 content_type='application/json')
         else:
@@ -415,15 +424,15 @@ def messagesend(request):
 
                 if result == True:
 
-                    HttpResponse(
-                        json.dumps({'Access-Control-Allow-Origin': "*", 'status': True, 'errors': ''}),
+                    return HttpResponse(
+                        json.dumps({'Access-Control-Allow-Origin': "*", 'status': True, 'errors': []}),
                         status=200,
                         content_type='application/json')
 
                 else:
 
-                    HttpResponse(
-                        json.dumps({'Access-Control-Allow-Origin': "*", 'status': False, 'errors': ''}),
+                    return HttpResponse(
+                        json.dumps({'Access-Control-Allow-Origin': "*", 'status': False, 'errors': ['не удалось сохранить сообщение']}),
                         status=500,
                         content_type='application/json')
 
@@ -447,19 +456,69 @@ def messagesend(request):
             else:
                 return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)
 
+def dialogs(request):
+    
+    userAauthorized = request.user.is_authenticated
+
+    if userAauthorized:
+        
+        refreshLastOnline(request.user)
+
+        messagelist = Message.GetAllDialogs(request.user)
+
+        if request.is_ajax():
+
+            return JsonResponse({'status': True, 'dataset': messagelist})
+
+        else:
+
+            return render(request, 'MessageList.html', {"messageList": messagelist})
+
+    else:
+
+        if request.is_ajax():
+            
+            return JsonResponse({'status': False, 'errors': ['Доступ запрещен']})
+
+        else:
+
+            return render(request, 'errors/403.html', None, None, status='403')
 
 def messages(request):
 
     userAauthorized = request.user.is_authenticated
 
     if userAauthorized:
+        
         refreshLastOnline(request.user)
 
-    messagelist = Message.GetAll(request.user)
+        idWho = ''
 
-    print(messagelist)
+        if request.POST.__contains__('data'):
 
-    return render(request, 'MessageList.html', {"messageList": messagelist})
+            data = dict(json.loads(request.POST.__getitem__('data')))
+
+            idWho = data.get('id')
+
+        messagelist = Message.GetAll(request.user, idWho)
+
+        if request.is_ajax():
+
+            return JsonResponse({'status': True, 'dataset': messagelist})
+
+        else:
+
+            return render(request, 'MessageList.html', {"messageList": messagelist})
+
+    else:
+
+        if request.is_ajax():
+            
+            return JsonResponse({'status': False, 'errors': ['Доступ запрещен']})
+
+        else:
+
+            return render(request, 'errors/403.html', None, None, status='403')
 
 def jobs(request):
 
@@ -469,12 +528,25 @@ def jobs(request):
         refreshLastOnline(request.user)
 
         userType = UserType.GetUserType(request.user)
+        jobOrders = JobOrder.GetActual(JobOrder, user = request.user);
+        if request.is_ajax():
+            
+            return JsonResponse({'status': True, 'dataset': jobOrders})
 
-        return render(request, 'JobList.html', {"jobsList": JobOrder.GetActual(JobOrder, user = request.user), "userType": userType, 'citylist': getCityListFull()})
+        else:
+            
+            return render(request, 'JobList.html', {"jobsList": jobOrders, "userType": userType})
 
     else:
 
-        return render(request, 'errors/403.html', None, None, status='403')
+        print('аякс запрос - ' + str(request.is_ajax))
+        if request.is_ajax():
+            
+            return JsonResponse({'status': False, 'errors': ['Доступ запрещен']})
+
+        else:
+
+            return render(request, 'accounts/login.html')
 
 def newjobs(request):
 

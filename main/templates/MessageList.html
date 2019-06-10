@@ -27,43 +27,60 @@
 
         <table class="table table-hover">
             <tbody>
-            {% for n in messageList %}
-                <tr>
 
-                    <td scope="row">
+            {% if messageList|length > 0 %}
 
-                        <div class="row pl-3">
+                {% for n in messageList %}
+                    <tr>
 
-                            <div class="col col-2">
-                                <img class="mr-3" src="{{ n.sender.foto }}" style="width: 100%; max-width: 100px">
+                        <td scope="row">
+
+                            <div class="row pl-3">
+
+                                <div class="col col-2">
+                                    <img class="mr-3" src="{{ n.sender.foto }}" style="width: 100%; max-width: 100px">
+                                </div>
+
+                                <div class="col col-10">
+                                    <div class="row">
+                                        <div class="col col-10">
+                                            <a href="{{ n.sender.url }}" class="text-danger article-sm" style="text-decoration: none">{{ n.sender.name|title }}</a>
+                                        </div>
+                                        <div class="col col-2">
+                                            <span class="color-dark-grey"> {{ n.date|date:"d M" }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <span class="text-menu txt-bold">{{ n.theme }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            {{ n.text }}
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
 
-                            <div class="col col-10">
-                                <div class="row">
-                                    <div class="col col-10">
-                                        <a href="{{ n.sender.url }}" class="text-danger article-sm" style="text-decoration: none">{{ n.sender.name|title }}</a>
-                                    </div>
-                                    <div class="col col-2">
-                                        <span class="color-dark-grey"> {{ n.date|date:"d M" }}</span>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <span class="text-menu txt-bold">{{ n.theme }}</span>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        {{ n.text }}
-                                    </div>
-                                </div>
+                        </td>
+                    </tr>
+                {% endfor %}
 
-                            </div>
-                        </div>
-
-                    </td>
-                </tr>
-            {% endfor %}
+            {% else %}
+                <div class="text-center" align="center">
+                    <div>
+                        <img src="{% get_attribute 'STATIC_URL' %}main/img/beer_1-grey.png">
+                    </div>
+                    <div>
+                        <span class="article article-sm"> Сообщений еще нет </span>
+                    </div>
+                    <div>
+                        <span> Здесь будет храниться вся ваша переписка с коллегами и работодателями </span>
+                    </div>      
+                </div>
+            {% endif %}
             </tbody>
         </table>
 

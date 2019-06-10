@@ -10,4 +10,5 @@ urlpatterns = [
     path('login/', views.Login),
     path('loginexpo/', views.LoginExpo),
     path('logout/', views.Logout),
+    path('reset/', views.Reset),
 ]

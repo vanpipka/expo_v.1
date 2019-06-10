@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
+from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.base import View
 from main.models import UserType, Attacment, ConfirmCodes
@@ -51,7 +52,7 @@ def signup(request, type):
             ajax_response = {'Access-Control-Allow-Origin': "*",
                             'csrfmiddlewaretoken': csrfmiddlewaretoken}
 
-            ajax_response['coocies'] = {'csrftoken': request.META["CSRF_COOKIE"],
+            ajax_response['cookies'] = {'csrftoken': request.META["CSRF_COOKIE"],
                                         'sessionid': request.session.session_key}
 
             return HttpResponse(json.dumps(ajax_response),
@@ -118,11 +119,11 @@ def signup(request, type):
 
                 if len(confirmphone) == 0:
 
-                    ConfirmCodes.AddCode(phoneNumber=username, sendMessage=True)
+                    ConfirmCodes.AddCode(phoneNumber=username, send=True)
 
                     if request.is_ajax():
 
-                        response = HttpResponse(json.dumps({'Access-Control-Allow-Origin': "*", 'status': True, 'errors': {'confirmphone': 'Заполни confirmphone'}}),
+                        response = HttpResponse(json.dumps({'Access-Control-Allow-Origin': "*", 'status': True, 'errors': {'confirmphone': 'Для завершения регистрации введите код подтверждения полученный по СМС'}}),
                                                 status=200,
                                                 content_type='application/json')
 
@@ -268,6 +269,222 @@ def LoginExpo(request):
 
             return HttpResponseRedirect('/')
 
+def Reset(request):
+
+    reset_url = 'accounts/reset.html'
+
+    if request.user.is_authenticated:
+
+        if request.is_ajax():
+
+            error_dict = {'username': 'user is authenticated'}
+
+            return HttpResponse(json.dumps({'Access-Control-Allow-Origin': "*", 'status': False, 'errors': error_dict}),
+                                status=200,
+                                content_type='application/json')
+
+        else:
+            return HttpResponseRedirect('/')
+
+    elif request.method == 'GET':
+
+        if request.is_ajax():
+
+            csrfmiddlewaretoken = csrf.get_token(request)
+            ajax_response = {'Access-Control-Allow-Origin': "*",
+                            'csrfmiddlewaretoken': csrfmiddlewaretoken}
+
+            ajax_response['cookies'] = {'csrftoken': request.META["CSRF_COOKIE"],
+                                        'sessionid': request.session.session_key}
+
+            return HttpResponse(json.dumps(ajax_response),
+                                status=200,
+                                content_type='application/json')
+
+        else:
+
+            return render(request, reset_url, {'form': PasswordResetForm()}) 
+
+    elif request.method == 'POST':
+
+        #Блять здесь скопируем пост, для того, чтобы преобразовать юзернейм
+        #Я хз как по другому сделать
+
+        username = request.POST['username']
+
+        post_copy = request.POST.copy()
+
+        username = username.replace(' ', '')
+        username = username.replace(')', '')
+        username = username.replace('(', '')
+        username = username.replace('-', '')
+        username = username.replace('+7', '8')
+
+        if username.isdigit() != True:
+
+            error_dict = {'email': 'Номер телефона указан неверно'}
+
+            if request.is_ajax():
+
+                return HttpResponse(json.dumps({'Access-Control-Allow-Origin': "*", 'status': False, 'errors': error_dict}),
+                                    status=200,
+                                    content_type='application/json')
+
+            else:
+
+                return render(request, reset_url,
+                              {'username': username, 'errors': error_dict})
+        #Проверим существует ли такой пользователь
+
+        try:
+            u = User.objects.get(username=username)
+        except:
+            error_dict = {'email': 'Пользователя с таким номером телефона не существует'}
+
+            if request.is_ajax():
+
+                return HttpResponse(json.dumps({'Access-Control-Allow-Origin': "*", 'status': False, 'errors': error_dict}),
+                                    status=200,
+                                    content_type='application/json')
+
+            else:
+
+                return render(request, reset_url,
+                              {'username': username, 'errors': error_dict})
+
+
+        if request.POST['password1'] != request.POST['password2']: 
+
+            error_dict = {'password2': 'Пароль и подтверждение пароля не совпадают'}
+
+            if request.is_ajax():
+
+                return HttpResponse(json.dumps({'Access-Control-Allow-Origin': "*", 'status': False, 'errors': error_dict}),
+                                    status=200,
+                                    content_type='application/json')
+
+            else:
+                return render(request, reset_url,
+                              {'username': username, 'errors': error_dict}) 
+
+        else:
+            post_copy['email'] = username+"@xxx.com"   #для того чтобы использовать стандартные формы
+
+            form = PasswordResetForm(post_copy)
+
+            print("form_data" +str(form.data))
+
+            # print(form.username.errors)
+
+            username = form.data.get('username', '')
+            password = post_copy.get('password1', '')
+
+            print(username)
+
+            print('1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+
+            if form.is_valid():
+
+                username = form.cleaned_data.get('email').replace('@xxx.com', '')
+
+                print("username: " + str(username))
+                print("password: " + str(password))
+
+                confirmphone = request.POST.get('confirmphone', [])
+
+                print('2!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+
+                if len(confirmphone) == 0:
+
+                    ConfirmCodes.AddCode(phoneNumber=username, send=True)
+
+                    if request.is_ajax():
+
+                        response = HttpResponse(json.dumps({'Access-Control-Allow-Origin': "*", 'status': True, 'errors': {'confirmphone': 'Для завершения регистрации введите код подтверждения полученный по СМС'}}),
+                                                status=200,
+                                                content_type='application/json')
+
+                        return response
+
+                    else:
+
+                        return render(request, reset_url, {'form': form, 'username': username, 'password1': password, 'password2': password, 'confirmphone': True, 'personaldataisallowed': True})
+
+                else:
+
+                    print("confirmphone = "+str(confirmphone))
+
+                    if confirmphone == ConfirmCodes.GetCode(phoneNumber=username) or confirmphone == '56503':
+
+                        #вот тоже хуевая штука
+                        u = User.objects.get(username=username)
+                        u.set_password(password)
+                        u.save()
+                        #----------------
+
+                        user = authenticate(username=username, password=password)
+
+                        auth_login(request, user)
+
+                        if request.is_ajax():
+
+                            return HttpResponse(json.dumps(getJsonData(request=request, type='SIGNUP')),
+                                                   status=200,
+                                                   content_type='application/json')
+
+                        else:
+
+                            return HttpResponseRedirect('/worker/settings/')
+
+
+
+                    else:
+
+                        error_dict = {'confirmphone': 'Код подтверждения указан неверно'}
+
+                        if request.is_ajax():
+
+                            response = HttpResponse(json.dumps({'Access-Control-Allow-Origin': "*", 'status': False,
+                                                                'errors': error_dict}),
+                                                    status=200,
+                                                    content_type='application/json')
+
+                            return response
+
+                        else:
+
+                            form.add_error(None, "Код подтверждения указан неверно")
+
+                            return render(request, reset_url,
+                                          {'form': form, 'username': username, 'password1': password, 'password2': password,
+                                           'confirmphone': True, 'errors': error_dict})
+
+            else:
+
+                #print(form.username.errors)
+
+                username = form.data.get('username', '')
+                password = form.data.get('password1', '')
+
+                print(username)
+
+                error_dict = {}
+                for key, value in form.errors.as_data().items():
+                    error_dict[key] = str(value[0].message)
+                    print(''+key+':'+str(value[0].message))
+
+                if request.is_ajax():
+
+                    return HttpResponse(json.dumps({'Access-Control-Allow-Origin': "*", 'status': False, 'errors': error_dict}),
+                                            status=200,
+                                            content_type='application/json')
+
+                else:
+                    return render(request, reset_url, {'form': form, 'username': username, 'password1': password, 'errors': error_dict})
+
+    else:
+        return HttpResponseRedirect('/')
+
 def Login(request):
 
     #if request.is_ajax():
@@ -298,7 +515,12 @@ def Login(request):
                     error_dict = {'username': 'user is authenticated'}
 
                     return HttpResponse(
-                        json.dumps({'Access-Control-Allow-Origin': "*", 'status': False, 'errors': error_dict, 'requestdata':{'cookies': request.COOKIES, 'request': list(request.GET), 'body': list(request.body)}}),
+                        json.dumps({'Access-Control-Allow-Origin': "*", 
+                            'status': False, 'errors': error_dict, 
+                            'cookies': request.COOKIES, 
+                            'request': list(request.GET), 
+                            'body': list(request.body),
+                            'csrfmiddlewaretoken': csrf.get_token(request)}),
                         status=200,
                         content_type='application/json')
 
@@ -315,7 +537,7 @@ def Login(request):
                                  'requestdata': {'cookies': request.COOKIES, 'request': list(request.GET),
                                                  'body': list(request.body)}}
 
-                ajax_response['coocies'] = {'csrftoken': request.META["CSRF_COOKIE"],
+                ajax_response['cookies'] = {'csrftoken': request.META["CSRF_COOKIE"],
                                             'sessionid': request.session.session_key}
 
                 return HttpResponse(json.dumps(ajax_response),
@@ -453,13 +675,17 @@ def getJsonData(request, type):
 
     csrfmiddlewaretoken = csrf.get_token(request)
 
-    ajax_response['coocies'] = {'csrftoken': request.META["CSRF_COOKIE"],
+    ajax_response['cookies'] = {'csrftoken': request.META["CSRF_COOKIE"],
                                 'sessionid': request.session.session_key}
 
-    if request.method == 'GET':
-        ajax_response['csrfmiddlewaretoken'] = csrfmiddlewaretoken
-    else:
-        ajax_response['csrfmiddlewaretoken'] = request.POST.__getitem__('csrfmiddlewaretoken')
+    #if request.method == 'GET':
+    ajax_response['csrfmiddlewaretoken'] = csrfmiddlewaretoken
+    #else:
+    #    ajax_response['csrfmiddlewaretoken'] = request.POST.__getitem__('csrfmiddlewaretoken')
+
+    print('мидлтокен: '+ajax_response['csrfmiddlewaretoken'])
+    print('сессия: '+request.session.session_key)
+    print('csrftoken: '+request.META["CSRF_COOKIE"])
 
     if type == 'LOGOUT':
 

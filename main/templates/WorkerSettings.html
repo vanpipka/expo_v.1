@@ -163,7 +163,7 @@
 
                 <div class="row mb-3">
                     <div class="col col-3">
-                        <label for="id_birthday" class="col-xs-2 control-label input-medium">День рождения*</label>
+                        <label for="id_birthday" class="col-xs-2 control-label input-medium">Дата рождения*</label>
                     </div>
                     <div class="col col-3">
                         <input type="text" name="birthday" class="form-control" id="id_birthday"  placeholder="День рождения" value="{{worker.birthday|date:"Y-m-d"}}" readonly>
@@ -185,7 +185,7 @@
 
                 <div class="row mb-3">
                     <div class="col col-3">
-                        <label for="id_workpermit" class="col-xs-2 control-label input-medium">Разрешение на работу</label>
+                        <label for="id_workpermit" class="col-xs-2 control-label input-medium">Разрешение на работу РФ</label>
                     </div>
                     <div class="col col-3">
                         <label class="checkbox-container">
@@ -238,7 +238,7 @@
 
                 <div class="row mb-3">
                     <div class="col col-3">
-                        <label for="id_haveIP" class="col-xs-2 control-label input-medium">Я зарегистрирован как ИП</label>
+                        <label for="id_haveIP" class="col-xs-2 control-label input-medium">ИП/Самозанятые</label>
                     </div>
                     <div class="col col-3">
                         <label class="checkbox-container">
@@ -250,7 +250,7 @@
 
                 <div class="row mb-3">
                     <div class="col col-3">
-                        <label for="id_haveinstrument" class="col-xs-2 control-label input-medium">Есть свои инструменты</label>
+                        <label for="id_haveinstrument" class="col-xs-2 control-label input-medium">Наличие инструмента</label>
                     </div>
                     <div class="col col-3">
                         <label class="checkbox-container">
@@ -278,7 +278,7 @@
                         <label for="id_experience" class="col-xs-2 control-label input-medium">Опыт работы на выставках</label>
                     </div>
                     <div class="col col-9">
-                        <textarea name="experience" class="form-control" rows="5" placeholder="Когда и в каких выставках участвовал, что делал" id="id_experience">{{worker.experience}}</textarea>
+                        <textarea name="experience" class="form-control" rows="5" placeholder="В каких выставочных компаниях и с какими материалами работал" id="id_experience">{{worker.experience}}</textarea>
                     </div>
                 </div>
 
@@ -290,7 +290,7 @@
 
                 <div class="row mb-3">
                         <div class="col col-3">
-                            <label for="id_Professions" class="col-xs-2 control-label input-medium">Профессия</label>
+                            <label for="id_Professions" class="col-xs-2 control-label input-medium">Специальность</label>
                         </div>
 
                         <div class="col col-9">
@@ -337,6 +337,7 @@
                                     <th style="width: 5px"></th>
                                     <th>Услуга</th>
                                     <th>Цена/руб.</th>
+                                    <th/>
                                     <th>&nbsp;&nbsp;&nbsp;Действия</th>
                                 </tr>
                             </thead>
@@ -353,6 +354,9 @@
                                         </td>
                                         <td>
                                             <input id="price_{{ forloop.counter }}" type="number" class="form-control" value="{{ i.price }}" disabled style="background-color: white; border-color: white">
+                                        </td>
+                                        <td>
+                                            руб./{{ i.unit }}
                                         </td>
                                         <td>
                                             <button type="button" class="btn text-danger" id="edit_{{ forloop.counter }}" onclick="editService(this)" style="text-align: left; background-color: white">Изменить</button>
@@ -383,6 +387,9 @@
                                     <input name = 'service_price' id="price_%number%" type="number" class="form-control" value="0" style="background-color: white; border-color: white">
                                 </td>
                                 <td>
+                                    руб.
+                                </td>
+                                <td>
                                     <button name = 'service_btnedit' type="button" class="btn text-danger" id="edit_%number%" onclick="editService(this)" style="text-align: left; background-color: white">Изменить</button>
                                     <button name = 'service_btndelete' type="button" class="btn text-danger" id="delete_%number%" onclick="deleteService(this)" style="text-align: left; background-color: white">Удалить</button>
                                 </td>
@@ -401,18 +408,20 @@
                         <input type="number" name = "salary" class="form-control" id="id_salary" placeholder="Зарплата" value="{{worker.works.salary}}">
                     </div>
                     <div class="col col-1 mt-1">
-                        руб.
+                        руб./мес.
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <div class="col col-3">
-                        <label for="freelance" class="col-xs-2 control-label input-medium">Фриланс</label>
+                     	<label for="id_freelance" class="col-xs-2 control-label input-medium">Фриланс</label>   
                     </div>
-                    <div class="col col-3">
+                    <div class="col col-2">
                         <input type="number" name = "freelance" class="form-control" id="id_freelance" placeholder="" value="">
                     </div>
-
+                    <div class="col col-7">
+                        Удаленная работа вне штата для представителей творческих профессий, ИТ-сферы, рекламы. 
+                    </div>
                 </div>
 
             </div>
@@ -435,7 +444,7 @@
 
                 <div class="row mb-3">
                     <div class="col col-3">
-                        <label for="id_haveshengen" class="col-xs-2 control-label input-medium">Есть шенгенская виза</label>
+                        <label for="id_haveshengen" class="col-xs-2 control-label input-medium">Наличие визы</label>
                     </div>
                     <div class="col col-3">
                         <label class="checkbox-container">
@@ -447,7 +456,7 @@
 
                 <div class="row mb-3">
                     <div class="col col-3">
-                        <label for="id_haveintpass" class="col-xs-2 control-label input-medium">Есть загран паспорт</label>
+                        <label for="id_haveintpass" class="col-xs-2 control-label input-medium">Наличие загран паспорт</label>
                     </div>
                     <div class="col col-3">
                         <label class="checkbox-container">
@@ -539,7 +548,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5>Укажите свои профессии</h5>
+                    <h5>Укажите свои специальности</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

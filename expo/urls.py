@@ -37,6 +37,7 @@ urlpatterns = [
     path('messages/new/', views.newmessage),
     path('messages/send/', views.messagesend),
     path('messages/', views.messages),
+    path('dialogs/', views.dialogs),
     path('news/save/', views.savenews),
     path('news/', views.news),
     path('jobs/save/', views.savejobs),
@@ -44,6 +45,7 @@ urlpatterns = [
     path('jobs/new/', views.newjobs),
     path('jobs/', views.jobs),
     path('sendsms/', views.sendsms),
+    path('testtest', views.testtest)
 ]
 
 

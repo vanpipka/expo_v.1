@@ -43,7 +43,7 @@
 
                                 {% if user.is_active and userType == 1%}
                                 <div class="col col-2 col-md-4">
-                                    {% if n.response_is_available %}
+                                    {% if n.response_is_available == 1 %}
                                         <button class="btn btn-danger container-fluid" type="button" onclick="get_job_data(this)" style=" border-radius: 0px; margin-top: -13px" data-toggle="modal" data-target="#addResponse" id = '{{ n.id }}'>Откликнуться</button>
                                     {% else %}
                                         <button class="btn btn-secondary bg-white text-dark container-fluid" type="button" style="margin-top: -13px; border-radius: 0px" id = '{{ n.id }}'>Отклик отправлен</button>

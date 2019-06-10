@@ -96,14 +96,14 @@
                 </div>
 
                 <div class="col col-3">
-                    <span class="badge container-fluid {% if worker.fsocheck %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Проверка ФСО пройдена</span>
-                    <span class="badge container-fluid {% if worker.workpermit %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Есть разрешение на работу</span>
-                    <span class="badge container-fluid {% if worker.datacheck %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Данные проверены</span>
-                    <span class="badge container-fluid {% if worker.haveip %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Зарегистрирован как ИП</span>
-                    <span class="badge container-fluid {% if worker.haveinstrument %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Есть инструмент</span>
+                    <span class="badge container-fluid {% if worker.fsocheck %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Проверка ФСО</span>
+                    <span class="badge container-fluid {% if worker.workpermit %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Разрешение на работу в РФ</span>
+                    <span class="badge container-fluid {% if worker.datacheck %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Анкета проверена</span>
+                    <span class="badge container-fluid {% if worker.haveip %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">ИП/Самозанятые</span>
+                    <span class="badge container-fluid {% if worker.haveinstrument %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Наличие инструмента</span>
                     <span class="badge container-fluid {% if worker.readytotravel %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Готов к командировкам</span>
-                    <span class="badge container-fluid {% if worker.haveintpass %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Есть загранпаспорт</span>
-                    <span class="badge container-fluid {% if worker.haveshengen %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Есть шенген</span>
+                    <span class="badge container-fluid {% if worker.haveintpass %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Наличие загранпаспорта</span>
+                    <span class="badge container-fluid {% if worker.haveshengen %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Наличие визы</span>
                 </div>
 
             </div>
@@ -212,7 +212,7 @@
                                     <tr>
                                         <th style="width: 5px"></th>
                                         <th>Услуга</th>
-                                        <th>Цена/руб.</th>
+                                        <th>Цена</th>
                                     </tr>
                                 </thead>
                                 <tbody id = 'tbodyServices'>
@@ -223,7 +223,7 @@
                                                 {{i.service}}
                                             </td>
                                             <td>
-                                                <input id="price_{{ forloop.counter }}" type="number" class="form-control" value="{{ i.price }}" disabled style="background-color: white; border-color: white">
+                                                {{ i.price }}руб./{{ i.unit }}
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -243,8 +243,8 @@
                         <div class="col col-2">
                             <span  name = "name" class="text-menu txt-bold" id="id_name" placeholder="Имя" value="">{{worker.works.salary}}</span>
                         </div>
-                        <div class="col col-1 mt-1">
-                            руб.
+                        <div class="col col-2 mt-1">
+                            руб./мес.
                         </div>
                     </div>
 
