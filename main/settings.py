@@ -39,7 +39,7 @@ with open(os.path.join(SETTINGS_DIR, 'settings.json'), 'r') as f:
         MEDIA_ROOT      = os.path.join(BASE_DIR, struct.get('MEDIA', ''))
         MEDIA_URL       = struct.get('MEDIA_HOST', '')
 
-        #print(struct)
+        print(struct)
     except json.JSONDecodeError:
         SECRET_KEY      = ''
         DEBUG           = False
