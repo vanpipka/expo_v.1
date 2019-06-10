@@ -864,13 +864,9 @@ class Comments(models.Model):
         Message.SaveComment(self)
 
     def setRating(comment):
+
         rating = Comments.objects.all().filter(idWorker=comment.idWorker).filter(moderation=True).aggregate(models.Avg('rating'), models.Count('id'))
-        logger.info('updateRating ihfo. worker: '+str(comment.idWorker)+', rating: '+str(rating))
-        try:
-            WorkerRating.updateRating(comment.idWorker, rating)
-        except Exception as e:
-            logger.error('updateRating error. worker: '+str(comment.idWorker)+', rating: '+str(rating))
-            raise
+        WorkerRating.updateRating(comment.idWorker, rating)
 
         #print("Количество:" +str(commentCount)+ " среднее:" + str(rating))
 
@@ -1106,13 +1102,17 @@ class WorkerRating(models.Model):
         except:
             workerRating = WorkerRating(idWorker=worker)
 
-        workerRating.rating         = rating['rating__avg']
+        if (rating['rating__avg'] == None):
+            workerRating.rating         = 0;
+        else:
+            workerRating.rating         = rating['rating__avg']
 
-        logger.error('updateRating error. rating: '+str(rating))
+        if (rating['id__count'] == None):
+            workerRating.commentsCount  = 0;
+        else:
+            workerRating.commentsCount  = rating['id__count']
 
-        workerRating.commentsCount  = rating['id__count']
-
-        #workerRating.save()
+        workerRating.save()
 
 def professions_changed(sender, **kwargs):
     # Do something
