@@ -1107,9 +1107,12 @@ class WorkerRating(models.Model):
             workerRating = WorkerRating(idWorker=worker)
 
         workerRating.rating         = rating['rating__avg']
+
+        logger.error('updateRating error. rating: '+str(rating))
+
         workerRating.commentsCount  = rating['id__count']
 
-        workerRating.save()
+        #workerRating.save()
 
 def professions_changed(sender, **kwargs):
     # Do something
