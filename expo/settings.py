@@ -131,15 +131,17 @@ LOGOUT_URL = "/accounts/login/"
 #        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #    }
 #}
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-		'NAME': 'vseexpo',
-        'USER': 'django',
-        'PASSWORD': 'Io89yHP>',
-        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+        'NAME': 'vseexpo',
+        'USER': 'root',
+        'PASSWORD': 'core',
+        'HOST': '127.0.0.1',   # Or an IP Address that your DB is hosted on
     },
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -202,4 +204,3 @@ with open(os.path.join(SETTINGS_DIR, 'companysettings.json'), 'r') as f:
 #EMAIL_HOST_PASSWORD = 'ieh7w2k'
 #DEFAULT_FROM_EMAIL = 'info@mmss.ltd'
 #DEFAULT_TO_EMAIL = 'info@mmss.ltd'
-
