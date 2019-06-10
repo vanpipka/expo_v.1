@@ -23,7 +23,7 @@ LANGUAGE_CODE = 'ru-RU'
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 #Прочитаем настройки из файла
-SETTINGS_DIR = os.path.join(BASE_DIR, 'expo_settings') 
+SETTINGS_DIR = os.path.join(BASE_DIR, 'expo_settings')
 #
 with open(os.path.join(SETTINGS_DIR, 'settings.json'), 'r') as f:
 
@@ -210,16 +210,16 @@ LOGGING = {
    'disable_existing_loggers': False,
    'handlers': {
        'file': {
-           'level': 'DEBUG',
+           'level': 'INFO',
            'class': 'logging.FileHandler',
            'filename': LOG_FILE,
-       },     
+       },
    },
    'loggers': {
        'django': {
            'handlers': ['file'],
-           'level': 'DEBUG',
+           'level': 'INFO',
            'propagate': True,
-       },             
+       },
    },
 }
