@@ -21,7 +21,7 @@ LANGUAGE_CODE = 'ru-RU'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+print(BASE_DIR)
 #Прочитаем настройки из файла
 SETTINGS_DIR = os.path.join(BASE_DIR, 'expo_settings')
 #
