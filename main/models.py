@@ -865,12 +865,12 @@ class Comments(models.Model):
 
     def setRating(comment):
         rating = Comments.objects.all().filter(idWorker=comment.idWorker).filter(moderation=True).aggregate(models.Avg('rating'), models.Count('id'))
-
+        logger.info('updateRating ihfo. worker: '+str(comment.idWorker)+', rating: '+str(rating))
         try:
             WorkerRating.updateRating(comment.idWorker, rating)
         except Exception as e:
             logger.error('updateRating error. worker: '+str(comment.idWorker)+', rating: '+str(rating))
-            raise         
+            raise
 
         #print("Количество:" +str(commentCount)+ " среднее:" + str(rating))
 
