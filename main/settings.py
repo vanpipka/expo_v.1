@@ -134,10 +134,10 @@ LOGOUT_URL = "/accounts/login/"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-		'NAME': 'vseexpo',
-        'USER': 'django',
-        'PASSWORD': 'Io89yHP>',
-        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+        'NAME': 'vseexpo',
+        'USER': 'root',
+        'PASSWORD': 'core',
+        'HOST': '127.0.0.1',   # Or an IP Address that your DB is hosted on
     },
 }
 
