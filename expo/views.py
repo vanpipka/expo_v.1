@@ -19,6 +19,15 @@ def legal(request):
     if userAauthorized:
         refreshLastOnline(request.user)
 
+    return render(request, 'termsOfUse.html', {})
+
+def legal(request):
+
+    userAauthorized = request.user.is_authenticated
+
+    if userAauthorized:
+        refreshLastOnline(request.user)
+
     return render(request, 'legal.html', {})
 
 def privacypolicy(request):
