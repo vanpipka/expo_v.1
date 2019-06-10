@@ -3,7 +3,7 @@
 
 <table class="table table-hover">
     <tbody>
-    {% if dataset.worker|length > 0 %}
+    {% if dataset|length > 0 %}
 
 	    {% for worker in dataset %}
 	        <tr>
@@ -149,7 +149,7 @@
 			</div>
 			<div>
 				<span> Чтобы получить больше результатов попробуйте изменить параметры поиска</span>
-			</div>      
+			</div>
 		</div>
 	{% endif %}
     </tbody>
