@@ -1,0 +1,20 @@
+{% extends "wrapper.html" %}
+{% load home_extras %}
+{% load i18n %}
+
+{% block content%}
+    <div class="container mt-3">
+
+        <div class="row mb-1 pl-3">
+            <div class="col-8">
+                <span class="article">Правовые документы</span>
+            </div>
+        </div>
+
+        <div class="">
+          <p><a style="color: #d21c43; text-decoration: none" href="/privacy-policy/" target="_self">Политика защиты персональных данных</a></p>
+          <p><a style="color: #d21c43; text-decoration: none" href="/confidential/" target="_self">Заявление-согласие на обработку предоставленной информации</a></p>
+          <p><a style="color: #d21c43; text-decoration: none" href="/termsOfUse/" target="_self">Условия использования Продуктов Компании</a></p>
+        </div>
+
+{% endblock %}

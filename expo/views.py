@@ -12,6 +12,15 @@ import json
 
 # Create your views here.
 
+def legal(request):
+
+    userAauthorized = request.user.is_authenticated
+
+    if userAauthorized:
+        refreshLastOnline(request.user)
+
+    return render(request, 'legal.html', {})
+
 def privacypolicy(request):
 
     userAauthorized = request.user.is_authenticated
@@ -457,11 +466,11 @@ def messagesend(request):
                 return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)
 
 def dialogs(request):
-    
+
     userAauthorized = request.user.is_authenticated
 
     if userAauthorized:
-        
+
         refreshLastOnline(request.user)
 
         messagelist = Message.GetAllDialogs(request.user)
@@ -477,7 +486,7 @@ def dialogs(request):
     else:
 
         if request.is_ajax():
-            
+
             return JsonResponse({'status': False, 'errors': ['Доступ запрещен']})
 
         else:
@@ -489,7 +498,7 @@ def messages(request):
     userAauthorized = request.user.is_authenticated
 
     if userAauthorized:
-        
+
         refreshLastOnline(request.user)
 
         idWho = ''
@@ -513,7 +522,7 @@ def messages(request):
     else:
 
         if request.is_ajax():
-            
+
             return JsonResponse({'status': False, 'errors': ['Доступ запрещен']})
 
         else:
@@ -530,18 +539,18 @@ def jobs(request):
         userType = UserType.GetUserType(request.user)
         jobOrders = JobOrder.GetActual(JobOrder, user = request.user);
         if request.is_ajax():
-            
+
             return JsonResponse({'status': True, 'dataset': jobOrders})
 
         else:
-            
+
             return render(request, 'JobList.html', {"jobsList": jobOrders, "userType": userType})
 
     else:
 
         print('аякс запрос - ' + str(request.is_ajax))
         if request.is_ajax():
-            
+
             return JsonResponse({'status': False, 'errors': ['Доступ запрещен']})
 
         else:

@@ -32,6 +32,7 @@ urlpatterns = [
     path('servererror/', views.servererror),
     path('success/', views.success),
     path('privacy-policy/', views.privacypolicy),
+    path('legal/', views.legal),
     path('companys/', views.companys),
     path('company/', views.company),
     path('messages/new/', views.newmessage),
@@ -47,5 +48,3 @@ urlpatterns = [
     path('sendsms/', views.sendsms),
     path('testtest', views.testtest)
 ]
-
-
