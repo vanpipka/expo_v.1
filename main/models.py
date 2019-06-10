@@ -1,5 +1,4 @@
 from typing import Type
-
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.contrib.auth.models import User
@@ -14,8 +13,10 @@ from os import path
 import random
 from expo.Balance import sendMessage
 from django.db.models import Q
-
 from django.dispatch import receiver
+import logging
+
+logger = logging.getLogger(__name__)
 
 class WorkGroup(models.Model):
 
@@ -729,7 +730,7 @@ class UserType(models.Model):
             userType = UserType.objects.get(user=user)
             userType.type = type
             userType.save()
-        
+
         except ObjectDoesNotExist:
 
             if type == 1 or type == None:
@@ -864,8 +865,12 @@ class Comments(models.Model):
 
     def setRating(comment):
         rating = Comments.objects.all().filter(idWorker=comment.idWorker).filter(moderation=True).aggregate(models.Avg('rating'), models.Count('id'))
-        print("рейтинг: "+str(rating))
-        WorkerRating.updateRating(comment.idWorker, rating)
+
+        try:
+            WorkerRating.updateRating(comment.idWorker, rating)
+        except Exception as e:
+            logger.error('updateRating error. worker: '+str(comment.idWorker)+', rating: '+str(rating))
+            raise         
 
         #print("Количество:" +str(commentCount)+ " среднее:" + str(rating))
 
@@ -938,9 +943,9 @@ class Message(models.Model):
         #    message2 = Message.objects.all().filter(recipient=user).filter(sender=who).values('id')
 
         #    for e in message1:
-        #        idList.append(e.get('id'))   
+        #        idList.append(e.get('id'))
         #    for e in message2:
-        #        idList.append(e.get('id'))  
+        #        idList.append(e.get('id'))
 
         #    print(idList)
 
@@ -995,12 +1000,12 @@ class Message(models.Model):
 
         for r in recipient:
 
-            dialogList.append(r.get('recipient'))   
+            dialogList.append(r.get('recipient'))
 
         for s in sender:
 
             if dialogList.count(s.get('sender')) == 0:
-                 dialogList.append(s.get('sender'))     
+                 dialogList.append(s.get('sender'))
 
         for e in dialogList:
 
@@ -1122,5 +1127,3 @@ m2m_changed.connect(professions_changed, sender=Worker.professions.through)
 #        print('sender: '+str(sender))
 #        print('instance: ' +str(instance))
 #        Worker.addWorker(user=instance, type=1)
-
-
