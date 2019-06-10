@@ -249,7 +249,7 @@ def forbiden(request):
 
     return render(request, 'errors/403.html', None, None, status='403')
 
-def notfound(request):
+def notfound(request, exception):
 
     userAauthorized = request.user.is_authenticated
 
@@ -313,7 +313,7 @@ def companys(request):
 
         return render(request, 'CompanyList.html', {"companyList": companyList})
 
-def company(request):
+def company(request, exception):
 
     userAauthorized = request.user.is_authenticated
 
@@ -581,7 +581,7 @@ def newjobs(request):
 
         return render(request, 'errors/403.html', None, None, status=403)
 
-def newmessage(request):
+def newmessage(request, exception):
 
     userAauthorized = request.user.is_authenticated
 
@@ -616,7 +616,7 @@ def newmessage(request):
 
 
 
-def savejobs(request):
+def savejobs(request, exception):
 
     if request.user.is_authenticated:
         refreshLastOnline(request.user)
@@ -690,7 +690,7 @@ def savejobs(request):
         else:
             return render(request, 'errors/403.html', None, None, status=403)
 
-def saveorder(request):
+def saveorder(request, exception):
 
     if request.user.is_authenticated:
         refreshLastOnline(request.user)

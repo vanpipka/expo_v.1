@@ -33,7 +33,7 @@ urlpatterns = [
     path('success/', views.success),
     path('privacy-policy/', views.privacypolicy),
     path('legal/', views.legal),
-    path('termsOfUse/', views.termsOfUse),
+    path('termsofuse/', views.termsOfUse),
     path('companys/', views.companys),
     path('company/', views.company),
     path('messages/new/', views.newmessage),
