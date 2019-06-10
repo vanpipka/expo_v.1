@@ -12,7 +12,7 @@ import json
 
 # Create your views here.
 
-def legal(request):
+def termsOfUse(request):
 
     userAauthorized = request.user.is_authenticated
 
