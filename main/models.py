@@ -134,6 +134,7 @@ class Attacment(models.Model):
         print(fullpath)
 
         #try:
+        if (True):
             with open(fullpath, "wb") as fh:
                 fh.write(base64.decodebytes(strOne.strip()))
 
