@@ -19,7 +19,7 @@ def termsOfUse(request):
     if userAauthorized:
         refreshLastOnline(request.user)
 
-    return render(request, 'termsOfUse.html', {})
+    return render(request, 'TermsOfUse.html', {})
 
 def legal(request):
 
