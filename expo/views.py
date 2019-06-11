@@ -21,6 +21,15 @@ def termsOfUse(request):
 
     return render(request, 'TermsOfUse.html', {})
 
+def confidential(request):
+
+    userAauthorized = request.user.is_authenticated
+
+    if userAauthorized:
+        refreshLastOnline(request.user)
+
+    return render(request, 'confidential.html', {})
+
 def legal(request):
 
     userAauthorized = request.user.is_authenticated

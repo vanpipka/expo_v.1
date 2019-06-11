@@ -34,6 +34,7 @@ urlpatterns = [
     path('privacy-policy/', views.privacypolicy),
     path('legal/', views.legal),
     path('termsofuse/', views.termsOfUse),
+    path('confidential/', views.confidential),
     path('companys/', views.companys),
     path('company/', views.company),
     path('messages/new/', views.newmessage),
