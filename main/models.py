@@ -121,7 +121,7 @@ class Attacment(models.Model):
         strOne = strOne.encode()
         strOne = b"=" + strOne
 
-        your_media_root = settings.MEDIA_ROOT
+        your_media_root = '/opt/vseexpo/main/media/';#settings.MEDIA_ROOT
         directory = str(your_media_root)
 
         name = str(uuid.uuid4()) + '.png'
