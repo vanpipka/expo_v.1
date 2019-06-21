@@ -11,19 +11,21 @@ from django.middleware import csrf
 logger = logging.getLogger(__name__)
 logger1 = logging.getLogger('expo')
 
-logger.info('TEST LOGGING INFO')
-logger.debug('TEST LOGGING debug')
-logger.warning('TEST LOGGING warning')
-logger.error('TEST LOGGING error')
-logger.critical('TEST LOGGING critical')
 
-logger1.info('TEST LOGGING INFO')
-logger1.debug('TEST LOGGING debug')
-logger1.warning('TEST LOGGING warning')
-logger1.error('TEST LOGGING error')
-logger1.critical('TEST LOGGING critical')
 
 def show(request):
+
+    logger.info('TEST LOGGING INFO')
+    logger.debug('TEST LOGGING debug')
+    logger.warning('TEST LOGGING warning')
+    logger.error('TEST LOGGING error')
+    logger.critical('TEST LOGGING critical')
+
+    logger1.info('TEST LOGGING INFO')
+    logger1.debug('TEST LOGGING debug')
+    logger1.warning('TEST LOGGING warning')
+    logger1.error('TEST LOGGING error')
+    logger1.critical('TEST LOGGING critical')
 
     if request.user.is_authenticated:
         refreshLastOnline(request.user)
