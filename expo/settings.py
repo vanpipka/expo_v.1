@@ -261,7 +261,7 @@ LOGGING = {
             'handlers': ['console', 'logfile'],
             'level': 'ERROR',
             'propagate': False,
-        }
+        },
         'expo': {
             'handlers': ['console', 'logfile'],
             'propagate': True,

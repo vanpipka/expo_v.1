@@ -241,9 +241,9 @@ LOGGING = {
             'formatter': 'simple'
         },
         # Log to a text file that can be rotated by logrotate
-        'file': {
+        'logfile': {
             'level': 'DEBUG',
-            'class': 'logging.FileHandler',
+            'class': 'logging.handlers.WatchedFileHandler',
             'filename': LOG_FILE,
         },
     },
@@ -257,7 +257,7 @@ LOGGING = {
             'handlers': ['console', 'logfile'],
             'level': 'ERROR',
             'propagate': False,
-        }
+        },
         'expo': {
             'handlers': ['console', 'logfile'],
             'propagate': True,
