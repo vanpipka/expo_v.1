@@ -207,26 +207,65 @@ with open(os.path.join(SETTINGS_DIR, 'companysettings.json'), 'r') as f:
 
 LOG_FILE = os.path.join(SETTINGS_DIR, 'vseexpo.log')
 
+#LOGGING = {
+   #'version': 1,
+  # 'disable_existing_loggers': False,
+ #  'handlers': {
+#       'file': {
+#           'level': 'DEBUG',
+#           'class': 'logging.FileHandler',
+#           'filename': LOG_FILE,
+#       },
+ #  },
+ #  'loggers': {
+#       'django': {
+#           'handlers': ['file'],
+#           'level': 'DEBUG',
+#           'propagate': True,
+#       },
+#       'expo': {
+#           'handlers': ['file'],
+#           'level': 'DEBUG',
+#           'propagate': True,
+#       },
+#   },
+#}
+
 LOGGING = {
-   'version': 1,
-   'disable_existing_loggers': False,
-   'handlers': {
-       'file': {
-           'level': 'DEBUG',
-           'class': 'logging.FileHandler',
-           'filename': LOG_FILE,
-       },
-   },
-   'loggers': {
-       'django': {
-           'handlers': ['file'],
-           'level': 'DEBUG',
-           'propagate': True,
-       },
-       'expo': {
-           'handlers': ['file'],
-           'level': 'DEBUG',
-           'propagate': True,
-       },
-   },
+    'version': 1,
+    'disable_existing_loggers': True,
+    'handlers': {
+        'null': {
+            'level': 'DEBUG',
+            'class': 'logging.NullHandler',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        # Log to a text file that can be rotated by logrotate
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': LOG_FILE,
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'logfile'],
+            'propagate': True,
+            'level': 'INFO',
+        },
+        'django.request': {
+            'handlers': ['console', 'logfile'],
+            'level': 'ERROR',
+            'propagate': False,
+        }
+        'expo': {
+            'handlers': ['console', 'logfile'],
+            'propagate': True,
+            'level': 'INFO',
+        },
+    }
 }
