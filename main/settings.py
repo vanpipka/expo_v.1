@@ -227,6 +227,8 @@ with open(os.path.join(SETTINGS_DIR, 'companysettings.json'), 'r') as f:
 #   },
 #}
 
+LOG_FILE = os.path.join(SETTINGS_DIR, 'vseexpo.log')
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
