@@ -48,5 +48,5 @@ urlpatterns = [
     path('jobs/new/', views.newjobs),
     path('jobs/', views.jobs),
     path('sendsms/', views.sendsms),
-    path('testtest', views.testtest)
+    path('testtest/', views.testtest)
 ]

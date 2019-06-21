@@ -63,6 +63,7 @@ def adminexpo(request):
     else:
         return render(request, 'errors/403.html', None, None, status='403')
 
+
 def testtest(request):
     return render(request, 'testtest.html', {})
 
