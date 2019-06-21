@@ -204,3 +204,29 @@ with open(os.path.join(SETTINGS_DIR, 'companysettings.json'), 'r') as f:
 #EMAIL_HOST_PASSWORD = 'ieh7w2k'
 #DEFAULT_FROM_EMAIL = 'info@mmss.ltd'
 #DEFAULT_TO_EMAIL = 'info@mmss.ltd'
+
+LOG_FILE = os.path.join(SETTINGS_DIR, 'vseexpo.log')
+
+LOGGING = {
+   'version': 1,
+   'disable_existing_loggers': False,
+   'handlers': {
+       'file': {
+           'level': 'INFO',
+           'class': 'logging.FileHandler',
+           'filename': LOG_FILE,
+       },
+   },
+   'loggers': {
+       'django': {
+           'handlers': ['file'],
+           'level': 'INFO',
+           'propagate': True,
+       },
+       'expo': {
+           'handlers': ['file'],
+           'level': 'INFO',
+           'propagate': True,
+       },
+   },
+}

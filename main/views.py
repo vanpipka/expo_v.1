@@ -4,14 +4,32 @@ from expo.DataGet import  getProfessionList, getAllProfessionsAndGroups, getCity
 from expo.DataSet import refreshLastOnline
 from main.models import Professions, Service, UserType, News, Comments, Company, Attacment, CostOfService, Worker
 import json
+import logging
 
 from django.middleware import csrf
 # Create your views here.
+logger = logging.getLogger(__name__)
+logger1 = logging.getLogger('expo')
+
+logger.info('TEST LOGGING INFO')
+logger.debug('TEST LOGGING debug')
+logger.warning('TEST LOGGING warning')
+logger.error('TEST LOGGING error')
+logger.critical('TEST LOGGING critical')
+
+logger1.info('TEST LOGGING INFO')
+logger1.debug('TEST LOGGING debug')
+logger1.warning('TEST LOGGING warning')
+logger1.error('TEST LOGGING error')
+logger1.critical('TEST LOGGING critical')
 
 def show(request):
 
     if request.user.is_authenticated:
         refreshLastOnline(request.user)
+
+
+
     print("Куки сновной страницы")
     print(print('coocies: ' + str(request.COOKIES)))
 
@@ -62,7 +80,7 @@ def ServicesListSave(request):
 
     if request.user.is_authenticated:
         refreshLastOnline(request.user)
-    
+
     if request.user.is_authenticated: # != True:
 
         if request.method == "POST":
@@ -82,14 +100,14 @@ def ServicesListSave(request):
                     print(jsonString)
 
                     CostOfService.objects.filter(idWorker=worker).delete()
-  
+
                     for service in jsonString:
                         print ('ddddd')
 
                         price       = service.get('price')
                         idService   = service.get('id')
 
-                        if price != '' and price != '0' and price != 0 and price != None: 
+                        if price != '' and price != '0' and price != 0 and price != None:
                             try:
                                 costofservice = CostOfService(idWorker=worker, idService = Service.objects.get(id=idService))
                                 costofservice.price = float(price)
@@ -110,18 +128,18 @@ def ServicesListSave(request):
             if request.is_ajax():
                 return JsonResponse({'status': False, 'csrfmiddlewaretoken': csrf.get_token(request)})
             else:
-                return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403) 
+                return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)
     else:
         if request.is_ajax():
             return JsonResponse({'status': False, 'csrfmiddlewaretoken': csrf.get_token(request)})
         else:
-            return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)  
+            return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)
 
 def ProfessionsListSave(request):
 
     if request.user.is_authenticated:
         refreshLastOnline(request.user)
-    
+
     if request.user.is_authenticated: # != True:
 
         if request.method == "POST":
@@ -158,12 +176,12 @@ def ProfessionsListSave(request):
             if request.is_ajax():
                 return JsonResponse({'status': False, 'csrfmiddlewaretoken': csrf.get_token(request)})
             else:
-                return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403) 
+                return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)
     else:
         if request.is_ajax():
             return JsonResponse({'status': False, 'csrfmiddlewaretoken': csrf.get_token(request)})
         else:
-            return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)  
+            return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)
 
 def jsonProfessionList(request):
 
@@ -431,5 +449,3 @@ def showJson(request):
     response['Access-Control-Allow-Origin'] = "*"
 
     return response
-
-
