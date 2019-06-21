@@ -556,7 +556,7 @@ def Login(request):
             # Блять здесь скопируем пост, для того, чтобы преобразовать юзернейм
             # Я хз как по другому сделать
 
-            logger.debug('POST LOGIN PARAMS: '+request.POST)
+            logger.info('POST LOGIN PARAMS: '+request.POST)
 
             username = request.POST['username']
 
