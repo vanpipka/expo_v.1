@@ -17,7 +17,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login, authenticate
 from django.contrib.auth import logout as auth_logout
 
-logger = logging.getLogger('expo')
+logger = logging.getLogger('django')
 
 def signup_change(request):
     return render(request, 'accounts/signup_change.html')
