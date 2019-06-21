@@ -221,5 +221,10 @@ LOGGING = {
            'level': 'INFO',
            'propagate': True,
        },
+       'expo': {
+           'handlers': ['file'],
+           'level': 'INFO',
+           'propagate': True,
+       },
    },
 }

@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.base import View
 from main.models import UserType, Attacment, ConfirmCodes
 import json
+import logging
 from django.middleware import csrf
 from django.conf import settings
 
@@ -15,6 +16,8 @@ from django.contrib.auth.forms import AuthenticationForm
 # По нему django будет определять, выполнил ли вход пользователь.
 from django.contrib.auth import login as auth_login, authenticate
 from django.contrib.auth import logout as auth_logout
+
+logger = logging.getLogger('expo')
 
 def signup_change(request):
     return render(request, 'accounts/signup_change.html')
@@ -303,7 +306,7 @@ def Reset(request):
 
         else:
 
-            return render(request, reset_url, {'form': PasswordResetForm()}) 
+            return render(request, reset_url, {'form': PasswordResetForm()})
 
     elif request.method == 'POST':
 
@@ -353,7 +356,7 @@ def Reset(request):
                               {'username': username, 'errors': error_dict})
 
 
-        if request.POST['password1'] != request.POST['password2']: 
+        if request.POST['password1'] != request.POST['password2']:
 
             error_dict = {'password2': 'Пароль и подтверждение пароля не совпадают'}
 
@@ -365,7 +368,7 @@ def Reset(request):
 
             else:
                 return render(request, reset_url,
-                              {'username': username, 'errors': error_dict}) 
+                              {'username': username, 'errors': error_dict})
 
         else:
             post_copy['email'] = username+"@xxx.com"   #для того чтобы использовать стандартные формы
@@ -515,10 +518,10 @@ def Login(request):
                     error_dict = {'username': 'user is authenticated'}
 
                     return HttpResponse(
-                        json.dumps({'Access-Control-Allow-Origin': "*", 
-                            'status': False, 'errors': error_dict, 
-                            'cookies': request.COOKIES, 
-                            'request': list(request.GET), 
+                        json.dumps({'Access-Control-Allow-Origin': "*",
+                            'status': False, 'errors': error_dict,
+                            'cookies': request.COOKIES,
+                            'request': list(request.GET),
                             'body': list(request.body),
                             'csrfmiddlewaretoken': csrf.get_token(request)}),
                         status=200,
@@ -552,7 +555,9 @@ def Login(request):
 
             # Блять здесь скопируем пост, для того, чтобы преобразовать юзернейм
             # Я хз как по другому сделать
-            print(request.POST)
+
+            logger.debug('POST LOGIN PARAMS: '+request.POST)
+
             username = request.POST['username']
 
             post_copy = request.POST.copy()
