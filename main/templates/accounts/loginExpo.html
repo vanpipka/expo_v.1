@@ -11,7 +11,8 @@
                     <span class="article">Вход</span>
                 </div>
                 <div class="card-body">
-                    <form action="/accounts/loginexpo/" name="loginform" method="POST" action="" id="loginform">
+                  <form action="/worker/testcsrf/" name="loginform" method="POST" action="" id="loginform">
+                    <!--<form action="/accounts/loginexpo/" name="loginform" method="POST" action="" id="loginform">-->
                         {% csrf_token %}
 
                         <div class="form-group row">
