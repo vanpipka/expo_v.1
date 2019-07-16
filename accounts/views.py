@@ -40,7 +40,14 @@ def signup(request, type):
 
             error_dict = {'username': 'user is authenticated'}
 
-            return HttpResponse(json.dumps({'Access-Control-Allow-Origin': "*", 'status': False, 'errors': error_dict}),
+            jsonData = {'Access-Control-Allow-Origin': "*",
+                        'status': False,
+                        'errors': error_dict,
+                        'cookies': {'csrftoken': request.META["CSRF_COOKIE"],
+                                    'sessionid': request.session.session_key,
+                                    'csrfmiddlewaretoken': csrf.get_token(request)}}
+
+            return HttpResponse(json.dumps(jsonData),
                                 status=200,
                                 content_type='application/json')
 
@@ -51,12 +58,10 @@ def signup(request, type):
 
         if request.is_ajax():
 
-            csrfmiddlewaretoken = csrf.get_token(request)
             ajax_response = {'Access-Control-Allow-Origin': "*",
-                            'csrfmiddlewaretoken': csrfmiddlewaretoken}
-
-            ajax_response['cookies'] = {'csrftoken': request.META["CSRF_COOKIE"],
-                                        'sessionid': request.session.session_key}
+                            'cookies': {'csrftoken': request.META["CSRF_COOKIE"],
+                                        'sessionid': request.session.session_key,
+                                        'csrfmiddlewaretoken': csrf.get_token(request)}}
 
             return HttpResponse(json.dumps(ajax_response),
                                 status=200,
@@ -86,8 +91,14 @@ def signup(request, type):
             error_dict = {'username': 'Номер телефона указан неверно'}
 
             if request.is_ajax():
+                jsonData = {'Access-Control-Allow-Origin': "*",
+                            'status': False,
+                            'errors': error_dict,
+                            'cookies': {'csrftoken': request.META["CSRF_COOKIE"],
+                                        'sessionid': request.session.session_key,
+                                        'csrfmiddlewaretoken': csrf.get_token(request)}}
 
-                return HttpResponse(json.dumps({'Access-Control-Allow-Origin': "*", 'status': False, 'errors': error_dict}),
+                return HttpResponse(json.dumps(jsonData),
                                     status=200,
                                     content_type='application/json')
 
@@ -126,7 +137,14 @@ def signup(request, type):
 
                     if request.is_ajax():
 
-                        response = HttpResponse(json.dumps({'Access-Control-Allow-Origin': "*", 'status': True, 'errors': {'confirmphone': 'Для завершения регистрации введите код подтверждения полученный по СМС'}}),
+                        jsonData = {'Access-Control-Allow-Origin': "*",
+                                    'status': True,
+                                    'errors': {'confirmphone': 'Для завершения регистрации введите код подтверждения полученный по СМС'},
+                                    'cookies': {'csrftoken': request.META["CSRF_COOKIE"],
+                                                'sessionid': request.session.session_key,
+                                                'csrfmiddlewaretoken': csrf.get_token(request)}}
+
+                        response = HttpResponse(json.dumps(jsonData),
                                                 status=200,
                                                 content_type='application/json')
 
@@ -168,8 +186,14 @@ def signup(request, type):
 
                         if request.is_ajax():
 
-                            response = HttpResponse(json.dumps({'Access-Control-Allow-Origin': "*", 'status': False,
-                                                                'errors': error_dict}),
+                            jsonData = {'Access-Control-Allow-Origin': "*",
+                                        'status': False,
+                                        'errors': {'confirmphone': error_dict},
+                                        'cookies': {'csrftoken': request.META["CSRF_COOKIE"],
+                                                    'sessionid': request.session.session_key,
+                                                    'csrfmiddlewaretoken': csrf.get_token(request)}}
+
+                            response = HttpResponse(json.dumps(jsonData),
                                                     status=200,
                                                     content_type='application/json')
 
@@ -198,7 +222,14 @@ def signup(request, type):
 
                 if request.is_ajax():
 
-                    return HttpResponse(json.dumps({'Access-Control-Allow-Origin': "*", 'status': False, 'errors': error_dict}),
+                    jsonData = {'Access-Control-Allow-Origin': "*",
+                                'status': False,
+                                'errors': {'confirmphone': error_dict},
+                                'cookies': {'csrftoken': request.META["CSRF_COOKIE"],
+                                            'sessionid': request.session.session_key,
+                                            'csrfmiddlewaretoken': csrf.get_token(request)}}
+
+                    return HttpResponse(json.dumps(jsonData),
                                             status=200,
                                             content_type='application/json')
 
@@ -282,7 +313,14 @@ def Reset(request):
 
             error_dict = {'username': 'user is authenticated'}
 
-            return HttpResponse(json.dumps({'Access-Control-Allow-Origin': "*", 'status': False, 'errors': error_dict}),
+            jsonData = {'Access-Control-Allow-Origin': "*",
+                        'status': False,
+                        'errors': {'confirmphone': error_dict},
+                        'cookies': {'csrftoken': request.META["CSRF_COOKIE"],
+                                    'sessionid': request.session.session_key,
+                                    'csrfmiddlewaretoken': csrf.get_token(request)}}
+
+            return HttpResponse(json.dumps(jsonData),
                                 status=200,
                                 content_type='application/json')
 
@@ -293,14 +331,13 @@ def Reset(request):
 
         if request.is_ajax():
 
-            csrfmiddlewaretoken = csrf.get_token(request)
-            ajax_response = {'Access-Control-Allow-Origin': "*",
-                            'csrfmiddlewaretoken': csrfmiddlewaretoken}
+            jsonData = {'Access-Control-Allow-Origin': "*",
+                        'status': True,
+                        'cookies': {'csrftoken': request.META["CSRF_COOKIE"],
+                                    'sessionid': request.session.session_key,
+                                    'csrfmiddlewaretoken': csrf.get_token(request)}}
 
-            ajax_response['cookies'] = {'csrftoken': request.META["CSRF_COOKIE"],
-                                        'sessionid': request.session.session_key}
-
-            return HttpResponse(json.dumps(ajax_response),
+            return HttpResponse(json.dumps(jsonData),
                                 status=200,
                                 content_type='application/json')
 
@@ -329,7 +366,14 @@ def Reset(request):
 
             if request.is_ajax():
 
-                return HttpResponse(json.dumps({'Access-Control-Allow-Origin': "*", 'status': False, 'errors': error_dict}),
+                jsonData = {'Access-Control-Allow-Origin': "*",
+                            'status': False,
+                            'errors': error_dict,
+                            'cookies': {'csrftoken': request.META["CSRF_COOKIE"],
+                                        'sessionid': request.session.session_key,
+                                        'csrfmiddlewaretoken': csrf.get_token(request)}}
+
+                return HttpResponse(json.dumps(jsonData),
                                     status=200,
                                     content_type='application/json')
 
@@ -346,7 +390,14 @@ def Reset(request):
 
             if request.is_ajax():
 
-                return HttpResponse(json.dumps({'Access-Control-Allow-Origin': "*", 'status': False, 'errors': error_dict}),
+                jsonData = {'Access-Control-Allow-Origin': "*",
+                            'status': False,
+                            'errors': error_dict,
+                            'cookies': {'csrftoken': request.META["CSRF_COOKIE"],
+                                        'sessionid': request.session.session_key,
+                                        'csrfmiddlewaretoken': csrf.get_token(request)}}
+
+                return HttpResponse(json.dumps(jsonData),
                                     status=200,
                                     content_type='application/json')
 
@@ -362,7 +413,14 @@ def Reset(request):
 
             if request.is_ajax():
 
-                return HttpResponse(json.dumps({'Access-Control-Allow-Origin': "*", 'status': False, 'errors': error_dict}),
+                jsonData = {'Access-Control-Allow-Origin': "*",
+                            'status': False,
+                            'errors': error_dict,
+                            'cookies': {'csrftoken': request.META["CSRF_COOKIE"],
+                                        'sessionid': request.session.session_key,
+                                        'csrfmiddlewaretoken': csrf.get_token(request)}}
+
+                return HttpResponse(json.dumps(jsonData),
                                     status=200,
                                     content_type='application/json')
 
@@ -403,7 +461,14 @@ def Reset(request):
 
                     if request.is_ajax():
 
-                        response = HttpResponse(json.dumps({'Access-Control-Allow-Origin': "*", 'status': True, 'errors': {'confirmphone': 'Для завершения регистрации введите код подтверждения полученный по СМС'}}),
+                        jsonData = {'Access-Control-Allow-Origin': "*",
+                                    'status': True,
+                                    'errors':  {'confirmphone': 'Для завершения регистрации введите код подтверждения полученный по СМС'},
+                                    'cookies': {'csrftoken': request.META["CSRF_COOKIE"],
+                                                'sessionid': request.session.session_key,
+                                                'csrfmiddlewaretoken': csrf.get_token(request)}}
+
+                        response = HttpResponse(json.dumps(jsonData),
                                                 status=200,
                                                 content_type='application/json')
 
@@ -447,8 +512,14 @@ def Reset(request):
 
                         if request.is_ajax():
 
-                            response = HttpResponse(json.dumps({'Access-Control-Allow-Origin': "*", 'status': False,
-                                                                'errors': error_dict}),
+                            jsonData = {'Access-Control-Allow-Origin': "*",
+                                        'status': False,
+                                        'errors':  error_dict,
+                                        'cookies': {'csrftoken': request.META["CSRF_COOKIE"],
+                                                    'sessionid': request.session.session_key,
+                                                    'csrfmiddlewaretoken': csrf.get_token(request)}}
+
+                            response = HttpResponse(json.dumps(jsonData),
                                                     status=200,
                                                     content_type='application/json')
 
@@ -478,7 +549,14 @@ def Reset(request):
 
                 if request.is_ajax():
 
-                    return HttpResponse(json.dumps({'Access-Control-Allow-Origin': "*", 'status': False, 'errors': error_dict}),
+                    jsonData = {'Access-Control-Allow-Origin': "*",
+                                'status': False,
+                                'errors':  error_dict,
+                                'cookies': {'csrftoken': request.META["CSRF_COOKIE"],
+                                            'sessionid': request.session.session_key,
+                                            'csrfmiddlewaretoken': csrf.get_token(request)}}
+
+                    return HttpResponse(json.dumps(jsonData),
                                             status=200,
                                             content_type='application/json')
 
@@ -489,20 +567,6 @@ def Reset(request):
         return HttpResponseRedirect('/')
 
 def Login(request):
-
-    #if request.is_ajax():
-
-    #    form_class = LoginFormView
-
-    #    rendered_form_class = form_class.as_view()(request)
-
-    #    response = HttpResponse(json.dumps(getJsonData(request=request, type='LOGIN')),
-    #                        status=200,
-    #                        content_type='application/json')
-
-    #    return response
-
-    #else:
 
         print('login!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 
@@ -517,13 +581,15 @@ def Login(request):
 
                     error_dict = {'username': 'user is authenticated'}
 
+                    jsonData = {'Access-Control-Allow-Origin': "*",
+                                'status': False,
+                                'errors':  error_dict,
+                                'cookies': {'csrftoken': request.META["CSRF_COOKIE"],
+                                            'sessionid': request.session.session_key,
+                                            'csrfmiddlewaretoken': csrf.get_token(request)}}
+
                     return HttpResponse(
-                        json.dumps({'Access-Control-Allow-Origin': "*",
-                            'status': False, 'errors': error_dict,
-                            'cookies': request.COOKIES,
-                            'request': list(request.GET),
-                            'body': list(request.body),
-                            'csrfmiddlewaretoken': csrf.get_token(request)}),
+                        json.dumps(jsonData),
                         status=200,
                         content_type='application/json')
 
@@ -532,18 +598,13 @@ def Login(request):
 
             elif request.is_ajax():
 
-                print(request.COOKIES)
+                jsonData = {'Access-Control-Allow-Origin': "*",
+                            'status': True,
+                            'cookies': {'csrftoken': request.META["CSRF_COOKIE"],
+                                        'sessionid': request.session.session_key,
+                                        'csrfmiddlewaretoken': csrf.get_token(request)}}
 
-                csrfmiddlewaretoken = csrf.get_token(request)
-                ajax_response = {'Access-Control-Allow-Origin': "*",
-                                 'csrfmiddlewaretoken': csrfmiddlewaretoken,
-                                 'requestdata': {'cookies': request.COOKIES, 'request': list(request.GET),
-                                                 'body': list(request.body)}}
-
-                ajax_response['cookies'] = {'csrftoken': request.META["CSRF_COOKIE"],
-                                            'sessionid': request.session.session_key}
-
-                return HttpResponse(json.dumps(ajax_response),
+                return HttpResponse(json.dumps(jsonData),
                                     status=200,
                                     content_type='application/json')
 
@@ -618,7 +679,14 @@ def Login(request):
                     for key, value in form.errors.as_data().items():
                         error_dict[key] = str(value[0].message)
 
-                    return HttpResponse(json.dumps({'Access-Control-Allow-Origin': "*", 'status': False, 'errors': error_dict}),
+                    jsonData = {'Access-Control-Allow-Origin': "*",
+                                'status': False,
+                                'errors':  error_dict,
+                                'cookies': {'csrftoken': request.META["CSRF_COOKIE"],
+                                            'sessionid': request.session.session_key,
+                                            'csrfmiddlewaretoken': csrf.get_token(request)}}
+
+                    return HttpResponse(json.dumps(jsonData),
                                         status=200,
                                         content_type='application/json')
 
@@ -674,21 +742,11 @@ class LogoutView(View):
 
 def getJsonData(request, type):
 
-    ajax_response = {'Access-Control-Allow-Origin': "*"}
-
-    csrfmiddlewaretoken = csrf.get_token(request)
-
-    ajax_response['cookies'] = {'csrftoken': request.META["CSRF_COOKIE"],
-                                'sessionid': request.session.session_key}
-
-    #if request.method == 'GET':
-    ajax_response['csrfmiddlewaretoken'] = csrfmiddlewaretoken
-    #else:
-    #    ajax_response['csrfmiddlewaretoken'] = request.POST.__getitem__('csrfmiddlewaretoken')
-
-    print('мидлтокен: '+ajax_response['csrfmiddlewaretoken'])
-    print('сессия: '+request.session.session_key)
-    print('csrftoken: '+request.META["CSRF_COOKIE"])
+    ajax_response = {'Access-Control-Allow-Origin': "*",
+                'cookies': {'csrftoken': request.META["CSRF_COOKIE"],
+                            'sessionid': request.session.session_key,
+                            'csrfmiddlewaretoken': csrf.get_token(request)}
+    }
 
     if type == 'LOGOUT':
 
@@ -718,7 +776,5 @@ def getJsonData(request, type):
 
         else:
             ajax_response['status'] = False
-
-    print(ajax_response)
 
     return ajax_response
