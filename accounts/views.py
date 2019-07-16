@@ -574,6 +574,8 @@ def Login(request):
 
         if request.method == 'GET':
 
+            print('GET login!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+
             if request.user.is_authenticated:
 
                 print(request.COOKIES)
@@ -614,6 +616,8 @@ def Login(request):
 
         elif request.method == 'POST':
 
+            print('POST login!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            
             # Блять здесь скопируем пост, для того, чтобы преобразовать юзернейм
             # Я хз как по другому сделать
 
