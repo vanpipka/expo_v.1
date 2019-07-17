@@ -425,12 +425,12 @@ def showJson(request):
     print(request.GET)
 
     context = getAllProfessionsAndGroups()
-
-    resp = {'dataset': context, 'csrfmiddlewaretoken': csrf.get_token(request)}
+    cookies = {'csrfmiddlewaretoken': csrf.get_token(request)}
 
     if not request.user.is_authenticated:
-        resp['csrftoken'] = request.META["CSRF_COOKIE"]
+        cookies['csrftoken'] = request.META["CSRF_COOKIE"]
 
+    resp = {'dataset': context, 'cookies': cookies}
     response = JsonResponse(resp)
     response['Access-Control-Allow-Origin'] = "*"
 
