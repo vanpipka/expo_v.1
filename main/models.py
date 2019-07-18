@@ -322,7 +322,6 @@ class Worker(models.Model):
 
         return elem
 
-
 class Company(models.Model):
 
     id              = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -1115,13 +1114,34 @@ class WorkerRating(models.Model):
 
         workerRating.save()
 
+//ДИАЛОГИ И СООБЩЕНИЯ
+class Dialog(models.Model):
+
+    id              = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id_user1        = models.ForeignKey(User, verbose_name="Участник_1", on_delete=models.CASCADE)
+    id_user2        = models.ForeignKey(User, verbose_name="Участник_2", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '' + self.id +': '+ id_user1.__name__ + '-' + id_user2.__name__
+
+    GetCurrentDialog(id):
+        return None
+
+    GetDialogs(user):
+
+        dialogList  = []
+        dialogs = Dialog.objects.all().filter(Q(id_user1=user) | Q(id_user2=user))
+
+        for d in dialogs:
+            print(d.id)
+            
+        return None
+
 def professions_changed(sender, **kwargs):
     # Do something
     print("Действие с мэни ту мэни")
     if kwargs['action'] == "post_clear" or kwargs['action'] == "post_add":
         Professions.setWorkerCount(sender)
-
-
 
 m2m_changed.connect(professions_changed, sender=Worker.professions.through)
 

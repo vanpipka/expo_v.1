@@ -220,7 +220,7 @@ def showSettingsJson(request):
                         {"columnname": "services", "label": "Проектная работа", "type": "table", "value": worker['works'].get('servicelist', [])},
                     ]},
                     {"name": "Дополнительно", "items": [
-                        {"columnname": "personaldataisallowed", "label": "Согласен на обработку персональных данных", "labelposition": "right", "width": "100%", "type": "boolean", "value": worker.get('personaldataisallowed', False), "backgroundcolor": "#f8d7da"},
+                        #{"columnname": "personaldataisallowed", "label": "Согласен на обработку персональных данных", "labelposition": "right", "width": "100%", "type": "boolean", "value": worker.get('personaldataisallowed', False), "backgroundcolor": "#f8d7da"},
                         {"columnname": "publishdata", "label": "Опубликовать анкету в общий доступ", "labelposition": "right", "width": "100%", "type": "boolean", "value": worker.get('publishdata', False), "backgroundcolor": "#d4edda"},
                     ]}
                 ]
@@ -402,7 +402,7 @@ def showWorkersList(request):
         print("test csrf=====================================")
         print('Запрос: ' + str(request.POST))
         print('Куки: ' + str(request.COOKIES))
-           
+
         dictPost = dict(json.loads(request.POST.__getitem__('data')))
         context = searchWorker(user = request.user, searchList=dictPost)
 
@@ -488,7 +488,7 @@ def my_view(request):
 
         print("test body=====================================")
         #print(jsonString);
-        
+
 
         #dictPost = dict(json.loads(request.POST.__getitem__('data')))
         #context = searchWorker(user = request.user, searchList=dictPost)
