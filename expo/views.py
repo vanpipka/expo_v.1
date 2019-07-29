@@ -1,5 +1,5 @@
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from datetime import datetime as datet
 from datetime import timezone
 from main.models import Company, News, JobOrder, UserType, Attacment, Message, Worker, Comments, ConfirmCodes
@@ -489,18 +489,65 @@ def dialogs(request):
     userAauthorized = request.user.is_authenticated
 
     if userAauthorized:
-
         refreshLastOnline(request.user)
 
-        messagelist = Message.GetAllDialogs(request.user)
+        if request.method == 'GET':
+            idDialog = request.GET.get('id', '')
 
-        if request.is_ajax():
+            if idDialog != '':
 
-            return JsonResponse({'status': True, 'dataset': messagelist})
+                messageData = MessageExpo.getMessagesByDialog(request.user, idDialog)
 
-        else:
+                if request.is_ajax():
 
-            return render(request, 'MessageList.html', {"messageList": messagelist})
+                    return JsonResponse(messageData)
+
+                else:
+
+                    if (messageData['status']):
+
+                        return render(request, 'MessageList.html', {"messageData": messageData})
+
+                    else:
+
+                        return redirect('/forbiden')
+
+            else:
+
+                dialogList = Dialog.GetDialogs(request.user)
+
+                if request.is_ajax():
+
+                    return JsonResponse({'status': True, 'dataset': dialogList})
+
+                else:
+
+                    return render(request, 'DialogsList.html', {"messageList": dialogList})
+
+        elif request.method == 'POST':
+
+            print("Dialog POST: "+str(request.POST))
+
+            if request.POST.__contains__('data'):
+
+                data    = dict(json.loads(request.POST.__getitem__('data')))
+                answer  = MessageExpo.addMessageToDialog(request.user, data)
+
+                print("Data POST: "+str(data))
+
+                return JsonResponse(answer)
+
+            else:
+
+            #dialogID = request.POST.__getitem__('dialogID')
+            #message  = request.POST.__getitem__('message')
+
+            #if message == '' or message == None:
+            #    return JsonResponse({'status': False, 'errors': ['Сообщение пустое']})
+
+            #save message
+
+                return JsonResponse({'status': False, 'errors': ['Неверный формат запроса']})
 
     else:
 
@@ -509,8 +556,8 @@ def dialogs(request):
             return JsonResponse({'status': False, 'errors': ['Доступ запрещен']})
 
         else:
-
-            return render(request, 'errors/403.html', None, None, status='403')
+            return redirect('/forbiden')
+            #return render(request, 'errors/403.html', None, None, status='403')
 
 def messages(request):
 
@@ -545,8 +592,8 @@ def messages(request):
             return JsonResponse({'status': False, 'errors': ['Доступ запрещен']})
 
         else:
-
-            return render(request, 'errors/403.html', None, None, status='403')
+            return redirect('/forbiden')
+            #return render(request, 'errors/403.html', None, None, status='403')
 
 def jobs(request):
 
