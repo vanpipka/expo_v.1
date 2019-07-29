@@ -486,22 +486,22 @@ def messagesend(request):
 
 def dialogs(request):
 
-    userAauthorized = request.user.is_authenticated
+    #userAauthorized = request.user.is_authenticated
 
-    if userAauthorized:
-        refreshLastOnline(request.user)
+    #if userAauthorized:
+    #    refreshLastOnline(request.user)
 
-        return render(request, 'DialogsList.html', {"messageList": []})
+    #    return render(request, 'DialogsList.html', {"messageList": []})
 
-    else:
+    #else:
 
-        if request.is_ajax():
+    #    if request.is_ajax():
 
-            return JsonResponse({'status': False, 'errors': ['Доступ запрещен']})
+    #        return JsonResponse({'status': False, 'errors': ['Доступ запрещен']})
 
-        else:
+    #    else:
             #return redirect('/forbiden')
-            return render(request, 'errors/403.html', None, None, status='403')
+    return render(request, 'errors/403.html', None, None, status='403')
 
 def messages(request):
 
