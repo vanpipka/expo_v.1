@@ -526,18 +526,18 @@ def dialogs(request):
 
         elif request.method == 'POST':
 
-            print("Dialog POST: "+str(request.POST))
+            #print("Dialog POST: "+str(request.POST))
 
-            if request.POST.__contains__('data'):
+            #if request.POST.__contains__('data'):
 
-                data    = dict(json.loads(request.POST.__getitem__('data')))
-                answer  = MessageExpo.addMessageToDialog(request.user, data)
+            #    data    = dict(json.loads(request.POST.__getitem__('data')))
+            #    answer  = MessageExpo.addMessageToDialog(request.user, data)
 
-                print("Data POST: "+str(data))
+            #    print("Data POST: "+str(data))
 
-                return JsonResponse(answer)
+            #    return JsonResponse(answer)
 
-            else:
+            #else:
 
             #dialogID = request.POST.__getitem__('dialogID')
             #message  = request.POST.__getitem__('message')
@@ -547,7 +547,7 @@ def dialogs(request):
 
             #save message
 
-                return JsonResponse({'status': False, 'errors': ['Неверный формат запроса']})
+            return JsonResponse({'status': False, 'errors': ['Неверный формат запроса']})
 
     else:
 
