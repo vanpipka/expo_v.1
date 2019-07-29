@@ -27,27 +27,41 @@
                                 </div>
                             </td>
                         </tr>
-                    {% for n in messageData.messageList %}
-                        <tr>
-                            <td>
-                            {% if n.itsMe%}
-                                <div class="row" style="padding-right: 10px; float: right; min-width: 200px; max-width: 400px; white-space: normal">
-                                    <div class="col alert alert-primary">
-                                        {{n.text}}
-                                        <div style="font-size: 8px">{{n.created}}</div>
+                    {% if messageData.messageList|length > 0 %}
+                        {% for n in messageData.messageList %}
+                            <tr>
+                                <td>
+                                {% if n.itsMe%}
+                                    <div class="row" style="padding-right: 10px; float: right; min-width: 200px; max-width: 400px; white-space: normal">
+                                        <div class="col alert alert-primary">
+                                            {{n.text}}
+                                            <div style="font-size: 8px">{{n.created}}</div>
+                                        </div>
                                     </div>
-                                </div>
-                            {% else %}
-                                <div class="row" style="float: left; min-width: 200px; max-width: 400px; white-space: normal;">
-                                    <div class="col alert alert-secondary">
-                                        {{n.text}}
-                                        <div style="font-size: 8px">{{n.created}}</div>
+                                {% else %}
+                                    <div class="row" style="float: left; min-width: 200px; max-width: 400px; white-space: normal;">
+                                        <div class="col alert alert-secondary">
+                                            {{n.text}}
+                                            <div style="font-size: 8px">{{n.created}}</div>
+                                        </div>
                                     </div>
-                                </div>
-                            {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
+                                {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center" align="center" id = 'EmptyTemplate'>
+                            <div>
+                                <img src="{% get_attribute 'STATIC_URL' %}main/img/1-2-grey.png">
+                            </div>
+                            <div>
+                                <span class="article article-sm"> Нет ни одного сообщения </span>
+                            </div>
+                            <div>
+                                <span> Чтобы начать диалог введите сообщение в поле и нажмите отправить</span>
+                            </div>
+                        </div>
+                    {% endif %}
                         <tr id='MessagePosition'>
                             <td>
                                 <p><a id = "position" name="position"></a></p>
@@ -62,7 +76,7 @@
                     <input id = "dialogID" type="" name="dialogID" hidden value={{messageData.dialogID}}>
                     <div class="row">
                         <div class="col col-9">
-                            <input id = "message" class="form-control" autocomplete="off" type="text" name="message" required="true">
+                            <input placeholder = "Введите сообщение" id = "message" class="form-control" autocomplete="off" type="text" name="message" required="true">
                         </div>
                         <div class="col col-3">
                             <button class = "btn btn-danger container-fluid" type="submit">Отправить</button>
@@ -76,9 +90,6 @@
 
     <script>
 
-            //window.onload = function() {
-            //    location.href = ('#position');
-            //  };
 
             $('#form').validate({
                 submitHandler: function(form) {
@@ -88,7 +99,7 @@
             );
 
             function addNewMessage(status, text) {
-
+                let emptyTemplate   = document.getElementById('EmptyTemplate');
                 let messagePosition = document.getElementById('MessagePosition');
                 let messageText     = document.getElementById('message');
                 let MessageTBody    = document.getElementById('MessageTBody');
@@ -98,6 +109,8 @@
 
                 messageTemplate.id      = '';
                 messageTemplate.hidden  = false;
+
+                emptyTemplate.hidden  = true;
 
                 if (status) {
                     data = JSON.parse(text);
