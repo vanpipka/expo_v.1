@@ -515,7 +515,7 @@ def dialogs(request):
 
             elif idRecipient != '':
 
-                recipient = UserType.GetElementByID(idRecipient);
+                recipient = 'ffff'#UserType.GetElementByID(idRecipient);
                 print(recipient)
                 #dialogList = Dialog.GetDialog(request.user, recipient)
 
