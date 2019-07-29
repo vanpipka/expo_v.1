@@ -44,17 +44,12 @@
                                         <a href="{{ n.url }}" class="text-danger article-sm" style="text-decoration: none">{{ n.sender.name|title }}</a>
                                     </div>
                                     <div class="col col-2">
-                                        <span class="color-dark-grey"> {{ n.date|date:"d M" }}</span>
+                                        <span class="color-dark-grey"> {{ n.lastMessage.date|date:"d M" }}</span>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col">
-                                        <span class="text-menu txt-bold">{{ n.theme }}</span>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        {{ n.text }}
+                                        <span class="text-menu">{{ n.lastMessage.text }}</span>
                                     </div>
                                 </div>
 

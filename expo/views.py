@@ -516,10 +516,8 @@ def dialogs(request):
                 recipient = UserType.GetUserByID(idRecipient)
                 dialog    = None
 
-                print('recipient: '+str(recipient))
-
                 if recipient == None:
-                    print('не нашли получателя')
+
                     return redirect('/servererror')
 
                 else:
@@ -527,7 +525,7 @@ def dialogs(request):
                     dialog = Dialog.GetDialog(request.user, recipient)
 
                 if dialog == None:
-                    print('не нашли диалог')
+
                     return redirect('/servererror')
 
                 else:

@@ -1127,8 +1127,8 @@ class WorkerRating(models.Model):
 
         workerRating.save()
 
-class DialogManager(models.Manager):
 
+class DialogManager(models.Manager):
     def create_dialog(self, data):
 
         dialog = self.create(idUser1  = data['user1'],
@@ -1142,6 +1142,7 @@ class Dialog(models.Model):
     id             = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     idUser1        = models.ForeignKey(User, related_name="Участник_1", verbose_name="Участник_1", on_delete=models.CASCADE)
     idUser2        = models.ForeignKey(User, related_name="Участник_2", verbose_name="Участник_2", on_delete=models.CASCADE)
+    lastMessage    = models.ForeignKey('MessageExpo', blank = True, related_name="Последнее_сообщение", verbose_name="Последнее_сообщение", null=True, on_delete=models.CASCADE)
 
     objects        = DialogManager()
 
@@ -1163,7 +1164,6 @@ class Dialog(models.Model):
             data = {'user1': user1, 'user2': user2}
 
             try:
-                print('Создаем новый диалог')
                 newDialog = Dialog.objects.create_dialog(data)
             except:
                 newDialog = None
@@ -1171,16 +1171,20 @@ class Dialog(models.Model):
         else:
             newDialog = dialog[0]
 
-        print('Получили диалог'+ str(newDialog))
-
         return newDialog
 
     def GetDialogs(user):
 
         dialogList  = []
-        dialogs = Dialog.objects.all().filter(Q(idUser1=user) | Q(idUser2=user))
+        dialogs = Dialog.objects.all().filter(Q(idUser1=user) | Q(idUser2=user)).select_related('lastMessage')
 
         for d in dialogs:
+
+            lastMessage = {}
+
+            if d.lastMessage != None:
+                lastMessage['date'] = d.lastMessage.created
+                lastMessage['text'] = d.lastMessage.text
 
             if (user == d.idUser1):
                 sender = UserType.GetElementByUser(d.idUser2)
@@ -1190,7 +1194,11 @@ class Dialog(models.Model):
 
             url = '/dialogs?id='+str(d.id)
 
-            message = {'id': d.id, 'url': url, 'sender': {'name': sender.name, 'foto': Attacment.getresizelink(sender.image)}}
+            message = {'id': d.id,
+                        'url': url,
+                        'sender': {'name': sender.name, 'foto': Attacment.getresizelink(sender.image)},
+                        'lastMessage': lastMessage
+                    }
 
             dialogList.append(message)
 
@@ -1201,6 +1209,16 @@ class Dialog(models.Model):
         data = Dialog.objects.all().filter(id = dialogID).filter(Q(idUser1=user) | Q(idUser2=user))
 
         return data.count() != 0
+
+    def refreshLastMessage(message):
+
+        try:
+            dialog = message.idDialog;
+            dialog.lastMessage = message
+            dialog.save()
+        except Exception as e:
+
+            print('не удалось обновить последнее сообщение диалога')
 
 class MessageExpoManager(models.Manager):
     def create_message(self, data):
@@ -1228,6 +1246,11 @@ class MessageExpo(models.Model):
 
     def __str__(self):
         return self.sender.username + '-' + self.recipient.username + ': '+self.subject
+
+    def save(self, *args, **kwargs):
+        super(MessageExpo, self).save(*args, **kwargs)  # Call the "real" save() method.
+
+        Dialog.refreshLastMessage(self)
 
     def getMessagesByDialog(user, idDialog=''):
 
