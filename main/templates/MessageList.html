@@ -3,86 +3,149 @@
 {% load i18n %}
 
 {% block content%}
-    <div class="container mt-3">
+    <div class="container mt-3 mb-3">
 
-        <div class="row mb-1 pl-3">
-            <div class="col-8">
-                <span class="article">Все сообщения</span>
-            </div>
-            <div class="col-4">
-                <div class="row" style="margin-right: -2em">
-                    <!--<div class="col-4" style="line-height: 3.4em;">
-                           <label for="inputsorting" class="text-menu">Сортировка</label>
-                       </div>
-                       <div class="col-8">
-                           <div class="btn-group mt-2" role="group" aria-label="Basic example">
-                             <button type="button" class="btn">По дате проведения</button>
-                             <button type="button" class="btn">По дате добавления</button>
-                           </div>
-                       </div>-->
+        <div class="card">
+
+            <div class="card-header">
+                <div class="row mb-1 pl-3">
+                    <div class="col-8">
+                        <span class="article article-sm">Сообщения: {{messageData.companion}}</span>
+                    </div>
                 </div>
             </div>
-
+            <div class="card-body table-responsive" style="max-width: 100%; max-height: 400px; overflow-x: auto;overflow-y: auto">
+                <table onLoad="windowscroll()" id = "MessageTable" name = "MessageTable" class="" style="width: 99%; white-space: nowrap;">
+                    <tbody id="MessageTBody">
+                        <tr hidden id="MessageTemplate">
+                            <td>
+                                <div class="row" style="padding-right: 10px; float: right; max-width: 400px; white-space: normal">
+                                    <div class="col alert alert-primary">
+                                        <span></span>
+                                        <div style="font-size: 8px"><span></span></div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% for n in messageData.messageList %}
+                        <tr>
+                            <td>
+                            {% if n.itsMe%}
+                                <div class="row" style="padding-right: 10px; float: right; min-width: 200px; max-width: 400px; white-space: normal">
+                                    <div class="col alert alert-primary">
+                                        {{n.text}}
+                                        <div style="font-size: 8px">{{n.created}}</div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="row" style="float: left; min-width: 200px; max-width: 400px; white-space: normal;">
+                                    <div class="col alert alert-secondary">
+                                        {{n.text}}
+                                        <div style="font-size: 8px">{{n.created}}</div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                        <tr id='MessagePosition'>
+                            <td>
+                                <p><a id = "position" name="position"></a></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+                <form method="POST" name="form" id="form">
+                    {% csrf_token %}
+                    <input id = "dialogID" type="" name="dialogID" hidden value={{messageData.dialogID}}>
+                    <div class="row">
+                        <div class="col col-9">
+                            <input id = "message" class="form-control" autocomplete="off" type="text" name="message" required="true">
+                        </div>
+                        <div class="col col-3">
+                            <button class = "btn btn-danger container-fluid" type="submit">Отправить</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
 
-        <table class="table table-hover">
-            <tbody>
-
-            {% if messageList|length > 0 %}
-
-                {% for n in messageList %}
-                    <tr>
-
-                        <td scope="row">
-
-                            <div class="row pl-3">
-
-                                <div class="col col-2">
-                                    <img class="mr-3" src="{{ n.sender.foto }}" style="width: 100%; max-width: 100px">
-                                </div>
-
-                                <div class="col col-10">
-                                    <div class="row">
-                                        <div class="col col-10">
-                                            <a href="{{ n.sender.url }}" class="text-danger article-sm" style="text-decoration: none">{{ n.sender.name|title }}</a>
-                                        </div>
-                                        <div class="col col-2">
-                                            <span class="color-dark-grey"> {{ n.date|date:"d M" }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <span class="text-menu txt-bold">{{ n.theme }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            {{ n.text }}
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        </td>
-                    </tr>
-                {% endfor %}
-
-            {% else %}
-                <div class="text-center" align="center">
-                    <div>
-                        <img src="{% get_attribute 'STATIC_URL' %}main/img/beer_1-grey.png">
-                    </div>
-                    <div>
-                        <span class="article article-sm"> Сообщений еще нет </span>
-                    </div>
-                    <div>
-                        <span> Здесь будет храниться вся ваша переписка с коллегами и работодателями </span>
-                    </div>      
-                </div>
-            {% endif %}
-            </tbody>
-        </table>
-
     </div>
+
+    <script>
+
+            window.onload = function() {
+                location.href = ('#position');
+              };
+
+            $('#form').validate({
+                submitHandler: function(form) {
+                    sendmessage();
+                }
+            }
+            );
+
+            function addNewMessage(status, text) {
+
+                let messagePosition = document.getElementById('MessagePosition');
+                let messageText     = document.getElementById('message');
+                let MessageTBody    = document.getElementById('MessageTBody');
+                let messageTemplate = document.getElementById('MessageTemplate').cloneNode(true);
+
+                messageText.value = '';
+
+                messageTemplate.id      = '';
+                messageTemplate.hidden  = false;
+
+                if (status) {
+                    data = JSON.parse(text);
+
+                    if (data['status']){
+                        messageTemplate.getElementsByTagName('span')[0].innerText = data['message']['text'];
+                        messageTemplate.getElementsByTagName('span')[1].innerText = data['message']['created'];
+                    }else{
+                        messageTemplate.getElementsByTagName('span')[0].innerText = data['errors'];
+                    }
+                }
+                else{
+                    messageTemplate.getElementsByTagName('span')[0].innerText = text;
+                }
+
+                MessageTBody.insertBefore(messageTemplate, messagePosition);
+                location.href = ('#position');
+            }
+
+            function sendmessage() {
+
+                var formData = new FormData();
+
+                //Собираем конечный JSON
+                var json = JSON.stringify({
+                    dialogID: document.getElementById("dialogID").value,
+                    message: document.getElementById("message").value,
+                });
+
+                // добавить к пересылке ещё пару ключ - значение
+                formData.append("data", json);
+                formData.append("csrfmiddlewaretoken", document.getElementsByName("csrfmiddlewaretoken")[0].value);
+
+                // отослать
+                var xhr = new XMLHttpRequest();
+
+                xhr.onreadystatechange = function() { // (3)
+                    if (xhr.readyState != 4) return;
+
+                    if (xhr.status != 200) {
+                        addNewMessage(false, xhr.statusText)
+                    } else {
+                        addNewMessage(true, xhr.responseText)
+                    }
+                }
+
+                xhr.open("POST", "{% get_attribute 'HOME_PAGE' %}dialogs/", true);
+                xhr.send(formData);
+            }
+        </script>
 {% endblock %}

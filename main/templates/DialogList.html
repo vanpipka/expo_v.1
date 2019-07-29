@@ -1,0 +1,71 @@
+{% extends "wrapper.html" %}
+{% load home_extras %}
+{% load i18n %}
+
+{% block content%}
+    <div class="container mt-3">
+
+        <div class="row mb-1 pl-3">
+            <div class="col-8">
+                <span class="article">Все диалоги</span>
+            </div>
+            <div class="col-4">
+                <div class="row" style="margin-right: -2em">
+                    <!--<div class="col-4" style="line-height: 3.4em;">
+                           <label for="inputsorting" class="text-menu">Сортировка</label>
+                       </div>
+                       <div class="col-8">
+                           <div class="btn-group mt-2" role="group" aria-label="Basic example">
+                             <button type="button" class="btn">По дате проведения</button>
+                             <button type="button" class="btn">По дате добавления</button>
+                           </div>
+                       </div>-->
+                </div>
+            </div>
+
+        </div>
+
+        <table class="table table-hover">
+            <tbody>
+            {% for n in messageList %}
+                <tr>
+
+                    <td scope="row">
+
+                        <div class="row pl-3">
+
+                            <div class="col col-2">
+                                <img class="mr-3" src="{{ n.sender.foto }}" style="width: 100%; max-width: 100px">
+                            </div>
+
+                            <div class="col col-10">
+                                <div class="row">
+                                    <div class="col col-10">
+                                        <a href="{{ n.url }}" class="text-danger article-sm" style="text-decoration: none">{{ n.sender.name|title }}</a>
+                                    </div>
+                                    <div class="col col-2">
+                                        <span class="color-dark-grey"> {{ n.date|date:"d M" }}</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="text-menu txt-bold">{{ n.theme }}</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        {{ n.text }}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+{% endblock %}
