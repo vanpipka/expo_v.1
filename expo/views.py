@@ -493,11 +493,11 @@ def dialogs(request):
 
         if request.method == 'GET':
             idDialog = request.GET.get('id', '')
-
+            idRecipient = request.GET.get('recipient', '')
             if idDialog != '':
 
-                #messageData = MessageExpo.getMessagesByDialog(request.user, idDialog)
-                messageData = {'status': True}
+                messageData = MessageExpo.getMessagesByDialog(request.user, idDialog)
+                #messageData = {'status': True}
                 if request.is_ajax():
 
                     return JsonResponse(messageData)
@@ -512,42 +512,49 @@ def dialogs(request):
 
                         return redirect('/forbiden')
 
+
+            elif idRecipient != '':
+
+                recipient = UserType.GetElementByID(idRecipient);
+                print(recipient)
+                #dialogList = Dialog.GetDialog(request.user, recipient)
+
             else:
 
                 dialogList = Dialog.GetDialogs(request.user)
 
                 if request.is_ajax():
 
-                    return JsonResponse({'status': True, 'dataset': []})#dialogList})
+                    return JsonResponse({'status': True, 'dataset': dialogList})
 
                 else:
 
-                    return render(request, 'DialogsList.html', {"messageList": []})#dialogList})
+                    return render(request, 'DialogsList.html', {"messageList": dialogList})
 
         elif request.method == 'POST':
 
             #print("Dialog POST: "+str(request.POST))
 
-            #if request.POST.__contains__('data'):
+            if request.POST.__contains__('data'):
 
-            #    data    = dict(json.loads(request.POST.__getitem__('data')))
-            #    answer  = MessageExpo.addMessageToDialog(request.user, data)
+                data    = dict(json.loads(request.POST.__getitem__('data')))
+                answer  = MessageExpo.addMessageToDialog(request.user, data)
 
             #    print("Data POST: "+str(data))
 
-            #    return JsonResponse(answer)
+                return JsonResponse(answer)
 
-            #else:
+            else:
 
-            #dialogID = request.POST.__getitem__('dialogID')
-            #message  = request.POST.__getitem__('message')
+                #dialogID = request.POST.__getitem__('dialogID')
+                #message  = request.POST.__getitem__('message')
 
-            #if message == '' or message == None:
-            #    return JsonResponse({'status': False, 'errors': ['Сообщение пустое']})
+                #if message == '' or message == None:
+                #    return JsonResponse({'status': False, 'errors': ['Сообщение пустое']})
 
-            #save message
+                #save message
 
-            return JsonResponse({'status': False, 'errors': ['Неверный формат запроса']})
+                return JsonResponse({'status': False, 'errors': ['Неверный формат запроса']})
 
     else:
 

@@ -778,16 +778,26 @@ class UserType(models.Model):
 
         return user
 
+    def GetUserByID(id):
+
+        elem = None
+
+        if validate_uuid4(id):
+
+            element = UserType.objects.all().filter(filter(Q(worker=user) | Q(company=user)))
+
+            if element.count() != 0:
+
+                elem = element[0].user 
+
+        return elem
+
     def GetElementByUser(user):
 
         elem = None
 
-        print(user)
-
         try:
             element = UserType.objects.get(user=user)
-
-            print(element)
 
             if element.type == 1:
                 elem = element.worker
@@ -1144,6 +1154,9 @@ class Dialog(models.Model):
             return None
 
     def GetDialog(user1, user2):
+
+        if user1 == None or user2 == None:
+            return None
 
         dialog = Dialog.objects.all().filter((Q(idUser1=user1) and Q(idUser2=user2)) | (Q(idUser1=user2) and Q(idUser2=user1)))
 
