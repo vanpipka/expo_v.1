@@ -496,7 +496,7 @@ def dialogs(request):
 
             if idDialog != '':
 
-                messageData = MessageExpo.getMessagesByDialog(request.user, idDialog)
+                #messageData = MessageExpo.getMessagesByDialog(request.user, idDialog)
 
                 if request.is_ajax():
 
@@ -506,7 +506,7 @@ def dialogs(request):
 
                     if (messageData['status']):
 
-                        return render(request, 'MessageList.html', {"messageData": messageData})
+                        return render(request, 'MessageList.html', {"messageData": []})#messageData})
 
                     else:
 
@@ -514,15 +514,15 @@ def dialogs(request):
 
             else:
 
-                dialogList = Dialog.GetDialogs(request.user)
+                #dialogList = Dialog.GetDialogs(request.user)
 
                 if request.is_ajax():
 
-                    return JsonResponse({'status': True, 'dataset': dialogList})
+                    return JsonResponse({'status': True, 'dataset': []})#dialogList})
 
                 else:
 
-                    return render(request, 'DialogsList.html', {"messageList": dialogList})
+                    return render(request, 'DialogsList.html', {"messageList": []})#dialogList})
 
         elif request.method == 'POST':
 
