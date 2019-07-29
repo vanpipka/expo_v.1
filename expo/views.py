@@ -557,7 +557,7 @@ def dialogs(request):
 
         else:
 
-            return return redirect('/forbiden')
+            return redirect('/forbiden')
 
 def messages(request):
 
