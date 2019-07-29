@@ -486,10 +486,10 @@ def messagesend(request):
 
 def dialogs(request):
 
-    #userAauthorized = request.user.is_authenticated
+    userAauthorized = request.user.is_authenticated
 
-    #if userAauthorized:
-    #    refreshLastOnline(request.user)
+    if userAauthorized:
+        refreshLastOnline(request.user)
 
     #    return render(request, 'DialogsList.html', {"messageList": []})
 
