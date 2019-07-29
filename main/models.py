@@ -1339,7 +1339,11 @@ class MessageExpo(models.Model):
         recipient   = UserType.GetUserFromWorker(worker=Comment.idWorker)
         dialog      = Dialog.GetDialog(Comment.idUser, recipient)
 
+        print('Сохраняем отзыв как сообщение')
+
         if dialog != None:
+
+            print('Сохраняем отзыв как сообщение-1')
 
             message = MessageExpo()
 
