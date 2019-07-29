@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect
 from datetime import datetime as datet
 from datetime import timezone
-from main.models import UserType, Company, Dialog, MessageExpo, News, JobOrder, UserType, Attacment, Message, Worker, Comments, ConfirmCodes
+from main.models import Company, Dialog, MessageExpo, News, JobOrder, UserType, Attacment, Message, Worker, Comments, ConfirmCodes
 from expo.DataSet import refreshLastOnline
 from expo.DataGet import getCityListFull, getProfessionList, gerWorkList
 from expo.Balance import getBalance
@@ -515,8 +515,8 @@ def dialogs(request):
 
             elif idRecipient != '':
 
-                recipient = 'ffff'#UserType.GetElementByID(idRecipient);
-                print(recipient)
+                recipient = UserType.GetElementByID(idRecipient);
+                print('recipient'+str(recipient))
                 #dialogList = Dialog.GetDialog(request.user, recipient)
 
             else:
