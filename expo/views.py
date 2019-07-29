@@ -522,7 +522,7 @@ def dialogs(request):
 
                 #else:
 
-                return render(request, 'DialogsList.html', {"messageList": []}#dialogList})
+                return render(request, 'DialogsList.html', {"messageList": []})#dialogList})
 
         elif request.method == 'POST':
 
@@ -670,8 +670,6 @@ def newmessage(request):
     content = {'recipient': {'type': type,'name': recipient.name, 'id': recipient.id, 'foto': Attacment.getresizelink(recipient.image)}}
 
     return render(request, 'NewMessage.html', content)
-
-
 
 def savejobs(request):
 
