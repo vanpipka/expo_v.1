@@ -510,11 +510,11 @@ def dialogs(request):
 
                     else:
 
-                return redirect('/forbiden')
+                        return redirect('/forbiden')
 
             else:
 
-                dialogList = {}#Dialog.GetDialogs(request.user)
+                #dialogList = Dialog.GetDialogs(request.user)
 
                 #if request.is_ajax():
 
@@ -522,7 +522,7 @@ def dialogs(request):
 
                 #else:
 
-                return render(request, 'DialogsList.html', {"messageList": dialogList})
+                return render(request, 'DialogsList.html', {"messageList": []}#dialogList})
 
         elif request.method == 'POST':
 
