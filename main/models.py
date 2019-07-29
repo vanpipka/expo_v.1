@@ -778,20 +778,6 @@ class UserType(models.Model):
 
         return user
 
-    def GetUserByID(id):
-
-        elem = None
-
-        if validate_uuid4(id):
-
-            element = UserType.objects.all().filter(filter(Q(worker=user) | Q(company=user)))
-
-            if element.count() != 0:
-
-                elem = element[0].user 
-
-        return elem
-
     def GetElementByUser(user):
 
         elem = None
@@ -799,13 +785,29 @@ class UserType(models.Model):
         try:
             element = UserType.objects.get(user=user)
 
+            print(element)
+
             if element.type == 1:
                 elem = element.worker
             else:
                 elem = element.company
 
         except ObjectDoesNotExist:
-            print('не удалось получить запись userType')
+            print('не удалось получить запись userType '+str(user))
+
+        return elem
+
+    def GetUserByID(id):
+
+        elem = None
+
+        if validate_uuid4(id):
+
+            element = UserType.objects.all().filter(Q(worker=id) | Q(company=id))
+
+            if element.count() != 0:
+
+                elem = element[0].user
 
         return elem
 
@@ -1139,7 +1141,6 @@ class Dialog(models.Model):
     id             = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     idUser1        = models.ForeignKey(User, related_name="Участник_1", verbose_name="Участник_1", on_delete=models.CASCADE)
     idUser2        = models.ForeignKey(User, related_name="Участник_2", verbose_name="Участник_2", on_delete=models.CASCADE)
-    created        = models.DateTimeField("Дата добавления", default=timezone.now)
 
     objects        = DialogManager()
 
@@ -1154,9 +1155,6 @@ class Dialog(models.Model):
             return None
 
     def GetDialog(user1, user2):
-
-        if user1 == None or user2 == None:
-            return None
 
         dialog = Dialog.objects.all().filter((Q(idUser1=user1) and Q(idUser2=user2)) | (Q(idUser1=user2) and Q(idUser2=user1)))
 
@@ -1218,6 +1216,7 @@ class MessageExpo(models.Model):
     sender          = models.ForeignKey(User, related_name= "ОтправительСообщения", verbose_name="Отправитель", on_delete=models.CASCADE)
     recipient       = models.ForeignKey(User, related_name= "ПолучательСообщения", verbose_name="Получатель", on_delete=models.CASCADE)
     text            = models.TextField("Текст")
+    subject         = models.TextField("Тема")
     read            = models.BooleanField("Прочитано", default=False)
     created         = models.DateTimeField("Дата добавления", default=timezone.now)
 
@@ -1234,24 +1233,27 @@ class MessageExpo(models.Model):
 
             if Dialog.ThereIsAccessToTheDialog(user, idDialog):
 
-                answer['status'] = True
-                answer['companion'] = None
-                answer['messageList'] = []
+                dialog = Dialog.GetCurrentDialog(idDialog)
 
-                messageList = MessageExpo.objects.all().filter(idDialog = idDialog).order_by('created')
+                if dialog != None:
 
-                for m in messageList:
-                    answer['messageList'].append({'id': str(m.id),
-                                                'text': m.text,
-                                                'subject': m.subject,
-                                                'itsMe': True if user == m.sender else False,
-                                                'created': m.created,
-                                                })
+                    answer['status'] = True
+                    answer['companion'] = UserType.GetElementByUser(dialog.idUser2 if user == dialog.idUser1 else dialog.idUser1).name
+                    answer['messageList'] = []
 
-                    if answer['companion'] == None:
-                        answer['companion'] = str(m.recipient.username if user == m.sender else m.sender.username)
+                    messageList = MessageExpo.objects.all().filter(idDialog = idDialog).order_by('created')
 
-                    print('message id: '+ str(m.id))
+                    for m in messageList:
+                        answer['messageList'].append({'id': str(m.id),
+                                                    'text': m.text,
+                                                    'subject': m.subject,
+                                                    'itsMe': True if user == m.sender else False,
+                                                    'created': m.created,
+                                                    })
+
+                else:
+
+                    answer['message'] = 'is not valid GUID'
 
             else:
 
@@ -1285,7 +1287,7 @@ class MessageExpo(models.Model):
                             'idDialog':     dialogObj,
                             'text':         message,
                             'sender':       user,
-                            'recipient':    dialogObj.idUser1 if user == dialogObj.idUser2 else dialogObj.idUser1
+                            'recipient':    dialogObj.idUser1 if user == dialogObj.idUser2 else dialogObj.idUser2
                         }
 
                 try:
