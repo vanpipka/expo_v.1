@@ -449,7 +449,7 @@ class News(models.Model):
     id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name        = models.CharField(max_length=100)
     description = models.TextField()
-    created     = models.DateTimeField("Дата добавления", auto_now_add=True)
+    created     = models.DateTimeField("Дата добавления", default=timezone.now)
     link        = models.CharField(max_length=100)
     image       = models.CharField(max_length=100)
     imagelink   = models.ForeignKey(Attacment, on_delete=models.CASCADE, default="00000000000000000000000000000000")
