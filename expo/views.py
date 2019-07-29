@@ -518,7 +518,7 @@ def dialogs(request):
                 recipient = UserType.GetElementByID(idRecipient);
                 print('recipient'+str(recipient))
                 #dialogList = Dialog.GetDialog(request.user, recipient)
-
+                return render(request, 'MessageList.html', {"messageData": []})
             else:
 
                 dialogList = Dialog.GetDialogs(request.user)
