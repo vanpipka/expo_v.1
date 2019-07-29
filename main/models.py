@@ -1128,6 +1128,7 @@ class WorkerRating(models.Model):
         workerRating.save()
 
 class DialogManager(models.Manager):
+
     def create_dialog(self, data):
 
         dialog = self.create(idUser1  = data['user1'],
@@ -1162,12 +1163,15 @@ class Dialog(models.Model):
             data = {'user1': user1, 'user2': user2}
 
             try:
+                print('Создаем новый диалог')
                 newDialog = Dialog.objects.create_dialog(data)
             except:
                 newDialog = None
 
         else:
             newDialog = dialog[0]
+
+        print('Получили диалог'+ str(newDialog))
 
         return newDialog
 

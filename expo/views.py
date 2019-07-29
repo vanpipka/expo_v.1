@@ -63,7 +63,6 @@ def adminexpo(request):
     else:
         return render(request, 'errors/403.html', None, None, status='403')
 
-
 def testtest(request):
     return render(request, 'testtest.html', {})
 
@@ -517,8 +516,10 @@ def dialogs(request):
                 recipient = UserType.GetUserByID(idRecipient)
                 dialog    = None
 
-                if recipient == None:
+                print('recipient: '+str(recipient))
 
+                if recipient == None:
+                    print('не нашли получателя')
                     return redirect('/servererror')
 
                 else:
@@ -526,7 +527,7 @@ def dialogs(request):
                     dialog = Dialog.GetDialog(request.user, recipient)
 
                 if dialog == None:
-
+                    print('не нашли диалог')
                     return redirect('/servererror')
 
                 else:
