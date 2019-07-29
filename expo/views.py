@@ -514,7 +514,7 @@ def dialogs(request):
 
             else:
 
-                #dialogList = Dialog.GetDialogs(request.user)
+                dialogList = Dialog.GetDialogs(request.user)
 
                 if request.is_ajax():
 
