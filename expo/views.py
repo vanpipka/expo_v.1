@@ -491,63 +491,7 @@ def dialogs(request):
     if userAauthorized:
         refreshLastOnline(request.user)
 
-        if request.method == 'GET':
-            idDialog = request.GET.get('id', '')
-
-            if idDialog != '':
-
-                messageData = MessageExpo.getMessagesByDialog(request.user, idDialog)
-
-                if request.is_ajax():
-
-                    return JsonResponse(messageData)
-
-                else:
-
-                    if (messageData['status']):
-
-                        return render(request, 'MessageList.html', {"messageData": messageData})
-
-                    else:
-
-                        return redirect('/forbiden')
-
-            else:
-
-                #dialogList = Dialog.GetDialogs(request.user)
-
-                #if request.is_ajax():
-
-                #    return JsonResponse({'status': True, 'dataset': dialogList})
-
-                #else:
-
-                return render(request, 'DialogsList.html', {"messageList": []})#dialogList})
-
-        elif request.method == 'POST':
-
-            print("Dialog POST: "+str(request.POST))
-
-            if request.POST.__contains__('data'):
-
-                data    = dict(json.loads(request.POST.__getitem__('data')))
-                answer  = MessageExpo.addMessageToDialog(request.user, data)
-
-                print("Data POST: "+str(data))
-
-                return JsonResponse(answer)
-
-            else:
-
-            #dialogID = request.POST.__getitem__('dialogID')
-            #message  = request.POST.__getitem__('message')
-
-            #if message == '' or message == None:
-            #    return JsonResponse({'status': False, 'errors': ['Сообщение пустое']})
-
-            #save message
-
-                return JsonResponse({'status': False, 'errors': ['Неверный формат запроса']})
+        return render(request, 'DialogsList.html', {"messageList": []})
 
     else:
 
