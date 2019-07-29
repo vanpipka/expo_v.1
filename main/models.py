@@ -1115,6 +1115,183 @@ class WorkerRating(models.Model):
 
         workerRating.save()
 
+class DialogManager(models.Manager):
+    def create_dialog(self, data):
+
+        dialog = self.create(idUser1  = data['user1'],
+                            idUser2    = data['user2'],
+                            )
+        # do something with the book
+        return dialog
+
+class Dialog(models.Model):
+
+    id             = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    idUser1        = models.ForeignKey(User, related_name="Участник_1", verbose_name="Участник_1", on_delete=models.CASCADE)
+    idUser2        = models.ForeignKey(User, related_name="Участник_2", verbose_name="Участник_2", on_delete=models.CASCADE)
+    created        = models.DateTimeField("Дата добавления", default=timezone.now)
+
+    objects        = DialogManager()
+
+    def __str__(self):
+        return str(self.id) +': '+ self.idUser1.username + '-' + self.idUser2.username
+
+    def GetCurrentDialog(dialogID):
+
+        try:
+            return (Dialog.objects.get(id=dialogID))
+        except Exception as e:
+            return None
+
+    def GetDialog(user1, user2):
+
+        dialog = Dialog.objects.all().filter((Q(idUser1=user1) and Q(idUser2=user2)) | (Q(idUser1=user2) and Q(idUser2=user1)))
+
+        if dialog.count() == 0:
+            data = {'user1': user1, 'user2': user2}
+
+            try:
+                newDialog = Dialog.objects.create_dialog(data)
+            except:
+                newDialog = None
+
+        else:
+            newDialog = dialog[0]
+
+        return newDialog
+
+    def GetDialogs(user):
+
+        dialogList  = []
+        dialogs = Dialog.objects.all().filter(Q(idUser1=user) | Q(idUser2=user))
+
+        for d in dialogs:
+
+            if (user == d.idUser1):
+                sender = UserType.GetElementByUser(d.idUser2)
+            else:
+                sender = UserType.GetElementByUser(d.idUser1)
+
+
+            url = '/dialogs?id='+str(d.id)
+
+            message = {'id': d.id, 'url': url, 'sender': {'name': sender.name, 'foto': Attacment.getresizelink(sender.image)}}
+
+            dialogList.append(message)
+
+        return dialogList
+
+    def ThereIsAccessToTheDialog(user, dialogID):
+
+        data = Dialog.objects.all().filter(id = dialogID).filter(Q(idUser1=user) | Q(idUser2=user))
+
+        return data.count() != 0
+
+class MessageExpoManager(models.Manager):
+    def create_message(self, data):
+
+        message = self.create(idDialog  = data['idDialog'],
+                            text        = data['text'],
+                            sender      = data['sender'],
+                            recipient   = data['recipient']
+                            )
+        # do something with the book
+        return message
+
+class MessageExpo(models.Model):
+
+    id              = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    idDialog        = models.ForeignKey(Dialog, related_name= "Dialog", verbose_name="Dialog", on_delete=models.CASCADE)
+    sender          = models.ForeignKey(User, related_name= "ОтправительСообщения", verbose_name="Отправитель", on_delete=models.CASCADE)
+    recipient       = models.ForeignKey(User, related_name= "ПолучательСообщения", verbose_name="Получатель", on_delete=models.CASCADE)
+    text            = models.TextField("Текст")
+    read            = models.BooleanField("Прочитано", default=False)
+    created         = models.DateTimeField("Дата добавления", default=timezone.now)
+
+    objects         = MessageExpoManager()
+
+    def __str__(self):
+        return self.sender.username + '-' + self.recipient.username + ': '+self.subject
+
+    def getMessagesByDialog(user, idDialog=''):
+
+        answer = {'status': False, 'dialogID': idDialog}
+
+        if validate_uuid4(idDialog):
+
+            if Dialog.ThereIsAccessToTheDialog(user, idDialog):
+
+                answer['status'] = True
+                answer['companion'] = None
+                answer['messageList'] = []
+
+                messageList = MessageExpo.objects.all().filter(idDialog = idDialog).order_by('created')
+
+                for m in messageList:
+                    answer['messageList'].append({'id': str(m.id),
+                                                'text': m.text,
+                                                'subject': m.subject,
+                                                'itsMe': True if user == m.sender else False,
+                                                'created': m.created,
+                                                })
+
+                    if answer['companion'] == None:
+                        answer['companion'] = str(m.recipient.username if user == m.sender else m.sender.username)
+
+                    print('message id: '+ str(m.id))
+
+            else:
+
+                answer['message'] = 'Доступ  запрещен'
+
+        else:
+            answer['message'] = 'is not valid GUID'
+
+        return answer
+
+    def addMessageToDialog(user, data):
+
+        dialogID = data.get('dialogID', None)
+        message  = data.get('message', None)
+
+        if dialogID == None or message == None:
+            return ({'status': False, 'errors': 'Не верный формат запроса'})
+
+        answer = {'status': False}
+
+        if validate_uuid4(dialogID):
+
+            dialogObj = Dialog.GetCurrentDialog(dialogID)
+
+            if dialogObj == None:
+                answer['errors'] = 'Не верный идентификатор диалога'
+
+            elif dialogObj.idUser1 == user or dialogObj.idUser2 == user:
+
+                data = {
+                            'idDialog':     dialogObj,
+                            'text':         message,
+                            'sender':       user,
+                            'recipient':    dialogObj.idUser1 if user == dialogObj.idUser2 else dialogObj.idUser1
+                        }
+
+                try:
+                    newMessage = MessageExpo.objects.create_message(data)
+
+                    answer['status'] = True
+                    answer['message'] = {'created': newMessage.created.date(), 'text': newMessage.text}
+                    #dt.strftime("%A, %d. %B %Y %I:%M%p")
+                except Exception as e:
+                    answer['errors'] = 'Не удалось сохранить сообщение'
+
+            else:
+
+                answer['errors'] = 'Доступ запрещен'
+
+        else:
+            answer['errors'] = 'Не верный идентификатор диалога'
+
+        return answer
 
 def professions_changed(sender, **kwargs):
     # Do something
