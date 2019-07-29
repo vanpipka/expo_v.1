@@ -577,7 +577,7 @@ def dialogs(request):
 
         else:
 
-            return render(request, 'errors/403.html', None, None, status='403')
+            return redirect('accounts/login/')
 
 def messages(request):
 

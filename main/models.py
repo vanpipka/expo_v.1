@@ -874,7 +874,7 @@ class Comments(models.Model):
     def save(self, *args, **kwargs):
         super(Comments, self).save(*args, **kwargs)  # Call the "real" save() method.
         Comments.setRating(self)
-        Message.SaveComment(self)
+        MessageExpo.saveComment(self)
 
     def setRating(comment):
 
@@ -1127,7 +1127,6 @@ class WorkerRating(models.Model):
 
         workerRating.save()
 
-
 class DialogManager(models.Manager):
     def create_dialog(self, data):
 
@@ -1176,7 +1175,7 @@ class Dialog(models.Model):
     def GetDialogs(user):
 
         dialogList  = []
-        dialogs = Dialog.objects.all().filter(Q(idUser1=user) | Q(idUser2=user)).select_related('lastMessage')
+        dialogs = Dialog.objects.all().filter(Q(idUser1=user) | Q(idUser2=user)).select_related('lastMessage').order_by('-lastMessage__created')
 
         for d in dialogs:
 
@@ -1334,6 +1333,22 @@ class MessageExpo(models.Model):
             answer['errors'] = 'Не верный идентификатор диалога'
 
         return answer
+
+    def saveComment(Comment):
+
+        recipient   = UserType.GetUserFromWorker(worker=Comment.idWorker)
+        dialog      = Dialog.GetDialog(Comment.idUser, recipient)
+
+        if dialog != None:
+
+            message = MessageExpo()
+
+            message.idDialog    = dialog
+            message.sender      = Comment.idUser
+            message.recipient   = recipient
+            message.text        = 'Добавлен отзыв: '+Comment.text+' ('+str(Comment.rating)+'зв.)'
+
+            message.save()
 
 def professions_changed(sender, **kwargs):
     # Do something

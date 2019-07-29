@@ -99,18 +99,19 @@
             );
 
             function addNewMessage(status, text) {
-                let emptyTemplate   = document.getElementById('EmptyTemplate');
+              {% if messageData.messageList|length == 0 %}
+                let emptyTemplate       = document.getElementById('EmptyTemplate');
+                emptyTemplate.hidden    = true;
+              {% endif %}
                 let messagePosition = document.getElementById('MessagePosition');
                 let messageText     = document.getElementById('message');
-                let MessageTBody    = document.getElementById('MessageTBody');
+                let messageTBody    = document.getElementById('MessageTBody');
                 let messageTemplate = document.getElementById('MessageTemplate').cloneNode(true);
 
                 messageText.value = '';
 
                 messageTemplate.id      = '';
                 messageTemplate.hidden  = false;
-
-                emptyTemplate.hidden  = true;
 
                 if (status) {
                     data = JSON.parse(text);
@@ -126,7 +127,7 @@
                     messageTemplate.getElementsByTagName('span')[0].innerText = text;
                 }
 
-                MessageTBody.insertBefore(messageTemplate, messagePosition);
+                messageTBody.insertBefore(messageTemplate, messagePosition);
                 location.href = ('#position');
             }
 
