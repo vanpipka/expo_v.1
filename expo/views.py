@@ -500,8 +500,8 @@ def dialogs(request):
             return JsonResponse({'status': False, 'errors': ['Доступ запрещен']})
 
         else:
-            return redirect('/forbiden')
-            #return render(request, 'errors/403.html', None, None, status='403')
+            #return redirect('/forbiden')
+            return render(request, 'errors/403.html', None, None, status='403')
 
 def messages(request):
 
