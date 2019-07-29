@@ -1129,6 +1129,7 @@ class Dialog(models.Model):
     id             = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     idUser1        = models.ForeignKey(User, related_name="Участник_1", verbose_name="Участник_1", on_delete=models.CASCADE)
     idUser2        = models.ForeignKey(User, related_name="Участник_2", verbose_name="Участник_2", on_delete=models.CASCADE)
+    created        = models.DateTimeField("Дата добавления", default=timezone.now)
 
     objects        = DialogManager()
 
@@ -1204,7 +1205,6 @@ class MessageExpo(models.Model):
     sender          = models.ForeignKey(User, related_name= "ОтправительСообщения", verbose_name="Отправитель", on_delete=models.CASCADE)
     recipient       = models.ForeignKey(User, related_name= "ПолучательСообщения", verbose_name="Получатель", on_delete=models.CASCADE)
     text            = models.TextField("Текст")
-    subject         = models.TextField("Тема")
     read            = models.BooleanField("Прочитано", default=False)
     created         = models.DateTimeField("Дата добавления", default=timezone.now)
 
