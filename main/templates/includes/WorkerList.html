@@ -56,7 +56,7 @@
 	                                    <span class="badge badge-primary float-right mt-3" style="font-family: sans-serif;">Онлайн</span>
 	                                {% else %}
 	                                    <div class="pt-2 text-right">
-	                                        <label for="onlyfoto" class="col-xs-2 control-label input-medium">был в сети {{ worker.lastonline|date:"d M" }}</label>
+	                                        <label for="onlyfoto" class="col-xs-2 control-label input-medium">был в сети {{ worker.lastonline|date:"j.m.Y f" }}</label>
 	                                    </div>
 	                                {% endif %}
 	                            </div>
