@@ -1185,7 +1185,7 @@ class Dialog(models.Model):
             lastMessage = {}
 
             if d.lastMessage != None:
-                lastMessage['date'] = d.lastMessage.created
+                lastMessage['date'] = d.lastMessage.created.strftime("%d.%m.%Y %H:%M")
                 lastMessage['text'] = d.lastMessage.text
 
             if (user == d.idUser1):
