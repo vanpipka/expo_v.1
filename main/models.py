@@ -1277,7 +1277,7 @@ class MessageExpo(models.Model):
                                                     'text': m.text,
                                                     'subject': m.subject,
                                                     'itsMe': True if user == m.sender else False,
-                                                    'created': m.created,
+                                                    'created': m.created.strftime("%d.%m.%Y %H:%M"),
                                                     })
 
                 else:
