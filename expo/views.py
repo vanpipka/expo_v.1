@@ -552,8 +552,7 @@ def dialogs(request):
 
                 data    = dict(json.loads(request.POST.__getitem__('data')))
                 answer  = MessageExpo.addMessageToDialog(request.user, data)
-
-                print("Data POST: "+str(data))
+                #print("Data POST: "+str(data))
 
                 return JsonResponse(answer)
 
