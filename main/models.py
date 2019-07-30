@@ -1323,7 +1323,7 @@ class MessageExpo(models.Model):
                     newMessage = MessageExpo.objects.create_message(data)
 
                     answer['status'] = True
-                    answer['message'] = {'id' = str(newMessage.id), 'created': newMessage.created.strftime("%d.%m.%Y %H:%M"), 'text': newMessage.text}
+                    answer['message'] = {'id': str(newMessage.id), 'created': newMessage.created.strftime("%d.%m.%Y %H:%M"), 'text': newMessage.text}
                 except Exception as e:
                     answer['errors'] = 'Не удалось сохранить сообщение'
 
