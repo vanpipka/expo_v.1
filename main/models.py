@@ -121,6 +121,8 @@ class Attacment(models.Model):
 
         d = base64data.partition(",")
 
+        аа = len(d)
+
         print("разделили по запятой. Количетсво: ")
 
         strOne = d[2]
