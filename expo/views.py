@@ -524,13 +524,20 @@ def dialogs(request):
 
                     dialog = Dialog.GetDialog(request.user, recipient)
 
-                if dialog == None:
+                if request.is_ajax():
 
-                    return redirect('/servererror')
-
+                    if dialog == None:
+                        return JsonResponse({'status': False, 'errors': 'не удалось определить диалог'})
+                    else:
+                        messageData = MessageExpo.getMessagesByDialog(request.user, dialog.id)
+                        return JsonResponse(messageData)
+                                           
                 else:
 
-                    return redirect('/dialogs/?id='+str(dialog.id))
+                    if dialog == None:
+                        return redirect('/servererror')
+                    else:
+                        return redirect('/dialogs/?id='+str(dialog.id))
 
             else:
 
