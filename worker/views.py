@@ -50,9 +50,14 @@ def saveSettings(request):
 
                         data = dict(json.loads(request.POST.__getitem__('data')))
                         setWorker(request.user, data)
+
                     except Exception as e:
+
                         print('Не удалось сохранить профиль')
-                        return JsonResponse({'status': False, 'errors': 'Не удалось сохранить профиль', 'csrfmiddlewaretoken': csrf.get_token(request)})
+                        if request.is_ajax():
+                            return JsonResponse({'status': False, 'errors': 'Не удалось сохранить профиль', 'csrfmiddlewaretoken': csrf.get_token(request)})
+                        else:
+                            return HttpResponse(settings.HOME_PAGE + 'servererror/')
 
                 if request.is_ajax():
 
