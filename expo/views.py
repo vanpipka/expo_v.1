@@ -524,6 +524,8 @@ def dialogs(request):
                     else:
                         return redirect('/servererror')
                 else:
+
+                    print('Ищем диалог: '+str(request.user) +'/'+str(recipient) )
                     dialog = Dialog.GetDialog(request.user, recipient)
 
                 if request.is_ajax():
