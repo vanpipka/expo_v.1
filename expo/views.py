@@ -513,31 +513,44 @@ def dialogs(request):
 
             elif idRecipient != '':
 
+                print('1')
+
                 recipient = UserType.GetUserByID(idRecipient)
                 dialog    = None
 
                 if recipient == None:
+                    print('2')
                     if request.is_ajax():
+                        print('3')
                         return JsonResponse({'status': False, 'errors': 'не удалось определить диалог'})
                     else:
                         return redirect('/servererror')
                 elif request.user == recipient:
+                    print('4')
                     if request.is_ajax():
+                        print('5')
                         return JsonResponse({'status': False, 'errors': 'нельзя писать самому себе'})
                     else:
                         return redirect('/servererror')
                 else:
+                    print('6')
                     dialog = Dialog.GetDialog(request.user, recipient)
 
                 if request.is_ajax():
 
+                    print('7')
+
                     if dialog == None:
+                        print('8')
                         return JsonResponse({'status': False, 'errors': 'не удалось определить диалог'})
                     else:
 
                         if (request.user == d.idUser1):
+
+                            print('9')
                             sender = UserType.GetElementByUser(d.idUser2)
                         else:
+                            print('10')
                             sender = UserType.GetElementByUser(d.idUser1)
 
                         return JsonResponse({'status': True,
