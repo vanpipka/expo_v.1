@@ -112,21 +112,26 @@ class Attacment(models.Model):
 
         print("Фото======================================================================")
 
-        if base64data.find('base64') == -1:
-            print("Нет ключа base64")
-            return ''
-        if base64data.find('image/') == -1:
-            print("Нет ключа image/")
-            return ''
+        if base64data.find('base64') != -1:
+            if base64data.find('base64') == -1:
+                print("Нет ключа base64")
+                return ''
+            if base64data.find('image/') == -1:
+                print("Нет ключа image/")
+                return ''
 
-        d = base64data.partition(",")
+                d = base64data.partition(",")
 
-        print("разделили по запятой. Количетсво: "+str(len(d)))
+            print("разделили по запятой. Количетсво: "+str(len(d)))
 
-        strOne = d[2]
-        strOne = strOne.encode()
-        strOne = b"=" + strOne
+            strOne = d[2]
+            strOne = strOne.encode()
+            strOne = b"=" + strOne
 
+        else:
+
+            strOne = base64data
+            
         your_media_root = '/opt/vseexpo/main/media/';#settings.MEDIA_ROOT
         directory = str(your_media_root)
 
@@ -155,13 +160,13 @@ class Attacment(models.Model):
                 fullresizepath = path.join(directory, 'attacmentresize', resizename)
                 print('5')
                 Attacment.scale_image(input_image_path=fullpath, output_image_path=fullresizepath)
-                print('6')
+                print('12')
                 attachment.resizePath = fullresizepath.replace(directory, '').replace('\\', '/')
 
         #except:
         #    attachment.path = ''
         #    attachment.resizePath = ''
-        print('7')
+        print('13')
         attachment.save()
 
         return attachment
@@ -171,9 +176,12 @@ class Attacment(models.Model):
                     width=150,
                     height=150
                     ):
-        original_image = Image.open(input_image_path)
-        w, h = original_image.size
 
+        print('6')
+        original_image = Image.open(input_image_path)
+        print('7')
+        w, h = original_image.size
+        print('8')
         if w > h:
             position = (w - h) / 2
             croped_image = original_image.crop((position, 0, w - position, h))
@@ -193,9 +201,11 @@ class Attacment(models.Model):
             # No width or height specified
             raise RuntimeError('Width or height required!')
 
+        print('9')
         croped_image.thumbnail(max_size, Image.ANTIALIAS)
+        print('10')
         croped_image.save(output_image_path)
-
+        print('11')
         return output_image_path
 
     def getresizelink(attach):
