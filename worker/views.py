@@ -44,9 +44,10 @@ def saveSettings(request):
 
                     print("Сохраняем рабочего")
 
-                    #print(request.POST.__getitem__('data'))
+                    print(request.POST.__getitem__('data'))
 
                     try:
+
                         data = dict(json.loads(request.POST.__getitem__('data')))
                         setWorker(request.user, data)
                     except Exception as e:
