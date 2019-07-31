@@ -513,15 +513,17 @@ def dialogs(request):
 
             elif idRecipient != '':
 
+                print('idRecipient: '+str(idRecipient))
+
                 recipient = UserType.GetUserByID(idRecipient)
                 dialog    = None
 
                 if recipient == None:
-
-                    return redirect('/servererror')
-
+                    if request.is_ajax():
+                        return JsonResponse({'status': False, 'errors': 'не удалось определить диалог'})
+                    else:
+                        return redirect('/servererror')
                 else:
-
                     dialog = Dialog.GetDialog(request.user, recipient)
 
                 if request.is_ajax():
