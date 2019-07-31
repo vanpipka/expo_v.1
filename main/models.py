@@ -1163,7 +1163,7 @@ class Dialog(models.Model):
         if user1 == user2:
             return None
 
-        dialog = Dialog.objects.all().filter((Q(idUser1=user1) and Q(idUser2=user2)) | (Q(idUser1=user2) and Q(idUser2=user1)))
+        dialog = Dialog.objects.all().filter(Q(idUser1=user1, idUser2=user2) | Q(idUser1=user2, idUser2=user1))
 
         print('GetDialog: count: '+str(dialog.count()))
 
