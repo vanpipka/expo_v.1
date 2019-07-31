@@ -513,7 +513,11 @@ def dialogs(request):
 
             elif idRecipient != '':
 
+                print('idRecipient: '+str(idRecipient))
+
                 recipient = UserType.GetUserByID(idRecipient)
+
+                print('recipient: '+str(recipient))
                 dialog    = None
 
                 if recipient == None:
@@ -527,6 +531,8 @@ def dialogs(request):
                     else:
                         return redirect('/servererror')
                 else:
+                    print('user: '+str(request.user))
+                    print('recipient: '+str(recipient))
                     dialog = Dialog.GetDialog(request.user, recipient)
 
                 if request.is_ajax():
