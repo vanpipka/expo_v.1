@@ -110,13 +110,18 @@ class Attacment(models.Model):
 
     def savefile(base64data, src = 'attacment', resizeit=False):
 
+        print("Фото======================================================================")
+
         if base64data.find('base64') == -1:
+            print("Нет ключа base64")
             return ''
         if base64data.find('image/') == -1:
+            print("Нет ключа image/")
             return ''
 
         d = base64data.partition(",")
-        print("Фото======================================================================")
+
+        print("разделили по запятой. Количетсво: "+str(b.count()))
 
         strOne = d[2]
         strOne = strOne.encode()
@@ -132,7 +137,7 @@ class Attacment(models.Model):
 
         attachment = Attacment()
 
-        print(fullpath)
+        print('Полный путь:' + fullpath)
 
         #try:
         if (True):
@@ -1157,15 +1162,10 @@ class Dialog(models.Model):
 
     def GetDialog(user1, user2):
 
-        print('GetDialog: user1: '+str(user1))
-        print('GetDialog: user2: '+str(user2))
-
         if user1 == user2:
             return None
 
         dialog = Dialog.objects.all().filter(Q(idUser1=user1, idUser2=user2) | Q(idUser1=user2, idUser2=user1))
-
-        print('GetDialog: count: '+str(dialog.count()))
 
         if dialog.count() == 0:
             data = {'user1': user1, 'user2': user2}
@@ -1261,18 +1261,13 @@ class MessageExpo(models.Model):
 
     def getMessagesByDialog(user, idDialog=''):
 
-        print('1')
-
         answer = {'status': False, 'dialogID': idDialog}
 
         if validate_uuid4(idDialog):
-            print('getMessagesByDialog/user: '+ str(user)+' /dialog: '+idDialog)
             if Dialog.ThereIsAccessToTheDialog(user, idDialog):
-                print('3')
                 dialog = Dialog.GetCurrentDialog(idDialog)
 
                 if dialog != None:
-                    print('4')
                     answer['status'] = True
                     answer['companion'] = UserType.GetElementByUser(dialog.idUser2 if user == dialog.idUser1 else dialog.idUser1).name
                     answer['messageList'] = []

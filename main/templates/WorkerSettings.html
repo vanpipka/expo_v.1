@@ -414,13 +414,13 @@
 
                 <div class="row mb-3">
                     <div class="col col-3">
-                     	<label for="id_freelance" class="col-xs-2 control-label input-medium">Фриланс</label>   
+                     	<label for="id_freelance" class="col-xs-2 control-label input-medium">Фриланс</label>
                     </div>
                     <div class="col col-2">
                         <input type="number" name = "freelance" class="form-control" id="id_freelance" placeholder="" value="">
                     </div>
                     <div class="col col-7">
-                        Удаленная работа вне штата для представителей творческих профессий, ИТ-сферы, рекламы. 
+                        Удаленная работа вне штата для представителей творческих профессий, ИТ-сферы, рекламы.
                     </div>
                 </div>
 
@@ -467,66 +467,6 @@
                 </div>
 
             </div>
-
-            <!-- ПОРТФОЛИО -->
-            <!--<div class="mb-3">
-                <label class="article">Портфолио, работы, файлы</label>
-
-                <div class="form-group form-control">
-                    <label for="id_portfolio" class="col-xs-2 control-label"><strong>Портфолио:</strong></label>
-                    <div class="container-fluid">
-                        <div class="d-flex flex-row" style="overflow-x: scroll;" id="portfolio_list">
-                            <div class="col-4">
-                                 <div class="card card-body" >
-                                     <div class="border-secondary " style="border: dashed">
-                                         <div class="file-upload btn pb-3" style="height:145px; margin-left: auto; margin-right: auto; width: 100%" >
-                                             <label>
-                                                 <input id = "finput_portfolio" type="file" name="file" onchange="setlocalfoto(this)">
-                                                 <span>Добавить файл</span>
-                                             </label>
-                                         </div>
-                                     </div>
-                                     <p></p>
-                                     <input name = "" class="form-control" id="filedescription" placeholder="Введите описание">
-                                 </div>
-                            </div>
-
-                            {% for s in worker.attachments %}
-                                <div class="col-4" id="card_{{s.id}}">
-                                    <div class="card card-body">
-                                        <div class="product-img" style="height: 150px">
-                                            <img id ="portfolio_url" style="max-height:150px; max-width: 100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block;" src="{{ s.resizeurl }}" alt="">
-                                        </div>
-                                        <p></p>
-                                        <span name = "" class="text-sm-center" id="filedescriptionspan">{{s.description}}</span>
-                                        <button type="button" id="{{s.id}}" class="btn btn-danger" style="position:absolute; top:0; right:0;" onclick="deleteAttachment(this)">Х</button>
-                                    </div>
-                                </div>
-                            {% endfor %}
-
-                            <div class="col-4" id="hidden_portfolio_card" hidden>
-                                <div class="card card-body">
-                                    <div class="product-img" style="height: 150px">
-                                        <img id ="portfolio_url" style="max-height:150px; max-width: 100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block;" src="" alt="">
-                                    </div>
-                                    <p></p>
-                                    <span name = "" class="text-sm-center" id="filedescriptionspan"></span>
-                                    <button id="" type="button" class="btn btn-danger" style="position:absolute; top:0; right:0;" onclick="deleteAttachment(this)">Х</button>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>-->
-
-            <!--<div class="alert alert-danger mb-3">
-                <label class="checkbox-container" readonly>
-                    <input class="" id="id_personaldataisallowed" value="True" type="checkbox" name="personaldataisallowed" checked>
-                    <span class="checkmark"></span>
-                    <label for="id_personaldataisallowed" class="col-xs-2 control-label input-medium">Я даю согласие на обработку персональных данных и понимаю, что мои данные будут переданы третьей стороне для проверки</label>
-                </label>
-            </div>-->
 
             <div class="alert alert-success">
                 <label class="checkbox-container">
@@ -676,25 +616,6 @@
         dateFormat: 'yy-mm-dd',
     });
 
-    function deleteAttachment(e) {
-
-        var eid     = "card_"+e.id;
-        var divFile = document.getElementById(eid);
-
-        divFile.hidden = true;
-
-        if (eid.indexOf('new') == -1) {
-            deletefiles.push(e.id);
-        }
-        else {
-            for (i=0; i < newfiles.length; i++) {
-                if (newfiles[i].id == e.id) {
-                    newfiles.splice(e, 1);
-                }
-            }
-
-        }
-    }
 
     function setlocalfoto(e) {
         console.log(e.id)
@@ -778,19 +699,14 @@
             city: document.getElementById("City").value,
             haveip: document.getElementById("id_haveIP").checked,
             workpermit: document.getElementById("id_workpermit").checked,
-            //description: document.getElementById("id_Description").value,
-            //education: document.getElementById("id_education").value,
             experiencedate: document.getElementById("id_Experiencewith").value,
             salary: document.getElementById("id_salary").value,
             experience: document.getElementById("id_experience").value,
             country: document.getElementById("id_nationality").value,
             birthday: document.getElementById("id_birthday").value,
             haveinstrument: document.getElementById("id_haveinstrument").checked,
-            //personaldataisallowed: document.getElementById("id_personaldataisallowed").checked,
             publishdata: document.getElementById("id_publishdata").checked,
             fotourl: document.getElementById("fotourl").src,
-            attachments: newfiles,
-            delattachments: deletefiles,
             professions: SelectedProf,
             readytotravel: document.getElementById("id_readytotravel").checked,
             haveshengen: document.getElementById("id_haveshengen").checked,
@@ -825,4 +741,3 @@
 
 </script>
 {% endblock %}
-

@@ -44,7 +44,7 @@ def saveSettings(request):
 
                     print("Сохраняем рабочего")
 
-                    print(request.POST.__getitem__('data'))
+                    #print(request.POST.__getitem__('data'))
 
                     data = dict(json.loads(request.POST.__getitem__('data')))
 
@@ -63,7 +63,7 @@ def saveSettings(request):
 
                     print("Сохраняем компанию")
 
-                    print(request.POST.__getitem__('data'))
+                    #print(request.POST.__getitem__('data'))
 
                     data = dict(json.loads(request.POST.__getitem__('data')))
 
