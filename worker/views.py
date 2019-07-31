@@ -47,8 +47,10 @@ def saveSettings(request):
                     print(request.POST.__getitem__('data'))
 
                     try:
-
+                        print("Перед json.loads")
                         data = dict(json.loads(request.POST.__getitem__('data')))
+                        print("После json.loads")
+
                         setWorker(request.user, data)
 
                     except Exception as e:
