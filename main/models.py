@@ -1157,10 +1157,15 @@ class Dialog(models.Model):
 
     def GetDialog(user1, user2):
 
+        print('GetDialog: user1: '+str(user1))
+        print('GetDialog: user2: '+str(user2))
+
         if user1 == user2:
             return None
 
         dialog = Dialog.objects.all().filter((Q(idUser1=user1) and Q(idUser2=user2)) | (Q(idUser1=user2) and Q(idUser2=user1)))
+
+        print('GetDialog: count: '+str(dialog.count()))
 
         if dialog.count() == 0:
             data = {'user1': user1, 'user2': user2}
