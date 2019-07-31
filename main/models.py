@@ -141,22 +141,27 @@ class Attacment(models.Model):
 
         #try:
         if (True):
+            print('1')
             with open(fullpath, "wb") as fh:
+                print('2')
                 fh.write(base64.decodebytes(strOne.strip()))
-
+                print('3')
                 attachment.path = fullpath.replace(directory, '').replace('\\', '/')
 
             if resizeit:
+                print('3')
                 resizename = str(uuid.uuid4()) + '.png'
+                print('4')
                 fullresizepath = path.join(directory, 'attacmentresize', resizename)
-
+                print('5')
                 Attacment.scale_image(input_image_path=fullpath, output_image_path=fullresizepath)
+                print('6')
                 attachment.resizePath = fullresizepath.replace(directory, '').replace('\\', '/')
 
         #except:
         #    attachment.path = ''
         #    attachment.resizePath = ''
-
+        print('7')
         attachment.save()
 
         return attachment
