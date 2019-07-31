@@ -1256,16 +1256,18 @@ class MessageExpo(models.Model):
 
     def getMessagesByDialog(user, idDialog=''):
 
+        print('1')
+
         answer = {'status': False, 'dialogID': idDialog}
 
         if validate_uuid4(idDialog):
-
+            print('2')
             if Dialog.ThereIsAccessToTheDialog(user, idDialog):
-
+                print('3')
                 dialog = Dialog.GetCurrentDialog(idDialog)
 
                 if dialog != None:
-
+                    print('4')
                     answer['status'] = True
                     answer['companion'] = UserType.GetElementByUser(dialog.idUser2 if user == dialog.idUser1 else dialog.idUser1).name
                     answer['messageList'] = []
