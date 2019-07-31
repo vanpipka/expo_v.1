@@ -1261,7 +1261,7 @@ class MessageExpo(models.Model):
         answer = {'status': False, 'dialogID': idDialog}
 
         if validate_uuid4(idDialog):
-            print('2')
+            print('getMessagesByDialog/user: '+ str(user)+' /dialog: '+idDialog)
             if Dialog.ThereIsAccessToTheDialog(user, idDialog):
                 print('3')
                 dialog = Dialog.GetCurrentDialog(idDialog)
