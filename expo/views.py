@@ -529,9 +529,16 @@ def dialogs(request):
                     if dialog == None:
                         return JsonResponse({'status': False, 'errors': 'не удалось определить диалог'})
                     else:
-                        messageData = MessageExpo.getMessagesByDialog(request.user, dialog.id)
-                        return JsonResponse(messageData)
-                                           
+
+                        if (request.user == d.idUser1):
+                            sender = UserType.GetElementByUser(d.idUser2)
+                        else:
+                            sender = UserType.GetElementByUser(d.idUser1)
+
+                        return JsonResponse({'status': True,
+                                            'dialog': {'id': dialog.id, 'sender': {'name': sender.name, 'foto': Attacment.getresizelink(sender.image)},}
+                                            })
+
                 else:
 
                     if dialog == None:
