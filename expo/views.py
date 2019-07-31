@@ -535,9 +535,9 @@ def dialogs(request):
                     else:
 
                         if (request.user == dialog.idUser1):
-                            sender = UserType.GetElementByUser(d.idUser2)
+                            sender = UserType.GetElementByUser(dialog.idUser2)
                         else:
-                            sender = UserType.GetElementByUser(d.idUser1)
+                            sender = UserType.GetElementByUser(dialog.idUser1)
 
                         return JsonResponse({'status': True,
                                             'dialog': {'id': dialog.id, 'sender': {'name': sender.name, 'foto': Attacment.getresizelink(sender.image)},}
