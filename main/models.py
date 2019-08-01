@@ -151,6 +151,7 @@ class Attacment(models.Model):
                 print('2')
 
                 b64decode = base64.b64decode(strOne.strip())
+                print('2.5')
                 fh.write(b64decode)
                 print('3')
                 attachment.path = fullpath.replace(directory, '').replace('\\', '/')
