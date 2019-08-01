@@ -119,11 +119,8 @@ class Attacment(models.Model):
 
             d = base64data.partition(",")
 
-            print("разделили по запятой: " + str(len(b)))
-
             strOne = d[2]
-            strOne = strOne.encode()
-            strOne = b"=" + strOne
+            strOne = b"=" + strOne.encode()
 
         else:
 
