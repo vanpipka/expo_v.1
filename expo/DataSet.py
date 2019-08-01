@@ -44,7 +44,7 @@ def setWorker(id, data):
 
     #обработаем переданную дату начала работы
     if data.__contains__('experiencedate'):
-        experiencewith = data.__getitem__('experiencedate')
+        experiencewith = str(data.__getitem__('experiencedate'))
         if experiencewith == '':
             worker.Experiencewith = datet.now()
         else:
@@ -255,4 +255,3 @@ def refreshLastOnline(userId):
 
     except:
         print("пользователь "+str(userId) + " не найден")
-
