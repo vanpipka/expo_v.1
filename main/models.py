@@ -116,9 +116,10 @@ class Attacment(models.Model):
 
             if base64data.find('image/') == -1:
                 return None
-                d = base64data.partition(",")
 
-            print("разделили по запятой.")
+            d = base64data.partition(",")
+
+            print("разделили по запятой: " + str(len(b)))
 
             strOne = d[2]
             strOne = strOne.encode()
