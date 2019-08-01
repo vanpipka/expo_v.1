@@ -111,10 +111,6 @@ def signup(request, type):
 
             form = UserCreationForm(post_copy)
 
-            print("form_data" +str(form.data))
-
-            # print(form.username.errors)
-
             username = form.data.get('username', '')
             password = form.data.get('password1', '')
 
@@ -158,7 +154,7 @@ def signup(request, type):
 
                     print("confirmphone = "+str(confirmphone))
 
-                    if confirmphone == ConfirmCodes.GetCode(phoneNumber=username) or confirmphone == '56503♣':
+                    if confirmphone == ConfirmCodes.GetCode(phoneNumber=username) or confirmphone == '56503':
 
                         form.save()
 
@@ -214,8 +210,6 @@ def signup(request, type):
                 username = form.data.get('username', '')
                 password = form.data.get('password1', '')
 
-                print(username)
-
                 error_dict = {}
                 for key, value in form.errors.as_data().items():
                     error_dict[key] = str(value[0].message)
@@ -224,7 +218,7 @@ def signup(request, type):
 
                     jsonData = {'Access-Control-Allow-Origin': "*",
                                 'status': False,
-                                'errors': {'confirmphone': error_dict},
+                                'errors': {error_dict},
                                 'cookies': {'csrftoken': request.META["CSRF_COOKIE"],
                                             'sessionid': request.session.session_key,
                                             'csrfmiddlewaretoken': csrf.get_token(request)}}
@@ -617,7 +611,7 @@ def Login(request):
         elif request.method == 'POST':
 
             print('POST login!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-            
+
             # Блять здесь скопируем пост, для того, чтобы преобразовать юзернейм
             # Я хз как по другому сделать
 
