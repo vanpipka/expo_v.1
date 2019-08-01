@@ -110,60 +110,38 @@ class Attacment(models.Model):
 
     def savefile(base64data, src = 'attacment', resizeit=False):
 
-        print("Фото======================================================================")
-
         if base64data.find('base64') != -1:
 
             if base64data.find('image/') == -1:
                 return None
-
             d = base64data.partition(",")
 
             strOne = d[2]
             strOne = b"=" + strOne.encode()
 
         else:
-
             strOne = base64data
 
         your_media_root = '/opt/vseexpo/main/media/';#settings.MEDIA_ROOT
-        directory = str(your_media_root)
-
-        name = str(uuid.uuid4()) + '.png'
-
-        #
-        fullpath = path.join(directory, src, name)
-
-        attachment = Attacment()
-
-        print('Полный путь:' + fullpath)
+        directory       = str(your_media_root)
+        name            = str(uuid.uuid4()) + '.png'
+        fullpath        = path.join(directory, src, name)
+        attachment      = Attacment()
 
         #try:
         if (True):
             print('1')
             with open(fullpath, "wb") as fh:
-                print('2')
-
                 b64decode = base64.b64decode(strOne.strip())
-                print('2.5')
                 fh.write(b64decode)
-                print('3')
                 attachment.path = fullpath.replace(directory, '').replace('\\', '/')
 
             if resizeit:
-                print('3')
                 resizename = str(uuid.uuid4()) + '.png'
-                print('4')
                 fullresizepath = path.join(directory, 'attacmentresize', resizename)
-                print('5')
                 Attacment.scale_image(input_image_path=fullpath, output_image_path=fullresizepath)
-                print('12')
                 attachment.resizePath = fullresizepath.replace(directory, '').replace('\\', '/')
 
-        #except:
-        #    attachment.path = ''
-        #    attachment.resizePath = ''
-        print('13')
         attachment.save()
 
         return attachment
@@ -174,11 +152,8 @@ class Attacment(models.Model):
                     height=150
                     ):
 
-        print('6')
         original_image = Image.open(input_image_path)
-        print('7')
         w, h = original_image.size
-        print('8')
         if w > h:
             position = (w - h) / 2
             croped_image = original_image.crop((position, 0, w - position, h))
@@ -198,11 +173,9 @@ class Attacment(models.Model):
             # No width or height specified
             raise RuntimeError('Width or height required!')
 
-        print('9')
         croped_image.thumbnail(max_size, Image.ANTIALIAS)
-        print('10')
         croped_image.save(output_image_path)
-        print('11')
+
         return output_image_path
 
     def getresizelink(attach):
