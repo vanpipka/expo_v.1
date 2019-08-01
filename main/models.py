@@ -131,7 +131,7 @@ class Attacment(models.Model):
         else:
 
             strOne = base64data
-            
+
         your_media_root = '/opt/vseexpo/main/media/';#settings.MEDIA_ROOT
         directory = str(your_media_root)
 
@@ -149,7 +149,9 @@ class Attacment(models.Model):
             print('1')
             with open(fullpath, "wb") as fh:
                 print('2')
-                fh.write(base64.decodebytes(strOne.strip()))
+
+                b64decode = base64.b64decode(strOne.strip())
+                fh.write(b64decode)
                 print('3')
                 attachment.path = fullpath.replace(directory, '').replace('\\', '/')
 
