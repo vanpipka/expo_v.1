@@ -113,16 +113,12 @@ class Attacment(models.Model):
         print("Фото======================================================================")
 
         if base64data.find('base64') != -1:
-            if base64data.find('base64') == -1:
-                print("Нет ключа base64")
-                return ''
-            if base64data.find('image/') == -1:
-                print("Нет ключа image/")
-                return ''
 
+            if base64data.find('image/') == -1:
+                return None
                 d = base64data.partition(",")
 
-            print("разделили по запятой. Количетсво: "+str(len(d)))
+            print("разделили по запятой.")
 
             strOne = d[2]
             strOne = strOne.encode()
