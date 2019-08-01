@@ -125,8 +125,6 @@ def signup(request, type):
 
                 confirmphone = request.POST.get('confirmphone', [])
 
-                print('2!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-
                 if len(confirmphone) == 0:
 
                     ConfirmCodes.AddCode(phoneNumber=username, send=True)
@@ -151,8 +149,6 @@ def signup(request, type):
                         return render(request, signup_url, {'form': form, 'username': username, 'password1': password, 'password2': password, 'confirmphone': True, 'personaldataisallowed': True})
 
                 else:
-
-                    print("confirmphone = "+str(confirmphone))
 
                     if confirmphone == ConfirmCodes.GetCode(phoneNumber=username) or confirmphone == '56503':
 
@@ -184,7 +180,7 @@ def signup(request, type):
 
                             jsonData = {'Access-Control-Allow-Origin': "*",
                                         'status': False,
-                                        'errors': {'confirmphone': error_dict},
+                                        'errors': error_dict,
                                         'cookies': {'csrftoken': request.META["CSRF_COOKIE"],
                                                     'sessionid': request.session.session_key,
                                                     'csrfmiddlewaretoken': csrf.get_token(request)}}
@@ -218,7 +214,7 @@ def signup(request, type):
 
                     jsonData = {'Access-Control-Allow-Origin': "*",
                                 'status': False,
-                                'errors': {error_dict},
+                                'errors': error_dict,
                                 'cookies': {'csrftoken': request.META["CSRF_COOKIE"],
                                             'sessionid': request.session.session_key,
                                             'csrfmiddlewaretoken': csrf.get_token(request)}}
