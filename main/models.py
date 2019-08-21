@@ -545,7 +545,7 @@ class JobOrder(models.Model):
                     if response_array.count(e['jobOrder_id']) == 0:
                         response_array.append(e['jobOrder_id'])
 
-        objects = list(JobOrder.objects.all().select_related('city').select_related('company').order_by("-created").values('id', 'responseCount', 'description', 'date', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name'))
+        objects = list(JobOrder.objects.all().select_related('city').select_related('company').order_by("-created").values('id', 'responseCount', 'description', 'date', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name', 'company__image'))
 
         id_jobs = []
 
@@ -559,6 +559,8 @@ class JobOrder(models.Model):
         print(jobComposition)
 
         for e in objects:
+
+            e['photo'] = 'foto': Attacment.getresizelink(e.company__image)
 
             if (userType != 1):
                 e['response_is_available'] = 2      #ничего не выводить
