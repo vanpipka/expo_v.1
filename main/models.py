@@ -559,8 +559,11 @@ class JobOrder(models.Model):
         print(jobComposition)
 
         for e in objects:
-
-            e['photo'] = Attacment.getresizelink(e.company__image)
+            
+            try:
+                e['photo'] = Attacment.getresizelink(Attacment.objects.get(id=e['company__image']))
+            except:
+                e['photo'] = '';
 
             if (userType != 1):
                 e['response_is_available'] = 2      #ничего не выводить
