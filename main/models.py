@@ -560,7 +560,7 @@ class JobOrder(models.Model):
 
         for e in objects:
 
-            e['photo'] = 'foto': Attacment.getresizelink(e.company__image)
+            e['photo'] = Attacment.getresizelink(e.company__image)
 
             if (userType != 1):
                 e['response_is_available'] = 2      #ничего не выводить
