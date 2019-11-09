@@ -197,7 +197,7 @@ def adminexponews(request):
             if request.POST.__contains__('data'):
                 data = dict(json.loads(request.POST.__getitem__('data')))
 
-                #Comments.SetAdminData(data)
+                News.SetAdminData(data)
 
                 return HttpResponse(settings.HOME_PAGE + 'adminexpo/news/')
     else:

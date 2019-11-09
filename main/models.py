@@ -466,6 +466,18 @@ class News(models.Model):
 
         return objects
 
+    def SetAdminData(data):
+
+        try:
+            worker = News.objects.get(id = data.get("id"))
+
+            worker.block = data.get("block")
+
+            worker.save()
+
+        except:
+            print('не удалось сохранить работника')
+
     def SaveResponse(user, data):
 
         if user.is_superuser:
