@@ -375,14 +375,14 @@ def savenews(request):
     print('savenews2')
     if request.user.is_authenticated and request.user.is_superuser:
         print('savenews3')
-        print(request.POST.__getitem__('data'))
+
         print('savenews4')
         if request.method == "POST":
             print('savenews5')
             if request.POST.__contains__('data'):
 
                 print("Сохраняем новую новость")
-
+                print(request.POST.__getitem__('data'))
                 #{"name":"1","description":"3","link":"2"}
                 data = dict(json.loads(request.POST.__getitem__('data')))
 
