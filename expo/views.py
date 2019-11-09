@@ -107,7 +107,8 @@ def adminexpocompanys(request):
                                     'block': e.block,
                                     'email': e.emailaddress,
                                     'phone': e.phonenumber,
-                                    'vatnumber': e.vatnumber
+                                    'vatnumber': e.vatnumber,
+                                    'url': '/company/?id='+str(e.id)
                                     })
 
             return render(request, 'adminexpo/adminexpocompanys.html', {"dataset": dataset})
