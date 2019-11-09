@@ -168,6 +168,48 @@ def adminexpocomments(request):
         else:
             return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)
 
+def adminexponews(request):
+
+    userAauthorized = request.user.is_authenticated
+
+    if userAauthorized:
+        refreshLastOnline(request.user)
+
+    if request.user.is_superuser:
+        if request.method == "GET":
+
+            query = Comments.objects.all().filter().select_related('idUser').select_related('idWorker').select_related(
+                'idProf').order_by("-created")
+            dataset = []
+
+            for e in query:
+                dataset.append({'text': e.text,
+                                'id': e.id,
+                                'user': {'name': e.idUser.username, 'id': e.idUser.id, 'url': '/worker/info?id='+str(e.idUser.id)},
+                                'worker': {'name': e.idWorker.name, 'id': e.idWorker.id, 'url': '/worker/info?id='+str(e.idWorker.id)},
+                                'rating': e.rating,
+                                'profession': e.idProf.name,
+                                'moderation': e.moderation,
+                                'date': e.created
+                                })
+
+            return render(request, 'adminexpo/adminexpocomments.html', {"dataset": dataset})
+        else:
+
+            print(request.POST)
+
+            if request.POST.__contains__('data'):
+                data = dict(json.loads(request.POST.__getitem__('data')))
+
+                Comments.SetAdminData(data)
+
+                return HttpResponse(settings.HOME_PAGE + 'adminexpo/comments/')
+    else:
+        if request.method == "GET":
+            return render(request, 'errors/403.html', None, None, status='403')
+        else:
+            return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)
+
 def adminexpoworkers(request):
 
     userAauthorized = request.user.is_authenticated
