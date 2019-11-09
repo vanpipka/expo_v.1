@@ -142,7 +142,7 @@ def adminexpocomments(request):
             for e in query:
                 dataset.append({'text': e.text,
                                 'id': e.id,
-                                'user': {'name': e.idUser.username, 'id': e.idUser.id},
+                                'user': {'name': e.idUser.username, 'id': e.idUser.id, 'url': '/worker/info?id='+e.idUser.id},
                                 'worker': {'name': e.idWorker.name, 'id': e.idWorker.id},
                                 'rating': e.rating,
                                 'profession': e.idProf.name,

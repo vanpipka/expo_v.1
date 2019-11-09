@@ -29,7 +29,7 @@
                             <td style="width: 5px">{{ forloop.counter }} </td>
                             <td><a href="{{ comment.user.url }}" class="text-danger"> {{comment.user.name}}</a></td>
                             <td><a href="{{ comment.worker.url }}" class="text-danger"> {{comment.worker.name}}</a></td>
-                            <td> {{comment.date}} </td>
+                            <td>{{ comment.date|date:"j.m.Y f" }}</td>
                             <td>{{ comment.text }}</td>
                             <td>{{ comment.rating }}</td>
                             <td>{{ comment.profession }}</td>
