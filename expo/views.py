@@ -146,7 +146,8 @@ def adminexpocomments(request):
                                 'worker': {'name': e.idWorker.name, 'id': e.idWorker.id},
                                 'rating': e.rating,
                                 'profession': e.idProf.name,
-                                'moderation': e.moderation
+                                'moderation': e.moderation,
+                                'date': e.created
                                 })
 
             return render(request, 'adminexpo/adminexpocomments.html', {"dataset": dataset})
