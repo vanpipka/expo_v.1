@@ -442,6 +442,7 @@ class News(models.Model):
     created     = models.DateTimeField("Дата добавления", default=timezone.now)
     link        = models.CharField(max_length=100)
     image       = models.CharField(max_length=100)
+    block       = models.BooleanField(default=False)
     imagelink   = models.ForeignKey(Attacment, on_delete=models.CASCADE, default="00000000000000000000000000000000")
 
     def __str__(self):
@@ -449,7 +450,7 @@ class News(models.Model):
 
     def GetActual(self, position_begin=None, position_end=None):
 
-        objects = News.objects.all().order_by("-created")
+        objects = News.objects.all().filter(block=False).order_by("-created")
 
         if position_begin != None and position_end != None:
             objects = objects[position_begin: position_end]
@@ -559,7 +560,7 @@ class JobOrder(models.Model):
         print(jobComposition)
 
         for e in objects:
-            
+
             try:
                 e['photo'] = Attacment.getresizelink(Attacment.objects.get(id=e['company__image']))
             except:
