@@ -178,22 +178,18 @@ def adminexponews(request):
     if request.user.is_superuser:
         if request.method == "GET":
 
-            query = Comments.objects.all().filter().select_related('idUser').select_related('idWorker').select_related(
-                'idProf').order_by("-created")
+            query =News.objects.all().order_by("-created")
             dataset = []
 
             for e in query:
-                dataset.append({'text': e.text,
+                dataset.append({'name': e.name,
                                 'id': e.id,
-                                'user': {'name': e.idUser.username, 'id': e.idUser.id, 'url': '/worker/info?id='+str(e.idUser.id)},
-                                'worker': {'name': e.idWorker.name, 'id': e.idWorker.id, 'url': '/worker/info?id='+str(e.idWorker.id)},
-                                'rating': e.rating,
-                                'profession': e.idProf.name,
-                                'moderation': e.moderation,
-                                'date': e.created
+                                'description': e.description,
+                                'created': e.created,
+                                'link': e.link,
+                                'block': e.block
                                 })
-
-            return render(request, 'adminexpo/adminexpocomments.html', {"dataset": dataset})
+            return render(request, 'adminexpo/adminexponews.html', {"dataset": dataset})
         else:
 
             print(request.POST)
@@ -201,9 +197,9 @@ def adminexponews(request):
             if request.POST.__contains__('data'):
                 data = dict(json.loads(request.POST.__getitem__('data')))
 
-                Comments.SetAdminData(data)
+                #Comments.SetAdminData(data)
 
-                return HttpResponse(settings.HOME_PAGE + 'adminexpo/comments/')
+                return HttpResponse(settings.HOME_PAGE + 'adminexpo/news/')
     else:
         if request.method == "GET":
             return render(request, 'errors/403.html', None, None, status='403')

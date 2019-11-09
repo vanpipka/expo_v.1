@@ -13,11 +13,10 @@
                 <thead class="thead-default">
                 <tr>
                     <th style="width: 5px"></th>
-                    <th>ФИО</th>
-                    <th>Номер телефона</th>
-                    <th>Email</th>
-                    <th>Проверка пройдена</th>
-                    <th>Проверка ФСО</th>
+                    <th>Название</th>
+                    <th>Описание</th>
+                    <th>Дата создания</th>
+                    <th>Ссылка</th>
                     <th>Заблокирован</th>
                     <th>Действия</th>
                 </tr>
@@ -26,11 +25,10 @@
                 {% for worker in dataset %}
                         <tr id="tr_{{ forloop.counter }}">
                             <td style="width: 5px">{{ forloop.counter }} </td>
-                            <td><a href="{{ worker.url }}" class="text-danger"> {{worker.name}} {{worker.surname}}</a></td>
-                            <td>{{worker.phonenumber}}</td>
-                            <td>{{worker.emailaddress}}</td>
-                            <td><input id = "datacheck_{{worker.id}}" type="checkbox" {% if worker.datacheck %}checked{% endif %} hidden>{% if worker.datacheck %}<i id = "i_datacheck_{{worker.id}}" class="text-success fa fa-check" aria-hidden="true"></i>{% endif %}</td>
-                            <td><input id = "fsocheck_{{worker.id}}" type="checkbox" {% if worker.fsocheck %}checked{% endif %} hidden>{% if worker.fsocheck %}<i id = "i_fsocheck_{{worker.id}}" class="text-success fa fa-check" aria-hidden="true"></i>{% endif %}</td>
+                            <td>{{worker.name}}</td>
+                            <td>{{worker.description}}</td>
+                            <td>{{worker.creater|date:"j.m.Y f"}}</td>
+                            <td><a href="{{ comment.link }}" class="text-danger"> {{ comment.link }} </a></td>
                             <td><input id = "block_{{worker.id}}" type="checkbox" {% if worker.block %}checked{% endif %} hidden>{% if worker.block %}<i id = "i_fsocheck_{{worker.id}}" class="text-danger fa fa-check" aria-hidden="true"></i>{% endif %}</td>
                             <td>
                                 <button type="button" id = "edit_{{worker.id}}" onclick=edit_tr("{{ worker.id }}")>
