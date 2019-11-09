@@ -368,16 +368,17 @@ def news(request):
     return render(request, 'NewsList.html', {"newsList": News.GetActual(News)})
 
 def savenews(request):
-
+    print('savenews1')
     if request.user.is_authenticated:
+
         refreshLastOnline(request.user)
-
+    print('savenews2')
     if request.user.is_authenticated and request.user.is_superuser:
-
+        print('savenews3')
         print(request.POST.__getitem__('data'))
-
+        print('savenews4')
         if request.method == "POST":
-
+            print('savenews5')
             if request.POST.__contains__('data'):
 
                 print("Сохраняем новую новость")
@@ -406,6 +407,8 @@ def savenews(request):
                     return HttpResponse(settings.HOME_PAGE + 'servererror/', status=500)
 
         else:
+
+            print('savenews6')
             if request.is_ajax():
 
                 return HttpResponse(
