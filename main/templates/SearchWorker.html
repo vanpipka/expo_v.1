@@ -165,7 +165,7 @@
                             </label>
                         </div>-->
 
-                        
+
 
                         <!--<div class = "popup-block">
                             <input type="checkbox" name="haveinstrument" id="haveinstrument" value="True" {% if searchproperty.haveinstrument == True %}checked{% endif %} onclick="setpopup(this)">
@@ -515,8 +515,20 @@
         </div>
 
         <div class="col col-12 col-sm-12 col-md-7 col-lg-8"  id = 'workerscontainer'>
+          {% if user.is_authenticated %}
+          {% else %}
 
-            {% include "includes/WorkerList.html" %}
+                    <div class="text-center" align="center">
+                     <div>
+                       <span class="article article-sm"> Режим ограниченного просмотра </span>
+                     </div>
+                     <div>
+                       <span> Чтобы получить полную информацию о специалистах <a class="text-danger article-sm" href="/accounts/login/">зарегистрируйтесь</a> на сайте</span>
+                     </div>
+                   </div>
+
+          {% endif %}
+          {% include "includes/WorkerList.html" %}
 
         </div>
 
