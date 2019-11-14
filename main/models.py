@@ -839,6 +839,8 @@ class ConfirmCodes(models.Model):
 
     def AddCode(phoneNumber, send = False):
 
+        print("AddCode")
+        
         phoneNumber = phoneNumber.replace(' ', '')
         phoneNumber = phoneNumber.replace(')', '')
         phoneNumber = phoneNumber.replace('(', '')
