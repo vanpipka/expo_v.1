@@ -293,18 +293,21 @@ def showWorker(request):
 
         return render(request, 'errors/404.html', status=404)
 
-    if request.method == "GET":
-
-        commentForm = CommentForm()
-
-    workerList  = gerWorkList(idWorker=[id], userAauthorized=userAauthorized, its_superuser=request.user.is_superuser)
-    comments    = getComments(idWorker=id)
-
-    print("Ответ:" + str(len(workerList)))
-    if len(workerList) == 0:
-        return render(request, 'errors/404.html', status=404)
+    if userAauthorized != True:
+        return render(request, 'errors/405.html', status=403)        
     else:
-        return render(request, 'Worker.html', {"worker": workerList[0], "commentForm": commentForm, "comments": comments, "userAauthorized": userAauthorized})
+        if request.method == "GET":
+
+            commentForm = CommentForm()
+
+        workerList  = gerWorkList(idWorker=[id], userAauthorized=userAauthorized, its_superuser=request.user.is_superuser)
+        comments    = getComments(idWorker=id)
+
+        print("Ответ:" + str(len(workerList)))
+        if len(workerList) == 0:
+            return render(request, 'errors/404.html', status=404)
+        else:
+            return render(request, 'Worker.html', {"worker": workerList[0], "commentForm": commentForm, "comments": comments, "userAauthorized": userAauthorized})
 
 def showWorkersJson(request):
 
