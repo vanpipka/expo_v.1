@@ -839,7 +839,7 @@ class ConfirmCodes(models.Model):
 
     def AddCode(phoneNumber, send = False):
 
-        phoneNumber = phoneNumberы.replace(' ', '')
+        phoneNumber = phoneNumber.replace(' ', '')
         phoneNumber = phoneNumber.replace(')', '')
         phoneNumber = phoneNumber.replace('(', '')
         phoneNumber = phoneNumber.replace('-', '')
