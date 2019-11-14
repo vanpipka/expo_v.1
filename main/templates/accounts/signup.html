@@ -71,10 +71,9 @@
                 <div class="form-group row">
                     <div class="col col-6"></div>
                       {% if confirmphone %}
-                        <a style="border-radius: 0px" class="btn btn-light container-fluid txt-color-dark" href="">Отправить еще раз</a>
+                        <button class="btn btn-light container-fluid txt-color-dark" onclick="sendCode()">Получить код повторно</button>
                       {% endif %}
                     <div class="col col-6">
-
                         <button type="submit" class="btn btn-danger container-fluid">Зарегистрироваться</button>
                     </div>
                 </div>
@@ -95,6 +94,23 @@
         {% if confirmphone %}
 
         {% endif %}
+
+        function sendCode() {
+            var xhr = new XMLHttpRequest();
+
+            xhr.onreadystatechange = function() { // (3)
+                if (xhr.readyState != 4) return;
+
+                if (xhr.status != 200) {
+                    location.href = (xhr.responseText);
+                } else {
+                    location.href = (xhr.responseText);
+                }
+            }
+
+            xhr.open("GET", "/sendsms/?phone="+document.getElementById("id_username").value, true);
+            xhr.send();
+        }
 
     </script>
 

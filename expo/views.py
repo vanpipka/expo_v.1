@@ -86,6 +86,15 @@ def sendsms(request):
         return HttpResponse(settings.HOME_PAGE + 'success/', status=200)
 
     else:
+
+        phone = request.GET.get("phone", "")
+
+        print(phone)
+
+        if phone != "":
+            ConfirmCodes.AddCode(phoneNumber=phone, sendMessage=True)
+            return HttpResponse(settings.HOME_PAGE + 'success/', status=200)
+            
         return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)
 
 def adminexpocompanys(request):
