@@ -67,7 +67,7 @@ def testtest(request):
     return render(request, 'testtest.html', {})
 
 def sendsms(request):
-
+    print('запрос на отправку смс')
     userAauthorized = request.user.is_authenticated
 
     if userAauthorized:
@@ -80,7 +80,7 @@ def sendsms(request):
         print(phone)
 
         if phone != "":
-
+        
             ConfirmCodes.AddCode(phoneNumber=phone)#, sendMessage=True)
 
         return HttpResponse(settings.HOME_PAGE + 'success/', status=200)
@@ -94,7 +94,7 @@ def sendsms(request):
         if phone != "":
             ConfirmCodes.AddCode(phoneNumber=phone, sendMessage=True)
             return HttpResponse(settings.HOME_PAGE + 'success/', status=200)
-            
+
         return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)
 
 def adminexpocompanys(request):
