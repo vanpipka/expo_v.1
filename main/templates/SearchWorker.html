@@ -517,7 +517,10 @@
         <div class="col col-12 col-sm-12 col-md-7 col-lg-8"  id = 'workerscontainer'>
           {% if user.is_authenticated %}
           {% else %}
-
+          <table class="table table-hover">
+              <tbody>
+                <tr style="background-color: pink">
+                  <td>
                     <div class="text-center" align="center">
                      <div>
                        <span class="article article-sm"> Режим ограниченного просмотра </span>
@@ -526,7 +529,10 @@
                        <span> Чтобы получить полную информацию о специалистах <a class="text-danger article-sm" href="/accounts/login/">зарегистрируйтесь</a> на сайте</span>
                      </div>
                    </div>
-
+                  </td>
+                </tr>
+              </tbody>
+          </table>
           {% endif %}
           {% include "includes/WorkerList.html" %}
 
