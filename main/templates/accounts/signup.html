@@ -53,6 +53,7 @@
                         {% if errors.password2 %}
                             <span style="color: red; font-size: 10px">{{ errors.password2 }}</span>
                         {% endif %}
+                        <span id="sendSMS" style="color: grey; font-size: 10px" hidden>Код подтверждения отправлен</span>
                     </div>
                 </div>
 
@@ -98,6 +99,14 @@
 
         function sendCode() {
             var xhr = new XMLHttpRequest();
+
+            xhr.onreadystatechange = function() { // (3)
+                if (xhr.readyState != 4) return;
+
+                if (xhr.status != 200) {
+                    document.getElementById("sendSMS").hidden = false;
+                }
+            }
             xhr.open("GET", "/sendsms/?phone="+document.getElementById("id_username").value, true);
             xhr.send();
         }
