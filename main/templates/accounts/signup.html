@@ -11,7 +11,7 @@
             <span class="article">Регистрация</span>
         </div>
         <div class="card-body">
-            <form action="" method="post" id = "signupform" name="signupform" novalidate>
+            <form action="" method="post" id = "signupform" name="signupform">
                 {% csrf_token %}
 
                 <div class="form-group row">
@@ -58,7 +58,7 @@
 
                 <div class="form-group row" {% if confirmphone %} hidden {% endif %}>
                     <label class="ml-3 checkbox-container">
-                        <input class="" id="id_personaldataisallowed" value="True" required type="checkbox" name="personaldataisallowed" {% if personaldataisallowed %}checked{% endif %}>
+                        <input class="" id="id_personaldataisallowed" value="True" {% if confirmphone %} {%else%} required {% endif %} type="checkbox" name="personaldataisallowed" {% if personaldataisallowed %}checked{% endif %}>
                         <span class="checkmark"></span>
                         <label for="id_personaldataisallowed" class="col-xs-2 control-label input-medium">
                             <span class="ui-checkbox__content">
@@ -69,10 +69,11 @@
                 </div>
 
                 <div class="form-group row">
-                    <div class="col col-6"></div>
+                    <div class="col col-6">
                       {% if confirmphone %}
                         <button class="btn btn-light container-fluid txt-color-dark" onclick="sendCode()">Получить код повторно</button>
                       {% endif %}
+                    </div>
                     <div class="col col-6">
                         <button type="submit" class="btn btn-danger container-fluid">Зарегистрироваться</button>
                     </div>
