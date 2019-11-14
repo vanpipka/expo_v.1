@@ -80,19 +80,20 @@ def sendsms(request):
         print(phone)
 
         if phone != "":
-        
-            ConfirmCodes.AddCode(phoneNumber=phone)#, sendMessage=True)
 
-        return HttpResponse(settings.HOME_PAGE + 'success/', status=200)
+            ConfirmCodes.AddCode(phoneNumber=phone)
+            return HttpResponse(settings.HOME_PAGE + 'success/', status=200)
 
+        return HttpResponse(settings.HOME_PAGE + 'servererror/', status=500)
     else:
 
         phone = request.GET.get("phone", "")
 
         print(phone)
-
+        print('{EQ}')
         if phone != "":
-            ConfirmCodes.AddCode(phoneNumber=phone, sendMessage=True)
+
+            ConfirmCodes.AddCode(phoneNumber=phone, send=True)
             return HttpResponse(settings.HOME_PAGE + 'success/', status=200)
 
         return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)
