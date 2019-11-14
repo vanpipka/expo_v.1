@@ -839,6 +839,12 @@ class ConfirmCodes(models.Model):
 
     def AddCode(phoneNumber, send = False):
 
+        phoneNumber = phoneNumberы.replace(' ', '')
+        phoneNumber = phoneNumber.replace(')', '')
+        phoneNumber = phoneNumber.replace('(', '')
+        phoneNumber = phoneNumber.replace('-', '')
+        phoneNumber = phoneNumber.replace('+7', '8')
+
         confirmcode = str(random.randint(1000, 9999))
 
         print("Отправляем смс: ")
