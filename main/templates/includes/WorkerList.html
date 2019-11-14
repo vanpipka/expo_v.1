@@ -3,6 +3,21 @@
 
 <table class="table table-hover">
     <tbody>
+    {% if user.is_authenticated %}
+    {% else %}
+          <tr>
+            <td scope="row">
+              <div class="text-center" align="center">
+               <div>
+                 <span class="article article-sm"> Режим ограниченного просмотра </span>
+               </div>
+               <div>
+                 <span> Чтобы получить полную информацию о специалистах <a class="dropdown-item text-menu" href="/accounts/login/">зарегистрируйтесь</a> на сайте</span>
+               </div>
+             </div>
+            </td>
+          </tr>
+    {% endif %}
     {% if dataset|length > 0 %}
 
 	    {% for worker in dataset %}
@@ -90,6 +105,8 @@
 	                                    </div>
 	                                {% endif %}
 
+                              {% if user.is_authenticated %}
+
 	                                {% if worker.works.salary %}
 	                                    <div class="row">
 	                                        <div class="col col-7">
@@ -131,6 +148,8 @@
 	                                <span class="badge container-fluid {% if worker.haveinstrument %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Наличие инструмента</span>
 	                                <span class="badge container-fluid {% if worker.readytotravel %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">Готов к командировкам</span>
 	                            </div>
+
+                          {% endif %}
 	                        </div>
 	                    </div>
 
