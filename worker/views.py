@@ -294,7 +294,7 @@ def showWorker(request):
         return render(request, 'errors/404.html', status=404)
 
     if userAauthorized != True:
-        return render(request, 'errors/405.html', status=403)        
+        return render(request, 'errors/405.html', status=403)
     else:
         if request.method == "GET":
 
@@ -404,7 +404,7 @@ def showSearch(request):
 
     context['citylist'] = getCityListFull()
     context['servicelist'] = getServiceList()
-
+    context['its_company'] = userType.GetUserType(request.user) = 2
     return render(request, 'SearchWorker.html', context)
 
 def showWorkersList(request):

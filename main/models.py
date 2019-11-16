@@ -702,7 +702,7 @@ class UserType(models.Model):
 
     id      = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user    = models.OneToOneField(User, on_delete=models.CASCADE)
-    type    = models.DecimalField(max_digits=2, decimal_places=0)
+    type    = models.DecimalField(max_digits=2, decimal_places=0)   #2-компания, 1-специалист
     worker  = models.ForeignKey(Worker, on_delete=models.CASCADE, null=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True)
 
@@ -716,7 +716,7 @@ class UserType(models.Model):
                 userType.company    = None
                 userType.type       = 1
             else:
-                userType.worker = worker
+                userType.worker = None
                 userType.company = company
                 userType.type = 2
 
@@ -840,7 +840,7 @@ class ConfirmCodes(models.Model):
     def AddCode(phoneNumber, send = False):
 
         print("AddCode")
-        
+
         phoneNumber = phoneNumber.replace(' ', '')
         phoneNumber = phoneNumber.replace(')', '')
         phoneNumber = phoneNumber.replace('(', '')
