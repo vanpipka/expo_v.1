@@ -564,6 +564,7 @@ class JobOrder(models.Model):
         id_jobs = []
 
         for e in objects:
+            print(e.get('enddate'))
             id_jobs.append(e['id'])
 
         #print(id_jobs)
