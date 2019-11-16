@@ -20,7 +20,7 @@
                         <div class="panel-group" id="collapse-group" name="panel-group-for-search">
                             <div class="panel panel-default">
 
-                                {% if i.name == "Неопределено" %}
+                                {% if i.name == "Не указан" %}
                                   {% for elem in i.items %}
                                       <div>
                                           <input class="form-check-input" type="radio" name="checkcity" id="{{elem.id}}" onclick="setCity(this)" value="{{elem.name}}">
