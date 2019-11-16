@@ -41,8 +41,11 @@
                                             <div class="col col-3">
                                                 <span class="text-menu-grey">Дата проведения</span>
                                             </div>
-                                            <div class="col col-9">
-                                                <input type="text" name="date" class="form-control" id="id_date"  placeholder="Дата проведения" value="" required readonly>
+                                            <div class="col col-4">
+                                                <input type="text" name="date" class="form-control" id="id_date"  placeholder="Дата начала" value="" required readonly>
+                                            </div>
+                                            <div class="col col-5">
+                                                <input type="text" name="enddate" class="form-control" id="id_enddate"  placeholder="Дата окончания" value="" required readonly>
                                             </div>
                                         </div>
                                         <div class="row pt-3 mr-3" style="margin: 5px">
@@ -152,6 +155,7 @@
                                         var json = JSON.stringify({
                                             job_city: document.getElementById("City").value,
                                             job_date: document.getElementById("id_date").value,
+                                            job_enddate: document.getElementById("id_enddate").value,
                                             job_description: document.getElementById("job_description").value,
                                             job_composition: SelectedService
                                         });
