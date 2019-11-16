@@ -22,7 +22,7 @@
 
                                 {% if i.name == "Не указан" %}
                                   {% for elem in i.items %}
-                                      <div>
+                                      <div style="margin-left: 15pt">
                                           <input class="form-check-input" type="radio" name="checkcity" id="{{elem.id}}" onclick="setCity(this)" value="{{elem.name}}">
                                           <label class="form-check-label" for="{{elem.id}}">
                                               {{elem.name}}
