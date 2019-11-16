@@ -3,7 +3,7 @@
 
 <table class="table table-hover">
     <tbody>
-    
+
     {% if dataset|length > 0 %}
 
 	    {% for worker in dataset %}
@@ -91,7 +91,7 @@
 	                                    </div>
 	                                {% endif %}
 
-                              {% if user.is_authenticated %}
+                              {% if user.is_authenticated and its_company %}
 
 	                                {% if worker.works.salary %}
 	                                    <div class="row">
