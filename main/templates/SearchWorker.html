@@ -358,7 +358,7 @@
                         <label class="text-menu txt-bold">Тип работы</label>
                         <select type="text" name = "worktype" class="form-control"  id="worktype" placeholder="" onchange = SelectWorkType.call(this)>
                             <option value="">Не важно</option>
-                            <option value="1" {% if searchproperty.worktype == 1 %}selected{% endif %}>Постояная работа</option>
+                            <!--<option value="1" {% if searchproperty.worktype == 1 %}selected{% endif %}>Постояная работа</option>-->
                             <option value="2" {% if searchproperty.worktype == 2 %}selected{% endif %}>Проектная работа</option>
                             <option value="3" {% if searchproperty.worktype == 3 %}selected{% endif %}>Фриланс</option>
                         </select>
@@ -378,6 +378,7 @@
                         {% endfor %}
 
                     </div>
+                    <!--
                     <div class="ml-4 mr-4 mt-3" id="fulltimework" style="display: none">
 
                         <div class = "row popup-block">
@@ -441,6 +442,7 @@
                         </div>
 
                     </div>
+                    -->
                     <div class="ml-4 mr-4 mt-3">
                         <label class="text-menu txt-bold">Рейтинг более</label>
 

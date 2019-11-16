@@ -530,6 +530,7 @@ class JobOrder(models.Model):
     description = models.TextField()
     created     = models.DateTimeField("Дата добавления", auto_now_add=True)
     date        = models.DateTimeField("Дата проведения работ", default=datetime.date(1900, 1, 1))
+    enddate        = models.DateTimeField("Дата окончания работ", default=datetime.date(1900, 1, 1))
     place       = models.CharField(max_length=100)
     company     = models.ForeignKey(Company, on_delete=models.CASCADE)
     city            = models.ForeignKey(City, on_delete=models.CASCADE, default="00000000000000000000000000000000")
@@ -642,7 +643,12 @@ class JobOrder(models.Model):
                 try:
                     jobOrder.date = datetime.datetime.strptime(data.get('job_date', "1960-01-01"), "%Y-%m-%d")
                 except:
-                    print('ошибка при сохранении даты рождения: ' + str(jobOrder) + '/1960-01-01')
+                    print('ошибка при сохранении даты начала работ: ' + str(jobOrder) + '/1960-01-01')
+
+                try:
+                    jobOrder.enddate = datetime.datetime.strptime(data.get('job_enddate', "1960-01-01"), "%Y-%m-%d")
+                except:
+                    print('ошибка при сохранении даты окончания работ: ' + str(jobOrder) + '/1960-01-01')
 
                 jobOrder.save()
 
