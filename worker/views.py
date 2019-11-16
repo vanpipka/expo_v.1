@@ -290,7 +290,6 @@ def showWorker(request):
     id = request.GET.get("id", None)
 
     if id == None:
-
         return render(request, 'errors/404.html', status=404)
 
     if userAauthorized != True:
@@ -303,31 +302,31 @@ def showWorker(request):
         workerList  = gerWorkList(idWorker=[id], userAauthorized=userAauthorized, its_superuser=request.user.is_superuser)
         comments    = getComments(idWorker=id)
 
-        print("Ответ:" + str(len(workerList)))
         if len(workerList) == 0:
             return render(request, 'errors/404.html', status=404)
         else:
-            return render(request, 'Worker.html', {"worker": workerList[0], "commentForm": commentForm, "comments": comments, "userAauthorized": userAauthorized})
+
+            context = {}
+
+            context["worker"]       = workerList[0]
+            context["commentForm"]  = commentForm
+            context["comments"]     = comments
+            context["userAauthorized"] = userAauthorized
+
+            if userAauthorized:
+                context['its_company'] = True if UserType.GetUserType(request.user) == 2 else False
+            else:
+                context['its_company'] = False
+
+            return render(request, 'Worker.html', context)
 
 def showWorkersJson(request):
-
-    #if request.user.is_authenticated:
-    #    refreshLastOnline(request.user)
-
-    #print(request.GET)
-
-    #context = {"dataset": []}
-    #context['Access-Control-Allow-Origin'] = "*"
-
-    #return JsonResponse(context)
 
     if request.user.is_authenticated:
         refreshLastOnline(request.user)
 
     profession  = None
     id          = None
-
-    print(request.GET)
 
     if request.method == "GET":
 
@@ -339,8 +338,6 @@ def showWorkersJson(request):
 
     context = {}
     context["dataset"] = gerWorkList(idGroup=profession, idWorker=id, userAauthorized=request.user.is_authenticated, groupAttribute = True)
-
-
     context['Access-Control-Allow-Origin'] = "*"
 
     return JsonResponse(context)
@@ -356,12 +353,7 @@ def showSearchJson(request):
 
     if request.method == "POST":
 
-        print("test csrf=====================================")
-        print('Запрос: ' + str(request.POST))
-        print('Куки: ' + str(request.COOKIES))
-
         dictPost = dict(json.loads(request.POST.__getitem__('data')))
-        print('шоу серч: '+ str(dictPost))
         context = searchWorker(user = request.user, searchList=dictPost, groupAttribute=True)
 
     elif request.method == "GET":
@@ -380,13 +372,7 @@ def showSearch(request):
 
     context = {}
 
-    print("Попали")
-
     if request.method == "POST":
-
-        print("test csrf=====================================")
-        print('Запрос: ' + str(request.POST))
-        print('Куки: ' + str(request.COOKIES))
 
         dictPost = dict(json.loads(request.POST.__getitem__('data')))
         context = searchWorker(user = request.user, searchList=dictPost)
@@ -400,13 +386,10 @@ def showSearch(request):
 
     context["count"] = len(context.get('dataset'))
 
-    print("Количество: "+ str(context["count"]))
-
     context['citylist'] = getCityListFull()
     context['servicelist'] = getServiceList()
 
     if request.user.is_authenticated:
-        print('Компания' if UserType.GetUserType(request.user) == 2 else 'специалист')
         context['its_company'] = True if UserType.GetUserType(request.user) == 2 else False
     else:
         context['its_company'] = False
@@ -415,18 +398,22 @@ def showSearch(request):
 
 def showWorkersList(request):
 
+    if request.user.is_authenticated:
+        refreshLastOnline(request.user)
+
     context = {}
 
     if request.method == "POST":
-
-        print("test csrf=====================================")
-        print('Запрос: ' + str(request.POST))
-        print('Куки: ' + str(request.COOKIES))
 
         dictPost = dict(json.loads(request.POST.__getitem__('data')))
         context = searchWorker(user = request.user, searchList=dictPost)
 
         context["count"] = len(context.get('dataset'))
+
+    if request.user.is_authenticated:
+        context['its_company'] = True if UserType.GetUserType(request.user) == 2 else False
+    else:
+        context['its_company'] = False
 
     return render(request, 'includes/WorkerList.html', context);
 
