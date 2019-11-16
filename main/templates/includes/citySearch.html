@@ -19,20 +19,32 @@
                         {% if i.items %}
                         <div class="panel-group" id="collapse-group" name="panel-group-for-search">
                             <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <a data-toggle="collapse" data-parent="#collapse-group" href="#el1{{ i.id }}">{{i.name}}</a>
-                                </div>
 
-                                <div id="el1{{ i.id }}" class="panel-collapse collapse in ml-5" >
-                                {% for elem in i.items %}
-                                    <div>
-                                        <input class="form-check-input" type="radio" name="checkcity" id="{{elem.id}}" onclick="setCity(this)" value="{{elem.name}}">
-                                        <label class="form-check-label" for="{{elem.id}}">
-                                            {{elem.name}}
-                                        </label>
-                                    </div>
-                                {% endfor %}
-                                </div>
+                                {% if i.name == "Неопределено" %}
+                                  {% for elem in i.items %}
+                                      <div>
+                                          <input class="form-check-input" type="radio" name="checkcity" id="{{elem.id}}" onclick="setCity(this)" value="{{elem.name}}">
+                                          <label class="form-check-label" for="{{elem.id}}">
+                                              {{elem.name}}
+                                          </label>
+                                      </div>
+                                  {% endfor %}
+                                {% else %}
+                                  <div class="panel-heading">
+                                      <a data-toggle="collapse" data-parent="#collapse-group" href="#el1{{ i.id }}">{{i.name}}</a>
+                                  </div>
+
+                                  <div id="el1{{ i.id }}" class="panel-collapse collapse in ml-5" >
+                                  {% for elem in i.items %}
+                                      <div>
+                                          <input class="form-check-input" type="radio" name="checkcity" id="{{elem.id}}" onclick="setCity(this)" value="{{elem.name}}">
+                                          <label class="form-check-label" for="{{elem.id}}">
+                                              {{elem.name}}
+                                          </label>
+                                      </div>
+                                  {% endfor %}
+                                  </div>
+                                {% endif %}
                             </div>
                         </div>
                         {% endif %}
@@ -59,7 +71,7 @@
         for (var i = 0; i < cityArray.children.length; i++) {
 
             if (cityArray.children[i].getAttribute('name') == 'panel-group-for-search') {
-                    
+
                 let hidden          = true;
                 let maingroup       = cityArray.children[i].children[0];   //группа
                 let articlegroup    = maingroup.children[0];
@@ -72,14 +84,14 @@
                         if (x.indexOf(searchQuery) != -1) {
                             hidden = false;
                             elemgroup.children[y].hidden = false;
-                        }   
+                        }
                         else{
                             elemgroup.children[y].hidden = true;
-                        } 
-                    }  
+                        }
+                    }
                     else {
-                        elemgroup.children[y].hidden = false; 
-                        hidden = false;  
+                        elemgroup.children[y].hidden = false;
+                        hidden = false;
                     }
                 }
 
@@ -101,10 +113,10 @@
                     cityArray.children[i].hidden = false;
                     articlegroup.children[0].className  = "";
                     elemgroup.className = "panel-collapse in ml-5 collapse";
-                    articlegroup.children[0].setAttribute("aria-expanded", false);  
+                    articlegroup.children[0].setAttribute("aria-expanded", false);
                 }
 
-            } 
+            }
               //alert(  ); // Text, DIV, Text, UL, ..., SCRIPT
         }
     }
