@@ -90,7 +90,7 @@
 	                                    </div>
 	                                {% endif %}
 
-                              {% if user.is_authenticated and (user.is_superuser or its_company) %}
+                              {% if user.is_authenticated and its_company %}
 
 	                                {% if worker.works.salary %}
 	                                    <div class="row">
