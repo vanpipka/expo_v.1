@@ -404,7 +404,13 @@ def showSearch(request):
 
     context['citylist'] = getCityListFull()
     context['servicelist'] = getServiceList()
-    context['its_company'] = True #if UserType.GetUserType(request.user) == 2 else False
+
+    if request.user.is_authenticated:
+        print('Компания' if UserType.GetUserType(request.user) == 2 else 'специалист')
+        context['its_company'] = True if UserType.GetUserType(request.user) == 2 else False
+    else:
+        context['its_company'] = False
+
     return render(request, 'SearchWorker.html', context)
 
 def showWorkersList(request):
