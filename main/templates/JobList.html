@@ -76,39 +76,6 @@
                                 </div>
                             </div>
 
-                            {% if  n.job_composition %}
-
-                            <div class="row pt-3 mr-3" style="margin: 5px">
-                                <div class="col col-4">
-                                    <span class="text-menu-grey">Требуются</span>
-                                </div>
-                                <div class="col col-8">
-
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th><span class="text-menu txt-bold">Профессия</span></th>
-                                                <th><span class="text-menu txt-bold">Количество</span></th>
-                                                <th><span class="text-menu txt-bold">Ставка (руб./д.)</span></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-
-                                            {% for e in n.job_composition %}
-                                            <tr>
-                                                <td>{{ e.profession__name }}</td>
-                                                <td>{{ e.count }}</td>
-                                                <td>{{ e.price }}</td>
-                                            </tr>
-                                            {% endfor %}
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            {% endif %}
-
                             <div class="row color-dark-grey mb-3 pr-4">
                                 <div class="col col-4">
                                 </div>
