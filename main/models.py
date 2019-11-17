@@ -540,7 +540,7 @@ class JobOrder(models.Model):
     def __str__(self):
         return self.description
 
-    def GetActual(self, user=None):
+    def GetActual(self, user=None, id=None):
 
         response_array = []
         userType       = 0
@@ -559,7 +559,10 @@ class JobOrder(models.Model):
                     if response_array.count(e['jobOrder_id']) == 0:
                         response_array.append(e['jobOrder_id'])
 
-        objects = list(JobOrder.objects.all().select_related('city').select_related('company').order_by("-created").values('id', 'responseCount', 'description', 'date', 'enddate', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name', 'company__image'))
+        if id != None:
+            objects = list(JobOrder.objects.filter(id=id).select_related('city').select_related('company').order_by("-created").values('id', 'responseCount', 'description', 'date', 'enddate', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name', 'company__image'))
+        else:
+            objects = list(JobOrder.objects.all().select_related('city').select_related('company').order_by("-created").values('id', 'responseCount', 'description', 'date', 'enddate', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name', 'company__image'))
 
         id_jobs = []
 

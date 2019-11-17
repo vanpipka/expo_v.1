@@ -719,10 +719,16 @@ def infojobs(request):
 
     if userAauthorized:
         refreshLastOnline(request.user)
-
         userType = UserType.GetUserType(request.user)
 
-        return render(request, 'NewJob.html', {'userType': userType, 'citylist': getCityListFull(), 'professionsList': getProfessionList()})
+        id = request.GET.get("id", None)
+
+        if id == None:
+            return render(request, 'errors/404.html', status=404)
+            
+        jobOrders = JobOrder.GetActual(JobOrder, user = request.user, id=id);
+
+        return render(request, 'infojob.html', {'userType': userType, 'citylist': getCityListFull(), 'professionsList': getProfessionList()})
 
     else:
 
