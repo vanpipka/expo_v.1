@@ -540,7 +540,7 @@ class JobOrder(models.Model):
     def __str__(self):
         return self.description
 
-    def GetActual(self, user=None, id=None):
+    def GetActual(self, user=None):
 
         response_array = []
         userType       = 0
@@ -559,12 +559,60 @@ class JobOrder(models.Model):
                     if response_array.count(e['jobOrder_id']) == 0:
                         response_array.append(e['jobOrder_id'])
 
-            else userType == 2 and id != None:
+        objects = list(JobOrder.objects.all().select_related('city').select_related('company').order_by("-created").values('id', 'responseCount', 'description', 'date', 'enddate', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name', 'company__image'))
 
-                response_list = list(JobResponse.objects.filter(jobOrder=id).values('jobOrder_id, worker, description'))
+        id_jobs = []
+
+        for e in objects:
+            print(e.get('enddate'))
+            id_jobs.append(e['id'])
+
+        #print(id_jobs)
+
+        jobComposition = list(JobComposition.objects.all().filter(jobOrder_id__in=id_jobs).select_related('profession').values('jobOrder_id', 'profession__id', 'profession__name', 'count', 'price'))
+
+        print(jobComposition)
+
+        for e in objects:
+
+            try:
+                e['photo'] = Attacment.getresizelink(Attacment.objects.get(id=e['company__image']))
+            except:
+                e['photo'] = '';
+
+            if (userType != 1):
+                e['response_is_available'] = 2      #ничего не выводить
+            elif (response_array.count(e['id'])) == 0:
+                e['response_is_available'] = 1      #Можно откликнуться
+            else:
+                e['response_is_available'] = 0      #уже откликнулся
+
+            e['job_composition'] = []
+
+            for j in jobComposition:
+                if j['jobOrder_id'] == e['id']:
+                    e['job_composition'].append(j)
+
+        return objects
+
+    def GetInfo(self, user=None, id=None):
+
+        response_array = []
+        userType       = 0
+
+        if User != None:
+
+            userType = UserType.GetUserType(user)
+
+            if userType == 1:
+
+                worker = UserType.GetElementByUser(user)
+
+                response_list = list(JobResponse.objects.filter(worker=worker).values('jobOrder_id'))
 
                 for e in response_list:
-                    response_array.append(e)
+                    if response_array.count(e['jobOrder_id']) == 0:
+                        response_array.append(e['jobOrder_id'])
 
         if id != None:
             objects = list(JobOrder.objects.filter(id=id).select_related('city').select_related('company').order_by("-created").values('id', 'responseCount', 'description', 'date', 'enddate', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name', 'company__image'))
@@ -591,7 +639,6 @@ class JobOrder(models.Model):
                 e['photo'] = '';
 
             if (userType != 1):
-                e['response_array'] = response_array
                 e['response_is_available'] = 2      #ничего не выводить
             elif (response_array.count(e['id'])) == 0:
                 e['response_is_available'] = 1      #Можно откликнуться
