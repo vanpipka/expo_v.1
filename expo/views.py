@@ -725,10 +725,10 @@ def infojobs(request):
 
         if id == None:
             return render(request, 'errors/404.html', status=404)
-            
+
         jobOrders = JobOrder.GetActual(JobOrder, user = request.user, id=id);
 
-        return render(request, 'infojob.html', {'userType': userType, 'citylist': getCityListFull(), 'professionsList': getProfessionList()})
+        return render(request, 'infojob.html', {'n': jobOrders[0], 'userType': userType, 'citylist': getCityListFull(), 'professionsList': getProfessionList()})
 
     else:
 
