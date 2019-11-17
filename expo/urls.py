@@ -45,6 +45,7 @@ urlpatterns = [
     path('news/save/', views.savenews),
     path('news/', views.news),
     path('jobs/save/', views.savejobs),
+    path('jobs/info/', views.infojobs),
     path('jobs/saveorder/', views.saveorder),
     path('jobs/new/', views.newjobs),
     path('jobs/', views.jobs),

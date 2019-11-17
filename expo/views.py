@@ -713,6 +713,21 @@ def jobs(request):
 
             return render(request, 'accounts/login.html')
 
+def infojobs(request):
+
+    userAauthorized = request.user.is_authenticated
+
+    if userAauthorized:
+        refreshLastOnline(request.user)
+
+        userType = UserType.GetUserType(request.user)
+
+        return render(request, 'NewJob.html', {'userType': userType, 'citylist': getCityListFull(), 'professionsList': getProfessionList()})
+
+    else:
+
+        return render(request, 'errors/403.html', None, None, status=403)
+
 def newjobs(request):
 
     userAauthorized = request.user.is_authenticated
