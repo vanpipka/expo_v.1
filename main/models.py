@@ -595,7 +595,7 @@ class JobOrder(models.Model):
 
         return objects
 
-    def GetInfo(self, user=None, id=None):
+    def GetInfo(self, user=None, id):
 
         response_array = []
         userType       = 0
@@ -613,6 +613,15 @@ class JobOrder(models.Model):
                 for e in response_list:
                     if response_array.count(e['jobOrder_id']) == 0:
                         response_array.append(e['jobOrder_id'])
+
+            elif userType == 2:
+
+                response_list = list(JobResponse.objects.filter(jobOrder=id).values('jobOrder_id, description, worker'))
+
+                print(response_list)
+
+                for e in response_list:
+                    response_array.append(e)
 
         if id != None:
             objects = list(JobOrder.objects.filter(id=id).select_related('city').select_related('company').order_by("-created").values('id', 'responseCount', 'description', 'date', 'enddate', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name', 'company__image'))
