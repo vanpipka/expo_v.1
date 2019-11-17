@@ -595,7 +595,7 @@ class JobOrder(models.Model):
 
         return objects
 
-    def GetInfo(self, user=None, id):
+    def GetInfo(self, id, user=None):
 
         response_array = []
         userType       = 0
