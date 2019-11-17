@@ -102,6 +102,59 @@
                       </div>
                   </div>
 
+                  <div class="ml-3">
+                      <div class="row">
+                          <div class="col col-2"><label class="article">Отклики</label></div>
+                          <!--<div class="col"><label class="article text-danger">{{worker.commentscount}}</label></div>-->
+                      </div>
+
+                      <div class="border">
+
+                      {% for comment in n.response_array %}
+
+                          <div class="row pt-3 mr-3" style="margin: 5px">
+                              <div class="col col-2">
+                                  <div class="row">
+                                      <div class="col text-center">
+                                          <label class="article text-danger">{{ comment.worker }}</label>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="col text-center">
+                                          <span class="text-menu txt-bold">{{ comment.description }}</span>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="col col-10">
+                                  <div class="row ">
+                                      <span>{{ comment.text }}</span>
+                                  </div>
+
+                                  <div class="row color-dark-grey mb-3">
+                                      <div class="col col-8">
+                                      </div>
+                                      <div class="col col-2">
+                                          {{ comment.user.name }}
+                                      </div>
+                                      <div class="col col-2 text-right">
+                                          {{ comment.created|date:"d M Y" }}
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+
+                          <div class="row ">
+                              <div class="col ml-3 mr-3">
+                                  <hr class="bg-color-dark-grey" style="border: none; height: 1px;">
+                              </div>
+                          </div>
+
+                      {% endfor %}
+
+                      </div>
+
+                  </div>
+
               </div>
 
             </div>

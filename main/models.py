@@ -559,6 +559,13 @@ class JobOrder(models.Model):
                     if response_array.count(e['jobOrder_id']) == 0:
                         response_array.append(e['jobOrder_id'])
 
+            else userType == 2 and id != None:
+
+                response_list = list(JobResponse.objects.filter(jobOrder=id).values('jobOrder_id, worker, description'))
+
+                for e in response_list:
+                    response_array.append(e)
+
         if id != None:
             objects = list(JobOrder.objects.filter(id=id).select_related('city').select_related('company').order_by("-created").values('id', 'responseCount', 'description', 'date', 'enddate', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name', 'company__image'))
         else:
@@ -584,6 +591,7 @@ class JobOrder(models.Model):
                 e['photo'] = '';
 
             if (userType != 1):
+                e['response_array'] = response_array
                 e['response_is_available'] = 2      #ничего не выводить
             elif (response_array.count(e['id'])) == 0:
                 e['response_is_available'] = 1      #Можно откликнуться
