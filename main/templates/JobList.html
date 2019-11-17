@@ -119,7 +119,9 @@
                                     {{ n.created|date:"j.m.Y f" }}
                                 </div>
                                 <div class="col col-2 text-right pr-4" >
+                                  <a href='/'>
                                     <span class="badge {% if n.responseCount %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">{% if n.responseCount %}{{ n.responseCount }} отклик(а){% else %}Откликов нет{% endif %}</span>
+                                  </a>
                                 </div>
                             </div>
 
