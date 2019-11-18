@@ -80,10 +80,14 @@
                                 <div class="col col-2">
                                 </div>
                                 <div class="col col-6 text-right" id ="job_company_{{ n.id }}">
-                                    <div class="product-img mt-3" style="height: 25px;">
-                                        <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:25px" src="{{  n.photo }}" alt="">
+                                  <div class="row">
+                                    <div class="col">
+                                      <div class="product-img mt-3" style="height: 25px;">
+                                          <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:25px" src="{{  n.photo }}" alt="">
+                                      </div>
+                                      {{ n.company__name }}
                                     </div>
-                                    {{ n.company__name }}
+                                  </div>  
                                 </div>
                                 <div class="col col-2 text-right" >
                                     {{ n.created|date:"j.m.Y f" }}
