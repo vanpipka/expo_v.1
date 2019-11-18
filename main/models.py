@@ -601,6 +601,9 @@ class JobOrder(models.Model):
         response_array = []
         userType       = 0
 
+        if validate_uuid4(id) != True:
+            return False
+
         if User != None:
 
             userType = UserType.GetUserType(user)
@@ -619,7 +622,7 @@ class JobOrder(models.Model):
 
                 print('получаем отклики по заказу '+id)
 
-                response_list = list(JobResponse.objects.filter(jobOrder_id=id).values('description', 'worker'))
+                response_list = list(JobResponse.objects.filter(JobOrder.objects.get(id=id).values('description', 'worker')))
 
                 print('Получили  отклики по заказу '+id)
 
@@ -630,10 +633,7 @@ class JobOrder(models.Model):
 
         print('получаем данные по заказу 1')
 
-        if id != None:
-            objects = list(JobOrder.objects.filter(id=id).select_related('city').select_related('company').order_by("-created").values('id', 'responseCount', 'description', 'date', 'enddate', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name', 'company__image'))
-        else:
-            objects = list(JobOrder.objects.all().select_related('city').select_related('company').order_by("-created").values('id', 'responseCount', 'description', 'date', 'enddate', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name', 'company__image'))
+        objects = list(JobOrder.objects.filter(id=id).select_related('city').select_related('company').order_by("-created").values('id', 'responseCount', 'description', 'date', 'enddate', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name', 'company__image'))
 
         id_jobs = []
 
