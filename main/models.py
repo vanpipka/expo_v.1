@@ -637,7 +637,7 @@ class JobOrder(models.Model):
 
         print('получаем данные по заказу 1')
 
-        objects = list(JobOrder.objects.filter(id=id).select_related('city').select_related('company').order_by("-created").values('author', 'id', 'responseCount', 'description', 'date', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name', 'company__image'))
+        objects = list(JobOrder.objects.filter(id=id).select_related('city').select_related('company').order_by("-created").values('author', 'id', 'responseCount', 'description', 'enddate', 'date', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name', 'company__image'))
 
         if len(objects) == 0:
             return False
