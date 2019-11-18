@@ -622,7 +622,7 @@ class JobOrder(models.Model):
 
                 print('получаем отклики по заказу '+id)
 
-                response_list = list(JobResponse.objects.filter(JobOrder.objects.get(id=id).values('description', 'worker')))
+                response_list = list(JobResponse.objects.filter(JobOrder.objects.get(id=id)).values('description', 'worker'))
 
                 print('Получили  отклики по заказу '+id)
 
