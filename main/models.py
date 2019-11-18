@@ -622,7 +622,7 @@ class JobOrder(models.Model):
 
                 print('получаем отклики по заказу '+id)
 
-                rrr = list(JobResponse.objects.filter(jobOrder = id))
+                response_list = list(JobResponse.objects.filter(jobOrder = id))
 
                 print(rrr)
                 #response_list = list(rrr.values('description', 'worker'))
@@ -631,9 +631,11 @@ class JobOrder(models.Model):
 
                 #print(response_list)
 
-                #for e in response_list:
-                #    response_array.append(e)
+                for e in response_list:
+                    response_array.append({'description' : e.description})
 
+        print(response_array)
+        
         print('получаем данные по заказу 1')
 
         objects = list(JobOrder.objects.filter(id=id).select_related('city').select_related('company').order_by("-created").values('id', 'responseCount', 'description', 'date', 'enddate', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name', 'company__image'))
