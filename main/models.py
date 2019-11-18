@@ -630,7 +630,7 @@ class JobOrder(models.Model):
                     response_array.append({'description' : e['answer'],
                                         'worker': e['worker__name'],
                                         'photo': Attacment.getresizelink(Attacment.objects.get(id=e['worker__image'])),
-                                        'workerurl': '/worker/info?id='+str(e['worker__id']))
+                                        'workerurl': '/worker/info?id='+str(e['worker__id'])})
 
         print(response_array)
 
