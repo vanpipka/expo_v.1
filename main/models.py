@@ -711,7 +711,7 @@ class JobOrder(models.Model):
 
                 jobOrder.company        = UserType.GetElementByUser(user)
                 jobOrder.description    = data.get('job_description', '')
-                #jobOdrer.author         = user
+                jobOrder.author         = user
                 id_city = data.get('job_city', '00000000000000000000000000000000')
 
                 if id_city == '':
