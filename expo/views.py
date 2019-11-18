@@ -728,7 +728,7 @@ def infojobs(request):
 
         jobInfo = JobOrder.GetInfo(JobOrder, user = request.user, id=id);
 
-        if jobOrders == False:
+        if jobInfo == False:
             return render(request, 'errors/500.html', status=500)
 
         return render(request, 'infojob.html', {'n': jobInfo, 'userType': userType, 'citylist': getCityListFull(), 'professionsList': getProfessionList()})
