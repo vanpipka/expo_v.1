@@ -6,8 +6,6 @@
 
     {% if user.is_active %}
 
-        {% if  userType == 2 %}
-
             <div class="container mt-3">
 
               <div id="div_{{ n.id }}">
@@ -89,7 +87,7 @@
                   {% endif %}
 
                   <div class="row color-dark-grey mb-3 pr-4">
-                      <div class="col col-4">
+                      <div class="col col-6">
                       </div>
                       <div class="col col-4 text-right" id ="job_company_{{ n.id }}">
                           {{ n.company__name }}
@@ -97,54 +95,46 @@
                       <div class="col col-2 text-right" >
                           {{ n.created|date:"j.m.Y f" }}
                       </div>
-                      <div class="col col-2 text-right pr-4" >
-                        <span class="badge {% if n.responseCount %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">{% if n.responseCount %}{{ n.responseCount }} отклик(а){% else %}Откликов нет{% endif %}</span>
-                      </div>
                   </div>
 
                   <div class="ml-3">
                       <div class="row">
-                          <div class="col col-2"><label class="article">Отклики</label></div>
-                          <!--<div class="col"><label class="article text-danger">{{worker.commentscount}}</label></div>-->
+                          <div class="col col-2">
+                            <label class="article-sm">Отклики
+                                {% if n.responseCount %}
+                                  ({{ n.responseCount }})
+                                {% else %}
+                                  (Откликов нет)
+                                {% endif %}
+                            </label>
+                          </div>
+
                       </div>
 
                       <div class="border">
 
                       {% for comment in n.response_array %}
 
-                          <div class="row pt-3 mr-3" style="margin: 5px">
-                              <div class="col col-2">
+
                                   <div class="row">
-                                      <div class="col text-center">
-                                          <label class="article text-danger">{{ comment.worker }}</label>
+                                      <div class="col col-2 text-center">
+                                           <div class="product-img mt-3" style="height: 50px;">
+                                               <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:50px" src="{{  comment.photo }}" alt="">
+
+                                           </div>
+                                           <a class="article text-danger" href="{{ comment.workerurl }}">
+                                                  {{ comment.worker }}
+                                                </a>
                                       </div>
-                                  </div>
-                                  <div class="row">
-                                      <div class="col text-center">
+
+                                      <div class="col col-10 text-center">
                                           <span class="text-menu txt-bold">{{ comment.description }}</span>
                                       </div>
                                   </div>
-                              </div>
-                              <div class="col col-10">
-                                  <div class="row ">
-                                      <span>{{ comment.text }}</span>
-                                  </div>
 
-                                  <div class="row color-dark-grey mb-3">
-                                      <div class="col col-8">
-                                      </div>
-                                      <div class="col col-2">
-                                          {{ comment.user.name }}
-                                      </div>
-                                      <div class="col col-2 text-right">
-                                          {{ comment.created|date:"d M Y" }}
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
 
                           <div class="row ">
-                              <div class="col ml-3 mr-3">
+                              <div class="col">
                                   <hr class="bg-color-dark-grey" style="border: none; height: 1px;">
                               </div>
                           </div>
@@ -158,8 +148,6 @@
               </div>
 
             </div>
-
-        {% endif %}
 
     {% endif %}
 

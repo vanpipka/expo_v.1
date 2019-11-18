@@ -622,57 +622,55 @@ class JobOrder(models.Model):
 
                 print('получаем отклики по заказу '+id)
 
-                response_list = JobResponse.objects.filter(jobOrder = id)
+                response_list = list(JobResponse.objects.filter(jobOrder_id = id).select_related('worker').values('id', 'answer', 'worker__name', 'worker__image'))
 
-                print(rrr)
-                #response_list = list(rrr.values('description', 'worker'))
-
-                #print('Получили  отклики по заказу '+id)
-
-                #print(response_list)
+                print(response_list)
 
                 for e in response_list:
-                    response_array.append({'description' : e.description})
+                    response_array.append({'description' : e['answer'],
+                                        'worker': e['worker__name'],
+                                        'photo': Attacment.getresizelink(Attacment.objects.get(id=e['worker__image'])),
+                                        'workerurl': '/worker/info?id='+str(e['worker__id']))
 
         print(response_array)
 
         print('получаем данные по заказу 1')
 
-        objects = list(JobOrder.objects.filter(id=id).select_related('city').select_related('company').order_by("-created").values('id', 'responseCount', 'description', 'date', 'enddate', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name', 'company__image'))
+        objects = list(JobOrder.objects.filter(id=id).select_related('city').select_related('company').order_by("-created").values('id', 'responseCount', 'description', 'date', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name', 'company__image'))
 
-        id_jobs = []
+        if len(e) == 0:
+            return False
 
-        for e in objects:
-            print(e.get('enddate'))
-            id_jobs.append(e['id'])
+        e = objects[0]
+        print(e)
 
-        #print(id_jobs)
-
-        jobComposition = list(JobComposition.objects.all().filter(jobOrder_id__in=id_jobs).select_related('profession').values('jobOrder_id', 'profession__id', 'profession__name', 'count', 'price'))
+        jobComposition = list(JobComposition.objects.all().filter(jobOrder_id=id).select_related('profession').values('jobOrder_id', 'profession__id', 'profession__name', 'count', 'price'))
 
         print(jobComposition)
 
-        for e in objects:
+        try:
+            e['photo'] = Attacment.getresizelink(Attacment.objects.get(id=e['company__image']))
+        except:
+            e['photo'] = '';
 
-            try:
-                e['photo'] = Attacment.getresizelink(Attacment.objects.get(id=e['company__image']))
-            except:
-                e['photo'] = '';
+        if (userType != 1):
+            e['response_is_available'] = 2      #ничего не выводить
+        elif (response_array.count(e['id'])) == 0:
+            e['response_is_available'] = 1      #Можно откликнуться
+        else:
+            e['response_is_available'] = 0      #уже откликнулся
 
-            if (userType != 1):
-                e['response_is_available'] = 2      #ничего не выводить
-            elif (response_array.count(e['id'])) == 0:
-                e['response_is_available'] = 1      #Можно откликнуться
-            else:
-                e['response_is_available'] = 0      #уже откликнулся
+        e['job_composition'] = []
 
-            e['job_composition'] = []
+        for j in jobComposition:
+            if j['jobOrder_id'] == e['id']:
+                e['job_composition'].append(j)
 
-            for j in jobComposition:
-                if j['jobOrder_id'] == e['id']:
-                    e['job_composition'].append(j)
+        e['response_array'] = response_array
+        print('========================================')
+        print(e)
 
-        return objects
+        return e
 
     def SaveResponse(user, data):
 
