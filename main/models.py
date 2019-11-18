@@ -536,6 +536,7 @@ class JobOrder(models.Model):
     city            = models.ForeignKey(City, on_delete=models.CASCADE, default="00000000000000000000000000000000")
     responseCount   = models.DecimalField(max_digits=3, decimal_places=0, default=0)
     deleted         = models.BooleanField(default=False)
+    author          = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.description
@@ -636,7 +637,7 @@ class JobOrder(models.Model):
 
         print('получаем данные по заказу 1')
 
-        objects = list(JobOrder.objects.filter(id=id).select_related('city').select_related('company').order_by("-created").values('id', 'responseCount', 'description', 'date', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name', 'company__image'))
+        objects = list(JobOrder.objects.filter(id=id).select_related('city').select_related('company').order_by("-created").values('author', 'id', 'responseCount', 'description', 'date', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name', 'company__image'))
 
         if len(objects) == 0:
             return False
@@ -710,7 +711,7 @@ class JobOrder(models.Model):
 
                 jobOrder.company        = UserType.GetElementByUser(user)
                 jobOrder.description    = data.get('job_description', '')
-
+                jobOdrer.author         = user
                 id_city = data.get('job_city', '00000000000000000000000000000000')
 
                 if id_city == '':

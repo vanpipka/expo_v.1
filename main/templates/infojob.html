@@ -5,7 +5,9 @@
 {% block content%}
 
     {% if user.is_active %}
-
+            {% if user  == n.author %}
+              Это автор
+            {% endif %}
             <div class="container mt-3">
 
               <div id="div_{{ n.id }}">
@@ -97,7 +99,7 @@
                             </div>
                             {{ n.company__name }}
                           </div>
-                        </div>                          
+                        </div>
                       </div>
                       <div class="col col-2 text-right" >
                           {{ n.created|date:"j.m.Y f" }}
