@@ -597,6 +597,7 @@ class JobOrder(models.Model):
 
     def GetInfo(self, id, user=None):
 
+        print('получаем данные по заказу')
         response_array = []
         userType       = 0
 
@@ -616,12 +617,16 @@ class JobOrder(models.Model):
 
             elif userType == 2:
 
+                print('получаем отклики по заказу')
+
                 response_list = list(JobResponse.objects.filter(jobOrder=id).values('jobOrder_id, description, worker'))
 
                 print(response_list)
 
                 for e in response_list:
                     response_array.append(e)
+
+        print('получаем данные по заказу 1')
 
         if id != None:
             objects = list(JobOrder.objects.filter(id=id).select_related('city').select_related('company').order_by("-created").values('id', 'responseCount', 'description', 'date', 'enddate', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name', 'company__image'))
