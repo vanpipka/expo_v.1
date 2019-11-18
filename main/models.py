@@ -705,7 +705,7 @@ class JobOrder(models.Model):
 
         if userType == 2:
 
-            try:
+            #try:
 
                 jobOrder = JobOrder()
 
@@ -746,11 +746,11 @@ class JobOrder(models.Model):
 
                         Composition.save()
 
-            except:
+            #except:
 
                 return False
 
-            return True
+            #return True
 
         else:
 
