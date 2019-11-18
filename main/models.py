@@ -705,13 +705,13 @@ class JobOrder(models.Model):
 
         if userType == 2:
 
-            #try:
+            try:
 
                 jobOrder = JobOrder()
 
                 jobOrder.company        = UserType.GetElementByUser(user)
                 jobOrder.description    = data.get('job_description', '')
-                jobOdrer.author         = user
+                #jobOdrer.author         = user
                 id_city = data.get('job_city', '00000000000000000000000000000000')
 
                 if id_city == '':
@@ -746,11 +746,11 @@ class JobOrder(models.Model):
 
                         Composition.save()
 
-            #except:
+            except:
 
                 return False
 
-            #return True
+            return True
 
         else:
 
