@@ -624,7 +624,7 @@ class JobOrder(models.Model):
 
                 rrr = JobResponse.objects.filter(jobOrder = id)
 
-                print('1212')
+                print(rrr)
                 #response_list = list(.values('description', 'worker'))
 
                 #print('Получили  отклики по заказу '+id)
