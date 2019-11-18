@@ -617,9 +617,9 @@ class JobOrder(models.Model):
 
             elif userType == 2:
 
-                print('получаем отклики по заказу')
+                print('получаем отклики по заказу'+id)
 
-                response_list = list(JobResponse.objects.filter(jobOrder=id).values('jobOrder_id, description, worker'))
+                response_list = list(JobResponse.objects.filter(jobOrder_id=id).values('jobOrder_id, description, worker'))
 
                 print(response_list)
 
