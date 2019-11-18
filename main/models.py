@@ -622,29 +622,21 @@ class JobOrder(models.Model):
 
                 print('получаем отклики по заказу '+id)
 
-                response_list = list(JobResponse.objects.filter(jobOrder_id = id).select_related('worker').values('id', 'answer', 'worker__name', 'worker__image'))
+                response_list = list(JobResponse.objects.filter(jobOrder_id = id).select_related('worker').values('id', 'answer', 'worker__name', 'worker__image', 'worker__id'))
 
                 print(response_list)
 
-                position = 0;
-
                 for e in response_list:
-
-                    position = position +1;
-
-                    print(position)
-
-                    responsedata= {'description' : e['answer'],
+                    response_array.append({'description' : e['answer'],
                                         'worker': e['worker__name'],
                                         'photo': Attacment.getresizelink(Attacment.objects.get(id=e['worker__image'])),
-                                        'workerurl': '/worker/info?id='+str(e['worker__id'])}
+                                        'workerurl': '/worker/info?id='+str(e['worker__id'])})
 
-                    print(responsedata)                
-                    response_array.append(responsedata)
+        print(response_array)
 
         print('получаем данные по заказу 1')
 
-        objects = list(JobOrder.objects.filter(id=id).select_related('city').select_related('company').order_by("-created").values('id', 'responseCount', 'description', 'date', 'enddate', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name', 'company__image'))
+        objects = list(JobOrder.objects.filter(id=id).select_related('city').select_related('company').order_by("-created").values('id', 'responseCount', 'description', 'date', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name', 'company__image'))
 
         if len(e) == 0:
             return False
