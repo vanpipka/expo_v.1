@@ -731,6 +731,9 @@ def infojobs(request):
         if jobInfo == False:
             return render(request, 'errors/500.html', status=500)
 
+        print(request.user)
+        print(jobInfo['author'])
+
         if jobInfo['author'] == request.user:
             return render(request, 'NewJob.html', {'n': jobInfo, 'userType': userType, 'citylist': getCityListFull(), 'professionsList': getProfessionList()})
 
