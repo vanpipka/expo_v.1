@@ -626,11 +626,21 @@ class JobOrder(models.Model):
 
                 print(response_list)
 
+                position = 0;
+
                 for e in response_list:
-                    response_array.append({'description' : e['answer'],
+
+                    position = position +1;
+
+                    print(position)
+
+                    responsedata= {'description' : e['answer'],
                                         'worker': e['worker__name'],
                                         'photo': Attacment.getresizelink(Attacment.objects.get(id=e['worker__image'])),
-                                        'workerurl': '/worker/info?id='+str(e['worker__id'])})
+                                        'workerurl': '/worker/info?id='+str(e['worker__id'])}
+
+                    print(responsedata)                
+                    response_array.append(responsedata)
 
         print('получаем данные по заказу 1')
 
