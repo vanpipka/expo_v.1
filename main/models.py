@@ -706,12 +706,21 @@ class JobOrder(models.Model):
         if userType == 2:
 
             try:
+                id = data.get('job_id', '')
 
-                jobOrder = JobOrder()
+                if id != '':
+                    if validate_uuid4(id):
+                        jobOrder = JobOrder.get(id=id)
+                    else:
+                        return False
+                else:
+                    jobOrder = JobOrder()
 
                 jobOrder.company        = UserType.GetElementByUser(user)
                 jobOrder.description    = data.get('job_description', '')
                 jobOrder.author         = user
+                jobOrder.deleted        = data.get('job_deleted', False)
+
                 id_city = data.get('job_city', '00000000000000000000000000000000')
 
                 if id_city == '':

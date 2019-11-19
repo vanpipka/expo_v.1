@@ -800,7 +800,7 @@ def savejobs(request):
 
         if request.method == "POST":
 
-            userType = UserType.GetUserType(request.user)
+            userType    = UserType.GetUserType(request.user)
 
             print('тип юзера: ' + str(userType))
 

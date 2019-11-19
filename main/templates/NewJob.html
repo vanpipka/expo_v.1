@@ -8,7 +8,7 @@
 
         {% if  userType == 2 %}
 
-            <div class="container mt-3">
+            <div class="container mt-3 bordered">
 
                 <span class="article">{% if  edit != True  %}Новая заявка{% else %}Редактирование заявки{% endif %}</span>
 
@@ -19,6 +19,9 @@
                         <div class = "col">
                             <form name="form" id="form" class="bordered">
                                 {% csrf_token %}
+
+                                <input class="" id="id_order" value="{{n.id}}" type="text" name="id_order" hidden>
+
                                 <div class="form-group">
                                     {% if  edit == True  %}
                                     <div class="row mb-3 text-right mr-3">
@@ -149,58 +152,7 @@
 
                                             </div>
                                         </div>
-                                    {% if  edit == True  %}
-                                        <div class="ml-3">
-                                            <div class="row">
-                                                <div class="col">
-                                                  <label class="article-sm">Отклики
-                                                      {% if n.responseCount %}
-                                                        ({{ n.responseCount }})
-                                                      {% else %}
-                                                        (Откликов нет)
-                                                      {% endif %}
-                                                  </label>
-                                                </div>
 
-                                            </div>
-
-                                            <div class="border">
-
-                                            {% for comment in n.response_array %}
-
-
-                                                        <div class="row">
-                                                            <div class="col col-2 text-center">
-                                                                 <div class="product-img mt-3" style="height: 50px;">
-                                                                     <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:50px" src="{{  comment.photo }}" alt="">
-
-                                                                 </div>
-                                                                 <a class="article text-danger" href="{{ comment.workerurl }}">
-                                                                        {{ comment.worker }}
-                                                                      </a>
-                                                            </div>
-
-                                                            <div class="col col-10 text-center">
-                                                                <span class="text-menu txt-bold">{{ comment.description }}</span>
-                                                            </div>
-                                                        </div>
-
-
-                                                <div class="row ">
-                                                    <div class="col">
-                                                        <hr class="bg-color-dark-grey" style="border: none; height: 1px;">
-                                                    </div>
-                                                </div>
-
-                                            {% endfor %}
-
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-
-                                    {%endif%}
                                 </div>
                                 <script>
 
@@ -248,7 +200,9 @@
                                         //Собираем конечный JSON
 
                                         var json = JSON.stringify({
+                                            job_id: document.getElementById("id_order").value,
                                             job_city: document.getElementById("City").value,
+                                            job_deleted: document.getElementById("id_deleted").value,
                                             job_date: document.getElementById("id_date").value,
                                             job_enddate: document.getElementById("id_enddate").value,
                                             job_description: document.getElementById("job_description").value,
@@ -306,6 +260,59 @@
                         </div>
                     </div>
                 </div>
+
+                {% if  edit == True  %}
+                    <div class="ml-3">
+                        <div class="row">
+                            <div class="col">
+                              <label class="article-sm">Отклики
+                                  {% if n.responseCount %}
+                                    ({{ n.responseCount }})
+                                  {% else %}
+                                    (Откликов нет)
+                                  {% endif %}
+                              </label>
+                            </div>
+
+                        </div>
+
+                        <div class="border">
+
+                        {% for comment in n.response_array %}
+
+
+                                    <div class="row">
+                                        <div class="col col-2 text-center">
+                                             <div class="product-img mt-3" style="height: 50px;">
+                                                 <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:50px" src="{{  comment.photo }}" alt="">
+
+                                             </div>
+                                             <a class="article text-danger" href="{{ comment.workerurl }}">
+                                                    {{ comment.worker }}
+                                                  </a>
+                                        </div>
+
+                                        <div class="col col-10 text-center">
+                                            <span class="text-menu txt-bold">{{ comment.description }}</span>
+                                        </div>
+                                    </div>
+
+
+                            <div class="row ">
+                                <div class="col">
+                                    <hr class="bg-color-dark-grey" style="border: none; height: 1px;">
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {%endif%}
 
             </div>
 
