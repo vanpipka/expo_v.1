@@ -200,9 +200,11 @@
                                         //Собираем конечный JSON
 
                                         var json = JSON.stringify({
+                                          {% if  edit == True  %}
                                             job_id: document.getElementById("id_order").value,
-                                            job_city: document.getElementById("City").value,
                                             job_deleted: document.getElementById("id_deleted").value,
+                                          {% endif %}
+                                            job_city: document.getElementById("City").value,
                                             job_date: document.getElementById("id_date").value,
                                             job_enddate: document.getElementById("id_enddate").value,
                                             job_description: document.getElementById("job_description").value,
