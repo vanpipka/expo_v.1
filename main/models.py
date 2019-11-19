@@ -750,6 +750,8 @@ class JobOrder(models.Model):
 
                 jobOrder.save()
 
+                JobComposition.objects.filter(jobOrder=jobOrder).delete()
+
                 job_composition = data.get('job_composition', [])
 
                 for e in job_composition:
