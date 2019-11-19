@@ -706,16 +706,26 @@ class JobOrder(models.Model):
         if userType == 2:
 
             try:
+                print(1)
                 id = data.get('job_id', '')
+                print(id)
 
                 if id != '':
+                    print(2)
                     if validate_uuid4(id):
+                        print(3)
                         jobOrder = JobOrder.get(id=id)
+
+                        if jobOrder.author != user:
+                            print(6)
+                            return False
                     else:
                         return False
                 else:
+                    print(4)
                     jobOrder = JobOrder()
 
+                print(5)
                 jobOrder.company        = UserType.GetElementByUser(user)
                 jobOrder.description    = data.get('job_description', '')
                 jobOrder.author         = user
