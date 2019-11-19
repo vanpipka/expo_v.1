@@ -737,7 +737,7 @@ def infojobs(request):
         if jobInfo['author'] == request.user.id:
             return render(request, 'NewJob.html', {'n': jobInfo, 'userType': userType, 'citylist': getCityListFull(), 'professionsList': getProfessionList()})
 
-        return render(request, 'infojob.html', {'n': jobInfo, 'userType': userType, 'citylist': getCityListFull(), 'professionsList': getProfessionList()})
+        return render(request, 'infojob.html', {'edit': True, 'n': jobInfo, 'userType': userType, 'citylist': getCityListFull(), 'professionsList': getProfessionList()})
 
     else:
 

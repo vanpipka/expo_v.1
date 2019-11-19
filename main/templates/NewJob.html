@@ -10,7 +10,7 @@
 
             <div class="container mt-3">
 
-                <span class="article">Новая заявка</span>
+                <span class="article">{% if  edit != True  %}Новая заявка{% else %}Редактирование заявки{% endif %}</span>
 
                 <div>
 
@@ -28,7 +28,7 @@
                                             </div>
                                             <div class="col col-9 input-group">
                                                 <select name="City" required id="City" class="form-control" disabled>
-                                                    <option value="" selected></option>
+                                                    <option value="{{n.city_id}}" selected>{{n.city__name}}</option>
                                                 </select>
 
                                                 <div class="input-group-append">
@@ -53,7 +53,7 @@
                                                 <span class="text-menu-grey">Описание</span>
                                             </div>
                                             <div class="col col-9">
-                                                <textarea name="job_description" class="form-control" rows="5" placeholder="Описание предстоящих работ" id="job_description" required></textarea>
+                                                <textarea name="job_description" class="form-control" rows="5" placeholder="Описание предстоящих работ" id="job_description" required>{{n.description}}</textarea>
                                             </div>
                                         </div>
                                         <div class="row pt-3 mr-3" style="margin: 5px">
