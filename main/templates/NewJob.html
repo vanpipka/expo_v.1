@@ -74,11 +74,15 @@
                                                     <tbody id = 'tbodyServices'>
 
                                                         {% for e in n.job_composition %}
-                                                          <tr id="tr_{{forloop.counter0}}" hidden>
+                                                          <tr id="tr_{{forloop.counter0}}">
                                                               <td>
                                                                   <select name = "service_select" id="service_{{forloop.counter0}}" class = "form-control" style="background-color: white; border: white">
                                                                       {% for s in professionsList %}
-                                                                          <option value="{{s.id}}">{{ s.name }}</option>
+                                                                          {% if s.id == e.profession__id %}
+                                                                            <option value="{{s.id}}" selected >{{ s.name }}</option>
+                                                                          {% else %}
+                                                                            <option value="{{s.id}}">{{ s.name }}</option>
+                                                                          {% endif %}
                                                                       {% endfor %}
                                                                   </select>
                                                               </td>
@@ -86,7 +90,7 @@
                                                                   <input name = 'service_count' id="service_{{forloop.counter0}}" type="number" class="form-control" value="{{e.count}}" style="background-color: white; border-color: white">
                                                               </td>
                                                               <td>
-                                                                  <input name = 'service_price' id="price_{{forloop.counter0}}" type="number" class="form-control" value="{{e.summ}}" style="background-color: white; border-color: white">
+                                                                  <input name = 'service_price' id="price_{{forloop.counter0}}" type="number" class="form-control" value="{{e.price}}" style="background-color: white; border-color: white">
                                                               </td>
                                                               <td>
                                                                   <!--<button name = 'service_btnedit' type="button" class="btn text-danger" id="edit_%number%" onclick="editService(this)" style="text-align: left; background-color: white">Изменить</button>-->
