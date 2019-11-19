@@ -73,16 +73,7 @@
                                                     </thead>
                                                     <tbody id = 'tbodyServices'>
 
-                                                        <tr id = 'tbodyControls'>
-                                                            <td>
-                                                                <button type="button" class="btn text-danger" id="add_services" onclick="addService()" style="text-align: left; background-color: white;">Добавить</button>
-                                                            </td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                        </tr>
-
-                                                        { % for e in n.job_composition % }
+                                                        {% for e in n.job_composition %}
                                                           <tr id="tr_{{forloop.counter0}}" hidden>
                                                               <td>
                                                                   <select name = "service_select" id="service_{{forloop.counter0}}" class = "form-control" style="background-color: white; border: white">
@@ -102,7 +93,17 @@
                                                                   <button name = 'service_btndelete' type="button" class="btn text-danger" id="delete_{{forloop.counter0}}" onclick="deleteService(this)" style="text-align: left; background-color: white">Удалить</button>
                                                               </td>
                                                           </tr>
-                                                        { %endfor% }
+                                                        {%endfor%}
+
+                                                        <tr id = 'tbodyControls'>
+                                                            <td>
+                                                                <button type="button" class="btn text-danger" id="add_services" onclick="addService()" style="text-align: left; background-color: white;">Добавить</button>
+                                                            </td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr>
+
                                                     </tbody>
                                                     <!-- Строка таблицы для добавления -->
                                                     <tr id="tr_%number%" hidden>
