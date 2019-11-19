@@ -17,9 +17,22 @@
                     <div class="row mt-5">
 
                         <div class = "col">
-                            <form name="form" id="form">
+                            <form name="form" id="form" class="bordered">
                                 {% csrf_token %}
                                 <div class="form-group">
+                                    {% if  edit == True  %}
+                                    <div class="row mb-3">
+                                        <div class="col col-3">
+                                            <label for="id_deleted" class="col-xs-2 control-label input-medium">Удалить заявку</label>
+                                        </div>
+                                        <div class="col col-3">
+                                            <label class="checkbox-container">
+                                                <input class="" id="id_deleted" value="True" type="checkbox" name="deleted" {% if n.deleted %}checked{% endif %}>
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
                                     <div>
                                         <input id="job_id" hidden name="job_id"></input>
                                         <div class="row mr-3" style="margin: 5px">
