@@ -714,7 +714,7 @@ class JobOrder(models.Model):
                     print(2)
                     if validate_uuid4(id):
                         print(3)
-                        jobOrder = JobOrder.get(id=id)
+                        jobOrder = JobOrder.objects.get(id=id)
 
                         if jobOrder.author != user:
                             print(6)
