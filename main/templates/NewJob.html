@@ -21,11 +21,11 @@
                                 {% csrf_token %}
                                 <div class="form-group">
                                     {% if  edit == True  %}
-                                    <div class="row mb-3">
-                                        <div class="col col-3">
+                                    <div class="row mb-3 text-right mr-3">
+                                        <div class="col col-11">
                                             <label for="id_deleted" class="col-xs-2 control-label input-medium">Удалить заявку</label>
                                         </div>
-                                        <div class="col col-3">
+                                        <div class="col col-1">
                                             <label class="checkbox-container">
                                                 <input class="" id="id_deleted" value="True" type="checkbox" name="deleted" {% if n.deleted %}checked{% endif %}>
                                                 <span class="checkmark"></span>
