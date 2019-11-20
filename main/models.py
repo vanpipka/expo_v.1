@@ -1399,7 +1399,7 @@ class MessageExpo(models.Model):
                                                     'created': m.created.strftime("%d.%m.%Y %H:%M"),
                                                     })
 
-                        if m.read == False:
+                        if m.read == False and e.recipient == user:
                             m.read = True
                             m.save()
 
