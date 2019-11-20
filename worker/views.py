@@ -132,7 +132,7 @@ def showSettings(request):
 
         if userType == 1:
 
-            worker          = gerWorkList(user_id=request.user, userAauthorized=request.user.is_authenticated, itsSettings=True)
+            worker          = gerWorkList(user = request.user, user_id=request.user, userAauthorized=request.user.is_authenticated, itsSettings=True)
             selectedList    = []
 
             if worker != None and len(worker) > 0:
@@ -184,7 +184,7 @@ def showSettingsJson(request):
 
             token = csrf.get_token(request)
 
-            worker          = gerWorkList(user_id=request.user, userAauthorized=request.user.is_authenticated, itsSettings=True)
+            worker          = gerWorkList(user = request.user, user_id=request.user, userAauthorized=request.user.is_authenticated, itsSettings=True)
             selectedList    = []
 
             if worker != None and len(worker) > 0:
@@ -299,7 +299,7 @@ def showWorker(request):
 
             commentForm = CommentForm()
 
-        workerList  = gerWorkList(idWorker=[id], userAauthorized=userAauthorized, its_superuser=request.user.is_superuser)
+        workerList  = gerWorkList(user = request.user, idWorker=[id], userAauthorized=userAauthorized, its_superuser=request.user.is_superuser)
         comments    = getComments(idWorker=id)
 
         if len(workerList) == 0:
@@ -337,7 +337,7 @@ def showWorkersJson(request):
             id = [id]
 
     context = {}
-    context["dataset"] = gerWorkList(idGroup=profession, idWorker=id, userAauthorized=request.user.is_authenticated, groupAttribute = True)
+    context["dataset"] = gerWorkList(user = request.user, idGroup=profession, idWorker=id, userAauthorized=request.user.is_authenticated, groupAttribute = True)
     context['Access-Control-Allow-Origin'] = "*"
 
     return JsonResponse(context)

@@ -225,7 +225,7 @@ def adminexpoworkers(request):
 
     if request.user.is_superuser:
         if request.method == "GET":
-            context = {"dataset": gerWorkList(userAauthorized=True, its_superuser=request.user.is_superuser)}
+            context = {"dataset": gerWorkList(user = request.user, userAauthorized=True, its_superuser=request.user.is_superuser)}
             return render(request, 'adminexpo/adminexpoworkers.html', context)
         else:
 

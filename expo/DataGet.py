@@ -67,8 +67,9 @@ def getProfessionListWithGroup(count = None, selectedList=[]):
 
     return context
 
-def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, user_id = None, itsSettings = False, groupAttribute = False, its_superuser=False):
+def gerWorkList(user=None, idGroup=None, count=None, idWorker=None, userAauthorized=False, user_id = None, itsSettings = False, groupAttribute = False, its_superuser=False):
 
+    userType = UserType.GetUserType(user)
     nowDate  = timezone.now()
     WorkList = []
 
@@ -175,7 +176,7 @@ def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, 
         else:
             WorkerInfo["experiencewith"] = 0
 
-        if userAauthorized:
+        if userType == 2 or user == e:
             WorkerInfo["phonenumber"] = e.phonenumber
             WorkerInfo["emailaddress"] = e.emailaddress
         else:
@@ -188,8 +189,10 @@ def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, 
         attachments = []
 
         #Профессии
-        for prof in e.professions.all():
-            profList.append({"id": prof.id, "name": prof.name})
+        if userType == 2 or user == e:
+            for prof in e.professions.all():
+                profList.append({"id": prof.id, "name": prof.name})
+
         WorkerInfo["proflist"] = profList
 
         #for attachment in e.WorkerAttachment.all():
@@ -197,10 +200,13 @@ def gerWorkList(idGroup=None, count=None, idWorker=None, userAauthorized=False, 
         WorkerInfo["attachments"] = attachments
 
         #Цены на услуги
-        for prof in CostOfService.objects.all().filter(idWorker=workerid).select_related('idService'):
-            priceList.append({"id": prof.idService.id, "service": prof.idService.name, "price": prof.price, "unit": prof.idService.unit})
+        works = {}
+        if userType == 2 or user == e:
+            for prof in CostOfService.objects.all().filter(idWorker=workerid).select_related('idService'):
+                priceList.append({"id": prof.idService.id, "service": prof.idService.name, "price": prof.price, "unit": prof.idService.unit})
 
-        works = {'salary': e.salary, 'servicelist': priceList}
+            works = {'salary': e.salary, 'servicelist': priceList}
+
         WorkerInfo['works'] = works
 
         WorkerInfo["servicelist"] = priceList
@@ -216,7 +222,7 @@ def getMinWorkerList():
 
     for e in querySet:
         workerlist.append({"id": e.id, "name": e.name, "resizefotourl": Attacment.getresizelink(e.image)})
-        
+
     return workerlist
 
 def getComments(idWorker):
@@ -531,7 +537,7 @@ def searchWorker(user, searchList, userAauthorized=False, returnCount = False, g
             for elem in searchquery:
                 workerid.append(elem.id)
 
-            workerList = gerWorkList(idWorker=workerid, userAauthorized=userAauthorized, groupAttribute=groupAttribute, its_superuser=user.is_superuser)
+            workerList = gerWorkList(user = request.user, idWorker=workerid, userAauthorized=userAauthorized, groupAttribute=groupAttribute, its_superuser=user.is_superuser)
 
             context["dataset"] = workerList
             context["searchproperty"] = searchProperty
