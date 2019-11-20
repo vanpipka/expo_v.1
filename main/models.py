@@ -1400,8 +1400,8 @@ class MessageExpo(models.Model):
                                                     })
 
                         if m.read == False:
-                            e.read = True
-                            e.save()
+                            m.read = True
+                            m.save()
 
                 else:
 
