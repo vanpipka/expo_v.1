@@ -227,7 +227,7 @@ def showSettingsJson(request):
                         {"columnname": "professions", "label": "Специальность", "type": "multipleref", "value": worker.get('proflist', [])},
                     ]},
                     {"name": "Услуги и цены", "items": [
-                        {"columnname": "salary", "label": "Должностной оклад (руб.)", "type": "int", "value": worker['works'].get('salary', 0)},
+                        #{"columnname": "salary", "label": "Должностной оклад (руб.)", "type": "int", "value": worker['works'].get('salary', 0)},
                         {"columnname": "services", "label": "Проектная работа", "type": "table", "value": worker['works'].get('servicelist', [])},
                     ]},
                     {"name": "Дополнительно", "items": [

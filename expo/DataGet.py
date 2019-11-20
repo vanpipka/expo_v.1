@@ -198,9 +198,8 @@ def gerWorkList(user=None, idGroup=None, count=None, idWorker=None, userAauthori
         attachments = []
 
         #Профессии
-        if userType == 2 or user == e:
-            for prof in e.professions.all():
-                profList.append({"id": prof.id, "name": prof.name})
+        for prof in e.professions.all():
+            profList.append({"id": prof.id, "name": prof.name})
 
         WorkerInfo["proflist"] = profList
 
