@@ -185,7 +185,7 @@ def gerWorkList(user=None, idGroup=None, count=None, idWorker=None, userAauthori
 
         print("Перед первой проверкой")
 
-        if userType == 2 or user == e:
+        if userType == 2 or itsSettings:
             WorkerInfo["phonenumber"] = e.phonenumber
             WorkerInfo["emailaddress"] = e.emailaddress
         else:
@@ -209,7 +209,7 @@ def gerWorkList(user=None, idGroup=None, count=None, idWorker=None, userAauthori
 
         #Цены на услуги
         works = {}
-        if userType == 2 or user == e:
+        if userType == 2 or itsSettings:
             for prof in CostOfService.objects.all().filter(idWorker=workerid).select_related('idService'):
                 priceList.append({"id": prof.idService.id, "service": prof.idService.name, "price": prof.price, "unit": prof.idService.unit})
 
