@@ -539,7 +539,7 @@ def searchWorker(user, searchList, userAauthorized=False, returnCount = False, g
                 workerid.append(elem.id)
 
             print("before gerWorkList")
-            workerList = gerWorkList(user = request.user, idWorker=workerid, userAauthorized=userAauthorized, groupAttribute=groupAttribute, its_superuser=user.is_superuser)
+            workerList = gerWorkList(user = user, idWorker=workerid, userAauthorized=userAauthorized, groupAttribute=groupAttribute, its_superuser=user.is_superuser)
 
             context["dataset"] = workerList
             context["searchproperty"] = searchProperty
