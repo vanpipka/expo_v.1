@@ -227,7 +227,7 @@ def setWorker(id, data):
 #
       #          worker.WorkerAttachment.add(attach)
 
-    print(@работаем указанные цены
+    print("Обработаем указанные цены")
 
     if data.__contains__('services'):
         CostOfService.objects.filter(idWorker=worker).delete()
