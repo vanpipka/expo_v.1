@@ -1479,6 +1479,16 @@ class MessageExpo(models.Model):
 
             message.save()
 
+    def GetActualCount(user):
+
+        count = 0
+
+        if user.is_authenticated:
+
+            count = MessageExpo.objects.all().filter(recipient=user).filter(read=False).aggregate(models.Avg('recipient'), models.Count('id')).get('id__count', 0)
+
+        return count
+
 def professions_changed(sender, **kwargs):
     # Do something
     print("Действие с мэни ту мэни")

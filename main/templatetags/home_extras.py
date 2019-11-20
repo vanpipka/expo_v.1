@@ -1,7 +1,7 @@
 from django import template
 from django.conf import settings
 from datetime import datetime
-from main.models import Attacment, UserType, Message
+from main.models import Attacment, UserType, MessageExpo
 register = template.Library()
 
 
@@ -51,7 +51,7 @@ def getactualmessage(obj):
 
     if obj.is_authenticated:
 
-        count = Message.GetActualCount(user = obj)
+        count = MessageExpo.GetActualCount(user = obj)
 
         if count == 0:
             count = ''
@@ -65,7 +65,7 @@ def decline(value, start_index=0):
     a = (int(value) % 10)
 
     if int(value) == 13 or int(value) == 14:
-        y = 'лет' 
+        y = 'лет'
     elif a == 1:
         y = 'год'
     elif a == 2 or a == 3 or a == 4:
