@@ -70,7 +70,10 @@ def getProfessionListWithGroup(count = None, selectedList=[]):
 def gerWorkList(user=None, idGroup=None, count=None, idWorker=None, userAauthorized=False, user_id = None, itsSettings = False, groupAttribute = False, its_superuser=False):
 
     print("gerWorkList")
-    userType = UserType.GetUserType(user)
+    if user == None:
+        userType = None
+    else:
+        userType = UserType.GetUserType(user)
     print("userType: "+str(userType))
     nowDate  = timezone.now()
     WorkList = []
