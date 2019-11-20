@@ -139,6 +139,7 @@ def setWorker(id, data):
     # Обработаем разрешение на работу
     if data.__contains__('workpermit'):
         workpermit = data.__getitem__('workpermit')
+        print('workpermit:' + str(workpermit))
         if workpermit == True:
             worker.workpermit = True
         else:
@@ -146,7 +147,7 @@ def setWorker(id, data):
 
     # Обработаем национальность
     if data.__contains__('country'):
-
+        print('country:' + str(country))
         country = Country.objects.get(id=data.__getitem__('country'))
 
         worker.nationality = country
@@ -156,7 +157,7 @@ def setWorker(id, data):
 
     if data.__contains__('fotourl'):
         strOne = data.__getitem__('fotourl')
-
+        print('fotourl:')
         if strOne != None:
 
             fileurl = Attacment.savefile(base64data=strOne, src='foto', resizeit=True)
