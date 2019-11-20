@@ -155,7 +155,7 @@ def gerWorkList(user=None, idGroup=None, count=None, idWorker=None, userAauthori
             attributeArray.append({"name": "haveinstrument", "label": "Есть инструмент", "value": e.haveInstrument})
             attributeArray.append({"name": "workpermit", "label": "Разрешение на работу РФ", "value": e.workpermit})
             attributeArray.append({"name": "datacheck", "label": "Анкета проверена", "value": e.datacheck})
-            attributeArray.append({"name": "haveshengen", "label": "Наличие визы", "value": e.haveShengen})
+            #attributeArray.append({"name": "haveshengen", "label": "Наличие визы", "value": e.haveShengen})
             attributeArray.append({"name": "haveintpass", "label": "Наличие загранпаспорта", "value": e.haveIntPass})
             attributeArray.append({"name": "readytotravel", "label": "Готов к командировкам", "value": e.readytotravel})
 
@@ -167,7 +167,7 @@ def gerWorkList(user=None, idGroup=None, count=None, idWorker=None, userAauthori
             WorkerInfo["haveinstrument"] = e.haveInstrument
             WorkerInfo["workpermit"] = e.workpermit
             WorkerInfo["datacheck"] = e.datacheck
-            WorkerInfo["haveshengen"] = e.haveShengen
+            #WorkerInfo["haveshengen"] = e.haveShengen
             WorkerInfo["haveintpass"] = e.haveIntPass
             WorkerInfo["readytotravel"] = e.readytotravel
 
