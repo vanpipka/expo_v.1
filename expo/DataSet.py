@@ -145,6 +145,7 @@ def setWorker(id, data):
         else:
             worker.workpermit = False
 
+    print('before country')
     # Обработаем национальность
     if data.__contains__('country'):
         print('country:' + str(country))
@@ -155,6 +156,7 @@ def setWorker(id, data):
         if country.workpermit:
             worker.workpermit = True
 
+    print('before fotourl')
     if data.__contains__('fotourl'):
         strOne = data.__getitem__('fotourl')
         print('fotourl:')
