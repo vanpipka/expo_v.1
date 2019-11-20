@@ -162,10 +162,12 @@ def setWorker(id, data):
         print('fotourl:')
         if strOne != None:
 
-            fileurl = Attacment.savefile(base64data=strOne, src='foto', resizeit=True)
-
-            if fileurl:
-                worker.image = fileurl
+            try:
+                fileurl = Attacment.savefile(base64data=strOne, src='foto', resizeit=True)
+                if fileurl:
+                    worker.image = fileurl
+            except Exception as e:
+                print('Разобраться с файлами')
 
         else:
 
@@ -176,9 +178,7 @@ def setWorker(id, data):
             except:
 
                 img = Attacment()
-
                 img.id = '00000000000000000000000000000000'
-
                 img.save()
 
             worker.image = img
