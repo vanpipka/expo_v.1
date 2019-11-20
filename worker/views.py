@@ -221,7 +221,7 @@ def showSettingsJson(request):
                     {"name": "Командировки", "items": [
                         {"columnname": "readytotravel", "label": "Готов к командировкам", "type": "boolean", "value": worker.get('readytotravel', False)},
                         {"columnname": "haveintpass", "label": "Наличие загранпаспорта", "type": "boolean", "value": worker.get('haveintpass', False)},
-                        {"columnname": "haveshengen", "label": "Наличие визы", "type": "boolean", "value": worker.get('haveshengen', False)},
+                        #{"columnname": "haveshengen", "label": "Наличие визы", "type": "boolean", "value": worker.get('haveshengen', False)},
                     ]},
                     {"name": "Мои умения и навыки", "items": [
                         {"columnname": "professions", "label": "Специальность", "type": "multipleref", "value": worker.get('proflist', [])},
