@@ -182,6 +182,7 @@ def setWorker(id, data):
             worker.image = img
 
     #Сохраним
+    print('перед сохранением карточки:')
     worker.save()
 
     # Обработаем выбранные профессии
@@ -200,11 +201,11 @@ def setWorker(id, data):
             except:
                 print("не удалось сохранить профессию")
 
-    if data.__contains__('delattachments'):
-        delattachments = list(data.__getitem__('delattachments'))
-
-        WorkerAttachment.objects.filter(id__in=delattachments).delete()
-
+    #if data.__contains__('delattachments'):
+    #    delattachments = list(data.__getitem__('delattachments'))
+    #
+    #    WorkerAttachment.objects.filter(id__in=delattachments).delete()
+    #
     # Обработаем файлы
     #if data.__contains__('attachments'):
      #   print("Обработка файлов=======================================")
