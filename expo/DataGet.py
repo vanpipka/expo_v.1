@@ -71,6 +71,7 @@ def gerWorkList(user=None, idGroup=None, count=None, idWorker=None, userAauthori
 
     print("gerWorkList")
     userType = UserType.GetUserType(user)
+    print("userType: "+str(userType))
     nowDate  = timezone.now()
     WorkList = []
 
@@ -176,6 +177,8 @@ def gerWorkList(user=None, idGroup=None, count=None, idWorker=None, userAauthori
             WorkerInfo["experiencewith"] = calculate_age(e.Experiencewith) # Переделать на разность дат
         else:
             WorkerInfo["experiencewith"] = 0
+
+        print("Перед первой проверкой")
 
         if userType == 2 or user == e:
             WorkerInfo["phonenumber"] = e.phonenumber
