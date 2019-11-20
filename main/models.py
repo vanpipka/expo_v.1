@@ -1399,6 +1399,10 @@ class MessageExpo(models.Model):
                                                     'created': m.created.strftime("%d.%m.%Y %H:%M"),
                                                     })
 
+                        if m.read == False:
+                            e.read = True
+                            e.save()
+
                 else:
 
                     answer['message'] = 'is not valid GUID'

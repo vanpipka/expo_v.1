@@ -647,7 +647,7 @@ def dialogs(request):
 
         else:
 
-            return redirect('accounts/login/')
+            return redirect('/accounts/login/')
 
 def messages(request):
 
