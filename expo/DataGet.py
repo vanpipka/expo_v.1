@@ -69,6 +69,7 @@ def getProfessionListWithGroup(count = None, selectedList=[]):
 
 def gerWorkList(user=None, idGroup=None, count=None, idWorker=None, userAauthorized=False, user_id = None, itsSettings = False, groupAttribute = False, its_superuser=False):
 
+    print("gerWorkList")
     userType = UserType.GetUserType(user)
     nowDate  = timezone.now()
     WorkList = []
@@ -537,6 +538,7 @@ def searchWorker(user, searchList, userAauthorized=False, returnCount = False, g
             for elem in searchquery:
                 workerid.append(elem.id)
 
+            print("before gerWorkList")
             workerList = gerWorkList(user = request.user, idWorker=workerid, userAauthorized=userAauthorized, groupAttribute=groupAttribute, its_superuser=user.is_superuser)
 
             context["dataset"] = workerList
