@@ -148,9 +148,9 @@ def setWorker(id, data):
     print('before country')
     # Обработаем национальность
     if data.__contains__('country'):
-        print('country:' + str(country))
-        country = Country.objects.get(id=data.__getitem__('country'))
 
+        country = Country.objects.get(id=data.__getitem__('country'))
+        print('country:' + str(country))
         worker.nationality = country
 
         if country.workpermit:
