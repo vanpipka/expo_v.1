@@ -228,11 +228,11 @@ def jsonSelectionParameters(request):
             "type": 'boolean',
             "columnname": 'haveip',
         },
-        {
-            "title": 'Наличие визы',
-            "type": 'boolean',
-            "columnname": 'haveshengen',
-        },
+        #{
+        #    "title": 'Наличие визы',
+        #    "type": 'boolean',
+        #    "columnname": 'haveshengen',
+        #},
 
         {
             "title": 'Наличие загранпаспорта',
