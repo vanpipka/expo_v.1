@@ -352,7 +352,7 @@ def Reset(request):
 
         if username.isdigit() != True:
 
-            error_dict = {'email': 'Номер телефона указан неверно'}
+            error_dict = {'username': 'Номер телефона указан неверно'}
 
             if request.is_ajax():
 
@@ -376,7 +376,7 @@ def Reset(request):
         try:
             u = User.objects.get(username=username)
         except:
-            error_dict = {'email': 'Пользователя с таким номером телефона не существует'}
+            error_dict = {'username': 'Пользователя с таким номером телефона не существует'}
 
             if request.is_ajax():
 

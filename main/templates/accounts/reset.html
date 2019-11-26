@@ -18,8 +18,8 @@
                     <label for="id_username" class="col-sm-4 col-form-label">Телефон</label>
                     <div class="col-sm-8">
                         <input style="border-radius: 0px" name="username" type="text" class="form-control" id="id_username" placeholder="Номер телефона" value="{{ username }}" required {% if confirmphone %} readonly {% endif %}>
-                        {% if errors.email %}
-                            <span style="color: red; font-size: 10px">{{ errors.email }}</span>
+                        {% if errors.username %}
+                            <span style="color: red; font-size: 10px">{{ errors.username }}</span>
                         {% endif %}
                     </div>
                 </div>
