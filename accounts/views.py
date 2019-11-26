@@ -453,7 +453,7 @@ def Reset(request):
 
                         jsonData = {'Access-Control-Allow-Origin': "*",
                                     'status': True,
-                                    'errors':  {'confirmphone': 'Для завершения регистрации введите код подтверждения полученный по СМС'},
+                                    'errors':  {'confirmphone': 'Для завершения восстановления пароля введите код подтверждения полученный по СМС'},
                                     'cookies': {'csrftoken': request.META["CSRF_COOKIE"],
                                                 'sessionid': request.session.session_key,
                                                 'csrfmiddlewaretoken': csrf.get_token(request)}}
