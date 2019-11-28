@@ -703,7 +703,7 @@ class JobOrder(models.Model):
 
         userType = UserType.GetUserType(user)
 
-        if userType == 2:
+        if userType == 2 or user.is_superuser:
 
             try:
                 print(1)
@@ -728,9 +728,10 @@ class JobOrder(models.Model):
                 print(5)
                 jobOrder.company        = UserType.GetElementByUser(user)
                 jobOrder.description    = data.get('job_description', '')
-                jobOrder.author         = user
                 jobOrder.deleted        = data.get('job_deleted', False)
-
+                if id == '':
+                    jobOrder.author         = user
+                    
                 id_city = data.get('job_city', '00000000000000000000000000000000')
 
                 if id_city == '':

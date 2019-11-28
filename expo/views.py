@@ -876,7 +876,7 @@ def saveorder(request):
 
             userType = UserType.GetUserType(request.user)
 
-            if userType == 2:
+            if userType == 2 or request.user.is_superuser:
 
                 if request.POST.__contains__('data'):
 
