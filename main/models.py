@@ -716,7 +716,7 @@ class JobOrder(models.Model):
                         print(3)
                         jobOrder = JobOrder.objects.get(id=id)
 
-                        if jobOrder.author != user:
+                        if jobOrder.author != user and user.is_superuser == False:
                             print(6)
                             return False
                     else:
@@ -731,7 +731,7 @@ class JobOrder(models.Model):
                 jobOrder.deleted        = data.get('job_deleted', False)
                 if id == '':
                     jobOrder.author         = user
-                    
+
                 id_city = data.get('job_city', '00000000000000000000000000000000')
 
                 if id_city == '':
