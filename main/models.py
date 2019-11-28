@@ -726,12 +726,14 @@ class JobOrder(models.Model):
                     jobOrder = JobOrder()
 
                 print(5)
-                jobOrder.company        = UserType.GetElementByUser(user)
+
                 jobOrder.description    = data.get('job_description', '')
                 jobOrder.deleted        = data.get('job_deleted', False)
                 if id == '':
+                    jobOrder.company        = UserType.GetElementByUser(user)
                     jobOrder.author         = user
 
+                print(7)
                 id_city = data.get('job_city', '00000000000000000000000000000000')
 
                 if id_city == '':
