@@ -6,7 +6,7 @@
 
     {% if user.is_active %}
 
-        {% if  userType == 2 || user.is_superuser %}
+        {% if  userType == 2 or user.is_superuser %}
 
             <div class="container mt-3 bordered">
 
