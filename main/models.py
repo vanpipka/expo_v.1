@@ -122,7 +122,7 @@ class Attacment(models.Model):
         else:
             strOne = base64data
 
-        your_media_root = '/opt/vseexpo/main/media/'#settings.MEDIA_ROOT
+        your_media_root = '/opt/vseexpo/main/media/';#settings.MEDIA_ROOT
         directory       = str(your_media_root)
         name            = str(uuid.uuid4()) + '.png'
         fullpath        = path.join(directory, src, name)
@@ -579,7 +579,7 @@ class JobOrder(models.Model):
             try:
                 e['photo'] = Attacment.getresizelink(Attacment.objects.get(id=e['company__image']))
             except:
-                e['photo'] = ''
+                e['photo'] = '';
 
             if (userType != 1):
                 e['response_is_available'] = 2      #ничего не выводить
@@ -652,7 +652,7 @@ class JobOrder(models.Model):
         try:
             e['photo'] = Attacment.getresizelink(Attacment.objects.get(id=e['company__image']))
         except:
-            e['photo'] = ''
+            e['photo'] = '';
 
         if (userType != 1):
             e['response_is_available'] = 2      #ничего не выводить
@@ -1129,8 +1129,8 @@ class Message(models.Model):
         #messageQuery = Message.objects..select_related('comment').select_related('jobresponse').order_by("-created")
 
 
-        recipient = Message.objects.all().filter(Q(recipient=user) | Q(sender=user)).values('recipient').distinct()
-        sender    = Message.objects.all().filter(Q(recipient=user) | Q(sender=user)).values('sender').distinct()
+        recipient = Message.objects.all().filter(Q(recipient=user) | Q(sender=user)).values('recipient').distinct();
+        sender    = Message.objects.all().filter(Q(recipient=user) | Q(sender=user)).values('sender').distinct();
 
         for r in recipient:
 
@@ -1241,12 +1241,12 @@ class WorkerRating(models.Model):
             workerRating = WorkerRating(idWorker=worker)
 
         if (rating['rating__avg'] == None):
-            workerRating.rating         = 0
+            workerRating.rating         = 0;
         else:
             workerRating.rating         = rating['rating__avg']
 
         if (rating['id__count'] == None):
-            workerRating.commentsCount  = 0
+            workerRating.commentsCount  = 0;
         else:
             workerRating.commentsCount  = rating['id__count']
 
@@ -1340,7 +1340,7 @@ class Dialog(models.Model):
     def refreshLastMessage(message):
 
         try:
-            dialog = message.idDialog
+            dialog = message.idDialog;
             dialog.lastMessage = message
             dialog.save()
         except Exception as e:
