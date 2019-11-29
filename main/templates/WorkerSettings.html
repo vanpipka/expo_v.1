@@ -69,9 +69,10 @@
                                 </div>
                             </div>
                         {% endif %}
-
+                        <img id ="photoImage" src="{{ worker.fotourl }}" alt="" hidden>
                         <div class="row">
                             <div class="col">
+
                                 <div class="file-upload container-fluid btn btn-danger">
                                     <label>
                                         <input id = "finput_foto" type="file" name="file" onchange="setlocalfoto(this)" accept="image/jpg,image/jpeg,image/png">
@@ -535,6 +536,7 @@
     var currentCount = 100;
     var newfiles    = [];
     var deletefiles = [];
+    var HERMITE = new Hermite_class();
 
     function saveProf() {
 
@@ -619,6 +621,7 @@
 
 
     function setlocalfoto(e) {
+
         console.log(e.id)
         var input = document.getElementById(e.id);
         var fReader = new FileReader();
@@ -626,8 +629,13 @@
         fReader.onloadend = function(event){
 
             if(e.id=="finput_foto"){
+
                 var img = document.getElementById("fotourl");
                 img.src = event.target.result;
+                console.log(img.src);
+                photoImage.src = img.src;
+                HERMITE.resize_image('photoImage', 300, 100);
+                console.log(photoImage.src);
             }
 
             else{
@@ -690,7 +698,7 @@
         }
 
         //Собираем конечный JSON
-
+        console.log(document.getElementById("photoImage"));
         var json = JSON.stringify({
             name: document.getElementById("id_name").value,
             surname: document.getElementById("id_surname").value,
@@ -707,7 +715,7 @@
             birthday: document.getElementById("id_birthday").value,
             haveinstrument: document.getElementById("id_haveinstrument").checked,
             publishdata: document.getElementById("id_publishdata").checked,
-            fotourl: document.getElementById("fotourl").src,
+            fotourl: document.getElementById("photoImage").src,
             professions: SelectedProf,
             readytotravel: document.getElementById("id_readytotravel").checked,
             /*haveshengen: document.getElementById("id_haveshengen").checked,*/

@@ -240,7 +240,7 @@ class Worker(models.Model):
     professions    = models.ManyToManyField(Professions)
     phonenumber    = models.CharField(max_length=100)
     emailaddress   = models.CharField(max_length=100)
-    WorkerAttachment    = models.ManyToManyField(WorkerAttachment)
+    #WorkerAttachment    = models.ManyToManyField(WorkerAttachment)
     salary              = models.DecimalField(max_digits=10, decimal_places=0, default=0) #Цена основной работы
 
     def __str__(self):
@@ -844,6 +844,8 @@ class UserType(models.Model):
         return userType
 
     def SetUserType(user, type):
+
+        print(type)
 
         try:
             userType = UserType.objects.get(user=user)
