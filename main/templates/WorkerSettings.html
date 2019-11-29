@@ -738,11 +738,10 @@
             if (xhr.readyState != 4) return;
 
             if (xhr.status != 200) {
-
+                document.getElementById("btn_save").innerText = "Ошибка при сохранении";
+            } else {
                 loader.hidden = true;
                 location.href = (xhr.responseText);
-            } else {
-                document.getElementById("btn_save").innerText = "Ошибка при сохранении";  
             }
         }
 
