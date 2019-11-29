@@ -203,7 +203,6 @@ class Attacment(models.Model):
             else:
                 img = str(settings.MEDIA_URL) + str(attach.resizePath)
 
-            print(img)
             return (img)
         else:
             return str(settings.STATIC_URL) + 'main/img/add-photo.png'

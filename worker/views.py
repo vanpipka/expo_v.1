@@ -20,6 +20,8 @@ def show(request):
 
 def saveSettings(request):
 
+    print("saveSettings: ==========================================================")
+
     if request.user.is_authenticated:
         refreshLastOnline(request.user)
 
