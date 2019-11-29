@@ -163,6 +163,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
+
 LANGUAGE_CODE = 'en-us'
 
 #TIME_ZONE = 'UTC'

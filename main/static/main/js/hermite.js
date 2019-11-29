@@ -58,24 +58,30 @@ function Hermite_class() {
 	 * @param {string} multi_core optional.
 	 */
 	this.resize_image = function (image_id, width, height, percentages, multi_core) {
-		var img = document.getElementById(image_id);
+		var image = document.getElementById(image_id);
 
-		//create temp canvas
-		var temp_canvas = document.getElementById("canvas");
-		//temp_canvas.width = img.width;
-		//temp_canvas.height = img.height;
-		var temp_ctx = temp_canvas.getContext("2d");
+		var img = new Image();
+		img.src = image.src;
 
-		//draw image
-		temp_ctx.drawImage(img, 0, 0);
+		img.onload = function() {
 
-		canvas.width  = 300;
-		canvas.height = 300;
+			//create temp canvas
+			var temp_canvas = document.getElementById("canvas");
+			//temp_canvas.width = img.width;
+			//temp_canvas.height = img.height;
+			var temp_ctx = temp_canvas.getContext("2d");
 
-		console.log("sfsfsdfsdf");
+			//draw image
+			temp_ctx.drawImage(img, 0, 0);
 
-		var dataURL = temp_canvas.toDataURL();
-		img.src = dataURL;
+			canvas.width  = 300;
+			canvas.height = 300;
+
+			var dataURL = temp_canvas.toDataURL();
+			img.src = dataURL;
+
+		};
+
 
 		//prepare size
 		/*if (width == undefined && height == undefined && percentages != undefined) {

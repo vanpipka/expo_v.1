@@ -69,9 +69,6 @@
                                 </div>
                             </div>
                         {% endif %}
-                        <canvas id="canvas" width="300" height="300">
-                            Альтернативное содержимое, которое будет показано, если браузер не поддерживает Canvas.
-                        </canvas>
                         <div class="row">
                             <div class="col">
 
@@ -482,7 +479,10 @@
             </div>
 
             <div class="pb-3">
-                <button type="submit" class="btn btn-danger">Сохранить изменения</button>
+                <button type="submit" class="btn btn-danger" id="btn_save">
+                  <img id="loader" src="{% get_attribute 'STATIC_URL' %}main/img/loader.gif" style="max-height: 30px; vertical-align: middle" hidden></img>
+                  Сохранить изменения
+                </button>
             </div>
 
         </form>
@@ -635,8 +635,6 @@
                 var img = document.getElementById("fotourl");
                 img.src = event.target.result;
 
-
-
             }
 
             else{
@@ -672,11 +670,10 @@
 
     function formsave() {
 
-        HERMITE.resize_image('fotourl', 300, 300);
+        var loader    = document.getElementById("loader");
+        loader.hidden = false;
 
-        console.log(document.getElementById("fotourl").src);
-
-        var formData = new FormData();
+        var formData  = new FormData();
 
         //Собираем список профессий
         var ProfList = document.getElementById("ProfessionsGroup").getElementsByTagName('option');
@@ -737,15 +734,15 @@
         var xhr = new XMLHttpRequest();
 
         xhr.onreadystatechange = function() { // (3)
+
             if (xhr.readyState != 4) return;
 
             if (xhr.status != 200) {
-                //console.log(xhr);
-                //alert(xhr.status + ': ' + xhr.statusText);
+
+                loader.hidden = true;
                 location.href = (xhr.responseText);
             } else {
-                //alert("Данные сохранены");
-                location.href = (xhr.responseText);
+                document.getElementById("btn_save").innerText = "Ошибка при сохранении";  
             }
         }
 
