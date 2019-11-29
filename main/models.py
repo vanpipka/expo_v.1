@@ -127,7 +127,8 @@ class Attacment(models.Model):
         name            = str(uuid.uuid4()) + '.png'
         fullpath        = path.join(directory, src, name)
         attachment      = Attacment()
-
+        print("fullpath=============================================")
+        print(fullpath)
         #try:
         if (True):
             print('1')
@@ -135,7 +136,8 @@ class Attacment(models.Model):
                 b64decode = base64.b64decode(strOne.strip())
                 fh.write(b64decode)
                 attachment.path = fullpath.replace(directory, '').replace('\\', '/')
-
+                print("attachment.path=============================================")
+                print(attachment.path)
             if resizeit:
                 resizename = str(uuid.uuid4()) + '.png'
                 fullresizepath = path.join(directory, 'attacmentresize', resizename)

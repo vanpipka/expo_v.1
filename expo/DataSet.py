@@ -5,7 +5,7 @@ from main.models import Worker, City, Country, Professions, WorkerAttachment, Co
 
 def setWorker(id, data):
 
-    print("Сохраняем:")
+    print("Сохраняем: ==========================================================")
     print(id)
 
     worker = Worker.addWorker(user=id, type=1)
