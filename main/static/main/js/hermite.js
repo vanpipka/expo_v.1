@@ -16,7 +16,7 @@ function Hermite_class() {
 
 	/**
 	 * Returns CPU cores count
-	 * 
+	 *
 	 * @returns {int}
 	 */
 	this.getCores = function () {
@@ -25,7 +25,7 @@ function Hermite_class() {
 
 	/**
 	 * Hermite resize. Detect cpu count and use best option for user.
-	 * 
+	 *
 	 * @param {HtmlElement} canvas
 	 * @param {int} width
 	 * @param {int} height
@@ -50,7 +50,7 @@ function Hermite_class() {
 
 	/**
 	 * Hermite resize. Resize actual image.
-	 * 
+	 *
 	 * @param {string} image_id
 	 * @param {int} width
 	 * @param {int} height optional.
@@ -61,16 +61,24 @@ function Hermite_class() {
 		var img = document.getElementById(image_id);
 
 		//create temp canvas
-		var temp_canvas = document.createElement("canvas");
-		temp_canvas.width = img.width;
-		temp_canvas.height = img.height;
+		var temp_canvas = document.getElementById("canvas");
+		//temp_canvas.width = img.width;
+		//temp_canvas.height = img.height;
 		var temp_ctx = temp_canvas.getContext("2d");
 
 		//draw image
 		temp_ctx.drawImage(img, 0, 0);
 
+		canvas.width  = 300;
+		canvas.height = 300;
+
+		console.log("sfsfsdfsdf");
+
+		var dataURL = temp_canvas.toDataURL();
+		img.src = dataURL;
+
 		//prepare size
-		if (width == undefined && height == undefined && percentages != undefined) {
+		/*if (width == undefined && height == undefined && percentages != undefined) {
 			width = img.width / 100 * percentages;
 			height = img.height / 100 * percentages;
 		}
@@ -98,12 +106,12 @@ function Hermite_class() {
 		else {
 			this.resample_single(temp_canvas, width, height, true);
 			on_finish();
-		}
+		}*/
 	};
 
 	/**
 	 * Hermite resize, multicore version - fast image resize/resample using Hermite filter.
-	 * 
+	 *
 	 * @param {HtmlElement} canvas
 	 * @param {int} width
 	 * @param {int} height
@@ -297,7 +305,7 @@ function Hermite_class() {
 
 	/**
 	 * Hermite resize - fast image resize/resample using Hermite filter. 1 cpu version!
-	 * 
+	 *
 	 * @param {HtmlElement} canvas
 	 * @param {int} width
 	 * @param {int} height

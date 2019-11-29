@@ -69,7 +69,9 @@
                                 </div>
                             </div>
                         {% endif %}
-                        <img id ="photoImage" src="{{ worker.fotourl }}" alt="" hidden>
+                        <canvas id="canvas" width="300" height="300">
+                            Альтернативное содержимое, которое будет показано, если браузер не поддерживает Canvas.
+                        </canvas>
                         <div class="row">
                             <div class="col">
 
@@ -632,10 +634,9 @@
 
                 var img = document.getElementById("fotourl");
                 img.src = event.target.result;
-                console.log(img.src);
-                photoImage.src = img.src;
-                HERMITE.resize_image('photoImage', 300, 100);
-                console.log(photoImage.src);
+
+
+
             }
 
             else{
@@ -671,6 +672,10 @@
 
     function formsave() {
 
+        HERMITE.resize_image('fotourl', 300, 300);
+
+        console.log(document.getElementById("fotourl").src);
+
         var formData = new FormData();
 
         //Собираем список профессий
@@ -698,7 +703,7 @@
         }
 
         //Собираем конечный JSON
-        console.log(document.getElementById("photoImage"));
+
         var json = JSON.stringify({
             name: document.getElementById("id_name").value,
             surname: document.getElementById("id_surname").value,
@@ -715,7 +720,7 @@
             birthday: document.getElementById("id_birthday").value,
             haveinstrument: document.getElementById("id_haveinstrument").checked,
             publishdata: document.getElementById("id_publishdata").checked,
-            fotourl: document.getElementById("photoImage").src,
+            fotourl: document.getElementById("fotourl").src,
             professions: SelectedProf,
             readytotravel: document.getElementById("id_readytotravel").checked,
             /*haveshengen: document.getElementById("id_haveshengen").checked,*/
