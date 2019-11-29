@@ -1,10 +1,11 @@
 from django.http import  JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from expo.DataGet import  getProfessionList, getAllProfessionsAndGroups, getCityListFull, getServiceList, getCountryList, getCityList
 from expo.DataSet import refreshLastOnline
-from main.models import Professions, Service, UserType, News, Comments, Company, Attacment, CostOfService, Worker
+from main.models import Professions, Service, UserType, News, Comments, Company, Attacment, CostOfService, Worker, ConfirmCodes
 import json
 import logging
+from django.conf import settings
 
 from django.middleware import csrf
 # Create your views here.
@@ -44,6 +45,22 @@ def show(request):
 
     return render(request, 'index.html', context)
 
+def sendlink(request):
+
+    if request.user.is_authenticated:
+        refreshLastOnline(request.user)
+
+    if request.method == "POST":
+
+        phone = request.POST.__getitem__("get_link_phone")
+        type = request.POST.__getitem__("get_link_type")
+
+        ConfirmCodes.SendLink(phoneNumber=phone, type=type)
+        return redirect(settings.HOME_PAGE + 'success/', status=200)
+
+    else:
+        return redirect(settings.HOME_PAGE + 'forbiden/', status=403)
+
 def showtest(request):
 
     if request.user.is_authenticated:
@@ -58,113 +75,6 @@ def showtest(request):
     #    context['worker'] = getWorkerData(user_id = request.user, data = ['foto'])
 
     return render(request, 'index_ant.html', context)
-
-def ServicesListSave(request):
-
-    if request.user.is_authenticated:
-        refreshLastOnline(request.user)
-
-    if request.user.is_authenticated: # != True:
-
-        if request.method == "POST":
-
-            print(request.POST)
-
-            if request.POST.__contains__('data'):
-
-                #print(request.POST.__getitem__('data'))
-
-                jsonString = json.loads(request.POST.__getitem__('data'))
-
-                worker = UserType.GetElementByUser(request.user);
-
-                if worker != None:
-                    print ('aaaa')
-                    print(jsonString)
-
-                    CostOfService.objects.filter(idWorker=worker).delete()
-
-                    for service in jsonString:
-                        print ('ddddd')
-
-                        price       = service.get('price')
-                        idService   = service.get('id')
-
-                        if price != '' and price != '0' and price != 0 and price != None:
-                            try:
-                                costofservice = CostOfService(idWorker=worker, idService = Service.objects.get(id=idService))
-                                costofservice.price = float(price)
-                                costofservice.save()
-                            except:
-                                print('ошибка при сохранении цены: '+str(worker)+'/'+str(idService))
-                        else:
-                            print('цена равна 0: '+str(worker)+'/'+str(idService))
-
-            if request.is_ajax():
-
-                return JsonResponse({'status': True, 'csrfmiddlewaretoken': csrf.get_token(request)})
-
-            else:
-                return HttpResponse(settings.HOME_PAGE + 'success/')
-
-        else:
-            if request.is_ajax():
-                return JsonResponse({'status': False, 'csrfmiddlewaretoken': csrf.get_token(request)})
-            else:
-                return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)
-    else:
-        if request.is_ajax():
-            return JsonResponse({'status': False, 'csrfmiddlewaretoken': csrf.get_token(request)})
-        else:
-            return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)
-
-def ProfessionsListSave(request):
-
-    if request.user.is_authenticated:
-        refreshLastOnline(request.user)
-
-    if request.user.is_authenticated: # != True:
-
-        if request.method == "POST":
-
-            print(request.POST)
-
-            if request.POST.__contains__('data'):
-
-                jsonString = json.loads(request.POST.__getitem__('data'))
-
-                worker = UserType.GetElementByUser(request.user);
-
-                if worker != None:
-                    print ('aaaa')
-                    print(jsonString)
-
-                    worker.professions.clear()
-
-                    for prof in jsonString:
-
-                        if prof.get('value') == True:
-                            try:
-                                worker.professions.add(Professions.objects.get(id=prof.get('id')))
-                            except:
-                                print("не удалось сохранить профессию")
-
-            if request.is_ajax():
-                return JsonResponse({'status': True, 'csrfmiddlewaretoken': csrf.get_token(request)})
-
-            else:
-                return HttpResponse(settings.HOME_PAGE + 'success/')
-
-        else:
-            if request.is_ajax():
-                return JsonResponse({'status': False, 'csrfmiddlewaretoken': csrf.get_token(request)})
-            else:
-                return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)
-    else:
-        if request.is_ajax():
-            return JsonResponse({'status': False, 'csrfmiddlewaretoken': csrf.get_token(request)})
-        else:
-            return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)
 
 def jsonProfessionList(request):
 

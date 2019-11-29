@@ -316,13 +316,21 @@
                                 Скачать приложение по ссылке из SMS
                             </span>
                         </div>
-                        <div class="mt-3">
-                            <div class="form-group row">
-                                <div class="col-sm-6 col-md-6 col-lg-8">
-                                    <input id="get_link_phone" name="get_link_phone" class="form-control" placeholder="Номер телефона" value="">
-                                </div>
-                                <div class="col-sm-6 col-md-6 col-lg-4">
-                                    <a href="/"  type="" class="btn btn-danger container-fluid">Получить ссылку</a>
+                        <form class="" action="/sendlink/" method="post">
+                          {% csrf_token %}
+                          <div class="row mt-3">
+
+                            <div class="input-group col-sm-6 col-md-6 col-lg-8">
+                                  <input id="get_link_phone" name="get_link_phone" class="form-control" placeholder="Номер телефона" value="" required>
+                                  <div class="input-group-append">
+                                      <select class="form-control" name="get_link_type" required>
+                                          <option value="1">iPhone</option>
+                                          <option value="2">android</option>
+                                      </select>
+                                    </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-lg-4">
+                                    <button type="submit" class="btn btn-danger container-fluid">Получить ссылку</button>
                                     <script>
                                         $(function(){
                                             //2. Получить элемент, к которому необходимо добавить маску
@@ -331,7 +339,7 @@
                                     </script>
                                 </div>
                             </div>
-                        </div>
+                        </form>
                         <div class="row">
                             <div class="col text-left" style="max-height: 77px">
                                 <a href="https://apps.apple.com/ru/app/vseexpo/id1481122024">

@@ -25,6 +25,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('', views.show),
+    path('sendlink/', views.sendlink),
     path('m/servicelist/', views.jsonServicesList),
     #path('m/servicelist/save/', views.ServicesListSave),
     path('m/selectionparameters/', views.jsonSelectionParameters),

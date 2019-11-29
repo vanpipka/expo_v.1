@@ -972,6 +972,25 @@ class ConfirmCodes(models.Model):
             text = 'Код подтверждения для завершения регистрации: ' + str(confirmcode)
             dd = sendMessage(phone=phoneNumber, text=text)
 
+    def SendLink(phoneNumber, type):
+
+        print("SendLink")
+
+        phoneNumber = phoneNumber.replace(' ', '')
+        phoneNumber = phoneNumber.replace(')', '')
+        phoneNumber = phoneNumber.replace('(', '')
+        phoneNumber = phoneNumber.replace('-', '')
+        phoneNumber = phoneNumber.replace('+7', '8')
+
+        if type == '1':
+            text = 'Ссылка для загрузки VseEXPO: https://apps.apple.com/ru/app/vseexpo/id1481122024'
+        elif type == '2':
+            text = 'Ссылка для загрузки VseEXPO: https://play.google.com/store/apps/details?id=com.vseexpo.app'
+        else:
+            return
+
+        dd = sendMessage(phone=phoneNumber, text=text)
+
 class CostOfService(models.Model):
 
     id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
