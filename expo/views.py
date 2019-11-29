@@ -4,7 +4,7 @@ from datetime import datetime as datet
 from datetime import timezone
 from main.models import Company, Dialog, MessageExpo, News, JobOrder, UserType, Attacment, Message, Worker, Comments, ConfirmCodes
 from expo.DataSet import refreshLastOnline
-from expo.DataGet import getCityListFull, getProfessionList, gerWorkList
+from expo.DataGet import getCityListFull, getProfessionList, gerWorkList, getStatistics
 from expo.Balance import getBalance
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
@@ -60,6 +60,21 @@ def adminexpo(request):
         context = {'balance': getBalance()}
 
         return render(request, 'adminexpo/adminexpo.html', context)
+    else:
+        return render(request, 'errors/403.html', None, None, status='403')
+
+def adminexpocharts(request):
+
+    userAauthorized = request.user.is_authenticated
+
+    if userAauthorized:
+        refreshLastOnline(request.user)
+
+    if request.user.is_superuser:
+
+        content = getStatistics(request.user)
+
+        return render(request, 'adminexpo/adminexpocharts.html', content)
     else:
         return render(request, 'errors/403.html', None, None, status='403')
 

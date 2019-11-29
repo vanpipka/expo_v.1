@@ -1,10 +1,41 @@
 from datetime import *
 from django.utils import timezone
 from main.models import *
+from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
+from datetime import date, timedelta
 
+def getStatistics(user):
+    content     = {}
 
+    #Получаем данные по регистрациям за последние 10 дней
+    newusers    = []
+    sdate       = datetime.datetime.now().date()
+    i           = 10
+    while i >= 0:
+        ndate = sdate - timedelta(days=i)
+        newusers.append({"date":  str(ndate.day)+"."+str(ndate.month), "count": User.objects.filter(date_joined__range=(ndate, ndate + timedelta(days=1))).count()})
+        i = i-1
+
+    content["newUsers"] = newusers
+
+    #Получаем общее количество ползователей по профессиям
+    professions    = []
+    for p in Professions.objects.all().order_by("-workerСount"):
+        professions.append({
+                    "name": p.name,
+                    "count": p.workerСount
+                });
+
+    professions.append({
+                "name": "Без профессии",
+                "count": Worker.objects.filter(professions__isnull=True).count()
+            });
+
+    content["professions"] = professions
+
+    return content
 
 def getAllProfessionsAndGroups(count = None):
 
