@@ -1,6 +1,6 @@
 from datetime import datetime as datet
 from django.utils import timezone
-from main.models import Worker, City, Country, Professions, WorkerAttachment, CostOfService, Service, UserType, Attacment
+from main.models import UserActivity, Worker, City, Country, Professions, WorkerAttachment, CostOfService, Service, UserType, Attacment
 #from expo.SaveFile import savefile
 
 def setWorker(id, data):
@@ -248,6 +248,8 @@ def setWorker(id, data):
     return
 
 def refreshLastOnline(userId):
+
+    UserActivity.setActivity(userId)
 
     try:
 

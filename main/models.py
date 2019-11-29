@@ -19,6 +19,26 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+class UserActivity(models.Model):
+
+    id   = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateField(datetime.date, default=None, null=True)
+
+    def __str__(self):
+        return str(self.user) + " - " + str(self.date)
+
+    def setActivity(user):
+
+        try:
+            act = UserActivity.objects.get(date=datetime.datetime.now().date(), user=user)
+        except Exception as e:
+            act = UserActivity()
+            act.user = user
+            act.date = datetime.datetime.now().date()
+
+            act.save()
+
 class WorkGroup(models.Model):
 
     id      = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
