@@ -300,7 +300,7 @@
             </div>
             <div class="container">
                 <div class="row">
-                    <div class="col col-md-6 col-lg-8 pt-4">
+                    <div class="col col-md-8 col-lg-8 pt-4">
                         <div class="mt-5">
                             <span class="article">Не пропустите выставку!</span>
                         </div>
@@ -320,25 +320,24 @@
                           {% csrf_token %}
                           <div class="row mt-3">
 
-                            <div class="input-group col-sm-6 col-md-6 col-lg-8">
+                            <div class="input-group col">
                                   <input id="get_link_phone" name="get_link_phone" class="form-control" placeholder="Номер телефона" value="" required>
                                   <div class="input-group-append">
                                       <select class="form-control" name="get_link_type" required>
                                           <option value="1">iPhone</option>
                                           <option value="2">android</option>
                                       </select>
+                                      <button type="submit" class="btn btn-danger container-fluid">Получить ссылку</button>
                                     </div>
-                            </div>
-                            <div class="col-sm-6 col-md-6 col-lg-4">
-                                    <button type="submit" class="btn btn-danger container-fluid">Получить ссылку</button>
+
                                     <script>
                                         $(function(){
                                             //2. Получить элемент, к которому необходимо добавить маску
                                             $("#get_link_phone").mask("8(999) 999-9999");
                                         });
                                     </script>
-                                </div>
                             </div>
+                          </div>
                         </form>
                         <div class="row">
                             <div class="col text-left" style="max-height: 77px">
@@ -351,7 +350,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col col-md-6 col-lg-4">
+                    <div class="col col-md-4 col-lg-4">
                         <img >
                             <img src="{% get_attribute 'STATIC_URL' %}main/img/phone.png">
                         </img>
