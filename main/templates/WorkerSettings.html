@@ -166,7 +166,13 @@
                         <label for="id_birthday" class="col-xs-2 control-label input-medium">Дата рождения*</label>
                     </div>
                     <div class="col col-3">
-                        <input type="text" name="birthday" class="form-control" id="id_birthday"  placeholder="День рождения" value="{{worker.birthday|date:"Y-m-d"}}" readonly>
+                        <input type="text" name="birthday" class="form-control" id="id_birthday"  placeholder="День рождения" value="{{worker.birthday|date:"d-m-Y"}}">
+                        <script>
+                            $(function(){
+                                //2. Получить элемент, к которому необходимо добавить маску
+                                $("#id_birthday").mask("99-99-9999");
+                            });
+                        </script>
                     </div>
                 </div>
 
@@ -613,14 +619,6 @@
 
         tbody.insertBefore(tr, tbody.children[tbody.children.length-1]);
     }
-
-    // Выбор даты рождения
-    $( "#id_birthday" ).datepicker({
-        changeYear: true,
-        changeMonth: true,
-        dateFormat: 'yy-mm-dd',
-    });
-
 
     function setlocalfoto(e) {
 

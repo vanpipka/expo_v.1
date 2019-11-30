@@ -63,9 +63,13 @@ def setWorker(id, data):
                 print('ошибка при сохранении даты рождения: ' + str(worker) + '/1960-01-01')
         else:
             try:
-                worker.birthday   = datet.strptime(birthday, "%Y-%m-%d")
+                worker.birthday   = datet.strptime(birthday, "%Y-%m-%d")                
             except:
-                print('ошибка при сохранении даты рождения: ' + str(worker) + '/' + str(birthday))
+                try:
+                    worker.birthday = datet.strptime(birthday, "%d-%m-%Y")
+                except:
+                    print('ошибка при сохранении даты рождения: ' + str(worker) + '/' + str(birthday))
+
 
     # Обработаем наличие ИП
     if data.__contains__('haveip'):
