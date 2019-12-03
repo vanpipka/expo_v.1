@@ -11,23 +11,27 @@ def getStatistics(user):
 
     #Получаем данные по регистрациям за последние 10 дней
     newusers    = []
-    sdate       = datetime.datetime.now().date()
+    sdate       = timezone.now()
+
+    print(sdate)
     i           = 10
     while i >= 0:
         ndate = sdate - timedelta(days=i)
-        newusers.append({"date":  str(ndate.day)+"."+str(ndate.month), "count": UserActivity.objects.filter(date_joined__range=(ndate, ndate + timedelta(days=1))).count()})
+        newusers.append({"date":  str(ndate.day)+"."+str(ndate.month), "count": User.objects.filter(date_joined__range=(ndate, ndate + timedelta(days=1))).count()})
         i = i-1
+
 
     content["newUsers"] = newusers
 
     #Получаем данные по посещениям за последние 10 дней
-    visits    = []
-    sdate       = datetime.datetime.now().date()
-    i           = 10
+    visits= []
+    sdate       = timezone.now()
 
+    print(sdate)
+    i           = 10
     while i >= 0:
         ndate = sdate - timedelta(days=i)
-        newusers.append({"date":  str(ndate.day)+"."+str(ndate.month), "count": User.objects.filter(date__range=(ndate, ndate + timedelta(days=1))).count()})
+        visits.append({"date":  str(ndate.day)+"."+str(ndate.month), "count": UserActivity.objects.filter(date__range=(ndate, ndate + timedelta(days=1))).count()})
         i = i-1
 
     content["visits"] = visits
