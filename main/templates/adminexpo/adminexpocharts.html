@@ -13,6 +13,11 @@
           <div id="chart_div_1"></div>
         </div>
       </div>
+      <div class="row">
+        <div class="col">
+          <div id="chart_div_2"></div>
+        </div>
+      </div>
     </div>
 
     <script type="text/javascript">
@@ -61,6 +66,22 @@
           var chart = new google.visualization.AreaChart(document.getElementById('chart_div_1'));
           chart.draw(data, options);
 
+          //=======================================================
+          var data = google.visualization.arrayToDataTable([
+                  ['Дата', 'Количество'],
+                  {%for e in visits%}
+                        ['{{e.date}}',  {{e.count}}],
+                  {%endfor%}
+          ]);
+
+          var options = {
+            title: 'Количество уникальных пользователей',
+            hAxis: {title: 'Дата',  titleTextStyle: {color: '#333'}},
+            vAxis: {minValue: 0}
+          };
+
+          var chart = new google.visualization.AreaChart(document.getElementById('chart_div_1'));
+          chart.draw(data, options);
         }
       </script>
 

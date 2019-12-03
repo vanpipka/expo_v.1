@@ -15,10 +15,22 @@ def getStatistics(user):
     i           = 10
     while i >= 0:
         ndate = sdate - timedelta(days=i)
-        newusers.append({"date":  str(ndate.day)+"."+str(ndate.month), "count": User.objects.filter(date_joined__range=(ndate, ndate + timedelta(days=1))).count()})
+        newusers.append({"date":  str(ndate.day)+"."+str(ndate.month), "count": UserActivity.objects.filter(date_joined__range=(ndate, ndate + timedelta(days=1))).count()})
         i = i-1
 
     content["newUsers"] = newusers
+
+    #Получаем данные по посещениям за последние 10 дней
+    visits    = []
+    sdate       = datetime.datetime.now().date()
+    i           = 10
+
+    while i >= 0:
+        ndate = sdate - timedelta(days=i)
+        newusers.append({"date":  str(ndate.day)+"."+str(ndate.month), "count": User.objects.filter(date__range=(ndate, ndate + timedelta(days=1))).count()})
+        i = i-1
+
+    content["visits"] = visits
 
     #Получаем общее количество ползователей по профессиям
     professions    = []
@@ -112,26 +124,31 @@ def gerWorkList(user=None, idGroup=None, count=None, idWorker=None, userAauthori
     WorkList = []
 
     if user_id != None:
+        print("1")
         querySet = Worker.getWorkerQueryByUser(user=user_id)
 
     elif idWorker != None:
+        print("2")
         querySet = Worker.objects.all().filter(id__in=idWorker)
 
     else:
-
+        print("3")
         querySet = Worker.objects.all()
 
         if idGroup != None:
-
+            print("3.1")
             querySet = querySet.filter(professions__id = idGroup)
 
         if count != None:
+            print("3.2")
             querySet = querySet[:count]
 
-    if itsSettings != True:
+    if itsSettings != True and its_superuser !=True:
+        print("4")
         querySet = querySet.filter(publishdata=True)
 
     if its_superuser != True and itsSettings != True:
+        print("5")
         querySet = querySet.filter(block=False)
 
     querySet = querySet.select_related('idCity').select_related('nationality')
