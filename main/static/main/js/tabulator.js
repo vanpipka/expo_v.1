@@ -129,7 +129,7 @@ $(document).ready(function() {
             data: response.dataset.dataset,
             layout: 'fitColumns',
             pagination: 'local',
-            paginationSize: 20,
+            paginationSize: 15,
             initialSort: [
                 { column: 'age', dir: 'desc' }
             ],
