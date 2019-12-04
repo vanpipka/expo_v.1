@@ -1,6 +1,6 @@
 $(document).ready(function() {
     var table;
-    var url = 'http://127.0.0.1:56503/adminexpo/workers/';
+    var url = 'https://vseexpo.ru/adminexpo/workers/';
     $.get(url, function(response) {
 
       var dateEditor = function(cell, onRendered, success, cancel){
