@@ -272,7 +272,7 @@ class Worker(models.Model):
             worker = Worker.objects.get(id = data.get("id"))
 
             worker.block = data.get("block")
-            worker.fsocheck = data.get("fsocheck")
+            #worker.fsocheck = data.get("fsocheck")
             worker.datacheck = data.get("datacheck")
 
             worker.save()

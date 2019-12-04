@@ -239,9 +239,25 @@ def adminexpoworkers(request):
         refreshLastOnline(request.user)
 
     if request.user.is_superuser:
+
         if request.method == "GET":
-            context = {"dataset": gerWorkList(user = request.user, userAauthorized=True, its_superuser=request.user.is_superuser)}
-            return render(request, 'adminexpo/adminexpoworkers.html', context)
+
+            if request.is_ajax():
+                context = {"dataset": gerWorkList(user = request.user, userAauthorized=True, its_superuser=request.user.is_superuser)}
+
+                print(context)
+
+
+                #print("Получилиил всех")
+                #context = []
+
+                #context.append({"itemId":79,"title":"aaaaa","countRates":50,"rating":4.78});
+
+                return JsonResponse({"dataset": context})
+
+            else:
+                context = {"dataset": gerWorkList(user = request.user, userAauthorized=True, its_superuser=request.user.is_superuser)}
+                return render(request, 'adminexpo/adminexpoworkers.html', context)
         else:
 
             print(request.POST)
