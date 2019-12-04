@@ -147,6 +147,7 @@ $(document).ready(function() {
                 },
                 {
                     title: 'Город',
+                    sorter:"string",
                     field: 'city',
                     align: 'left',
                     formatter: function(cell) {
