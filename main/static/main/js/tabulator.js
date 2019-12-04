@@ -142,7 +142,7 @@ $(document).ready(function() {
                     width: 550,
                     formatter: function(cell) {
                         var data = cell.getData();
-                        return '<img style="height: 25px" src="'+ data.resizefotourl +'" /><a href="' + data.url + '" target="_blank">' + data.name + '</a>';
+                        return '<img style="height: 25px" src="'+ data.resizefotourl +'" /><a href="' + data.url + '" target="_blank">' + data.name +' '+ data.surname+'</a>';
                     }
                 },
                 {
