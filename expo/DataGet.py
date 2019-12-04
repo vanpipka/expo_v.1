@@ -186,6 +186,7 @@ def gerWorkList(user=None, idGroup=None, count=None, idWorker=None, userAauthori
                         "experience": e.experience,
                         "sex": e.sex,
                         "personaldataisallowed": e.personaldataisallowed,
+                        "cityname": e.idCity.name,
                         "city": {"id": e.idCity.id, "name": e.idCity.name},
                         "nationality": {"id": e.nationality.id, "name": e.nationality.name},
                         "isonline": True if (nowDate-e.lastOnline).seconds/60 < 5 else False}

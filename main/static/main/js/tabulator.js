@@ -149,12 +149,8 @@ $(document).ready(function() {
                     title: 'Город',
                     headerFilter: "input",
                     sorter:"string",
-                    field: 'city',
-                    align: 'left',
-                    formatter: function(cell) {
-                          var data = cell.getData();
-                          return data.city.name;
-                    }
+                    field: 'cityname',
+                    align: 'left'
                 },
                 {
                     title: 'Был онлайн',
