@@ -138,11 +138,11 @@ $(document).ready(function() {
                 {
                     title: 'Специалист',
                     headerFilter: "input",
-                    field: 'name',
+                    field: 'fullname',
                     width: 550,
                     formatter: function(cell) {
                         var data = cell.getData();
-                        return '<img style="height: 25px" src="'+ data.resizefotourl +'" /><a href="' + data.url + '" target="_blank">' + data.name +' '+ data.surname+'</a>';
+                        return '<img style="height: 25px" src="'+ data.resizefotourl +'" /><a href="' + data.url + '" target="_blank">' + data.fullname +'</a>';
                     }
                 },
                 {

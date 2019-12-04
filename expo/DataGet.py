@@ -170,6 +170,8 @@ def gerWorkList(user=None, idGroup=None, count=None, idWorker=None, userAauthori
                         "name": e.name,
                         "surname": e.surname,
                         "lastname": e.lastname,
+                        "fullname": e.name + " "+e.surname,
+                        "lastname": e.lastname,
                         "experiencedate": nowDate.year if e.Experiencewith == None else e.Experiencewith.year,
                         "experienceyear": 0 if e.Experiencewith == None else calculate_age(e.Experiencewith),
                         "rating": ratingInfo["rating"],
