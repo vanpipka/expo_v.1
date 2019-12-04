@@ -147,6 +147,7 @@ $(document).ready(function() {
                 },
                 {
                     title: 'Город',
+                    headerFilter: "input",
                     sorter:"string",
                     field: 'city',
                     align: 'left',
