@@ -63,7 +63,7 @@ def setWorker(id, data):
                 print('ошибка при сохранении даты рождения: ' + str(worker) + '/1960-01-01')
         else:
             try:
-                worker.birthday   = datet.strptime(birthday, "%Y-%m-%d")                
+                worker.birthday   = datet.strptime(birthday, "%Y-%m-%d")
             except:
                 try:
                     worker.birthday = datet.strptime(birthday, "%d-%m-%Y")

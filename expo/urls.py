@@ -43,6 +43,8 @@ urlpatterns = [
     path('messages/send/', views.messagesend),
     path('messages/', views.messages),
     path('dialogs/', views.dialogs),
+    path('responses/', views.responses),
+    path('responses/setResponseStatus/', views.setResponseStatus),
     path('news/save/', views.savenews),
     path('news/', views.news),
     path('jobs/save/', views.savejobs),

@@ -9,6 +9,9 @@
             <ul class="navbar-nav ml-auto">
 
                 {% if user.is_active %}
+                    <a class="nav-link ml-4 mt-1 text-menu" style="color: #1e1e1e;" href="/responses">
+                        {{user|getnameresponse}} <span class="badge badge-pill badge-danger">{{user|getnewresponse}}</span>
+                    </a>
                     <a class="nav-link ml-4 mt-1 text-menu" style="color: #1e1e1e;" href="/dialogs">
                         Сообщения <span class="badge badge-pill badge-danger">{{user|getactualmessage}}</span>
                     </a>

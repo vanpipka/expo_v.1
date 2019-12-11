@@ -1,7 +1,7 @@
 
 
 {% extends "wrapper.html" %}
-
+{% load home_extras %}
 {% block content %}
 
 <div style="left: 50%; top: 50%; position: absolute; margin: -250px 0 0 -250px;">
@@ -19,7 +19,7 @@
                     <div class="col-sm-8">
                         <input style="border-radius: 0px" name="username" type="text" class="form-control" id="id_username" placeholder="Номер телефона" value="{{ username }}" required>
                         {% if errors.username %}
-                            <span style="color: red; font-size: 10px">{{ errors.username }}</span>
+                            <span style="color: red; font-size: 10px">{{ errors.username|gettranslate }}</span>
                         {% endif %}
                     </div>
                 </div>
@@ -30,7 +30,7 @@
                         <div class="col-sm-8">
                             <input style="border-radius: 0px" name="confirmphone" type="text" class="form-control" id="id_confirmphone" placeholder="Код подтверждения" required>
                            {% if errors.confirmphone %}
-                                <span style="color: red; font-size: 10px">{{ errors.confirmphone }}</span>
+                                <span style="color: red; font-size: 10px">{{ errors.confirmphone|gettranslate }}</span>
                             {% endif %}
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                     <div class="col-sm-8">
                         <input style="border-radius: 0px" name="password1" type="password" class="form-control" id="id_password1" placeholder="Пароль" value="{{ password1 }}" required>
                         {% if errors.password1 %}
-                            <span style="color: red; font-size: 10px">{{ errors.password1 }}</span>
+                            <span style="color: red; font-size: 10px">{{ errors.password1|gettranslate }}</span>
                         {% endif %}
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                     <div class="col-sm-8">
                         <input style="border-radius: 0px" name="password2" type="password" class="form-control" id="id_password2" placeholder="Пароль" value="{{ password2 }}" required>
                         {% if errors.password2 %}
-                            <span style="color: red; font-size: 10px">{{ errors.password2 }}</span>
+                            <span style="color: red; font-size: 10px">{{ errors.password2|gettranslate }}</span>
                         {% endif %}
                     </div>
                 </div>

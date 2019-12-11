@@ -2,12 +2,13 @@
 from django.shortcuts import render, redirect
 from datetime import datetime as datet
 from datetime import timezone
-from main.models import Company, Dialog, MessageExpo, News, JobOrder, UserType, Attacment, Message, Worker, Comments, ConfirmCodes
+from main.models import JobResponse, Company, Dialog, MessageExpo, News, JobOrder, UserType, Attacment, Message, Worker, Comments, ConfirmCodes
 from expo.DataSet import refreshLastOnline
 from expo.DataGet import getCityListFull, getProfessionList, gerWorkList, getStatistics
 from expo.Balance import getBalance
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
+from expo.validate_uuid4 import validate_uuid4
 import json
 
 # Create your views here.
@@ -669,6 +670,130 @@ def dialogs(request):
             #save message
 
                 return JsonResponse({'status': False, 'errors': ['Неверный формат запроса']})
+
+    else:
+
+        if request.is_ajax():
+
+            return JsonResponse({'status': False, 'errors': ['Доступ запрещен']})
+
+        else:
+
+            return redirect('/accounts/login/')
+
+def setResponseStatus(request):
+
+    userAauthorized = request.user.is_authenticated
+
+    if userAauthorized:
+        refreshLastOnline(request.user)
+        if request.method == 'GET':
+            return redirect('/forbiden')
+        else:
+
+            if request.POST.__contains__('data'):
+
+                data    = dict(json.loads(request.POST.__getitem__('data')))
+                id      = data.get('id')
+                status  = data.get('status')
+
+                if validate_uuid4(id) != True:
+                    return JsonResponse({'status': False})
+
+                response = JobResponse.objects.get(id=id)
+
+                if response.jobOrder.author == request.user:
+                    if status == True:
+                        response.status = 1
+                    else:
+                        response.status = 2
+                    response.save()
+                    return JsonResponse({'status': True})
+                else:
+                    return JsonResponse({'status': False})
+
+            return JsonResponse({'status': False})
+
+def responses(request):
+
+    userAauthorized = request.user.is_authenticated
+
+    if userAauthorized:
+        refreshLastOnline(request.user)
+
+        if request.method == 'GET':
+
+            userType = UserType.GetUserType(request.user)
+
+            if userType == 1:
+
+                response_array = JobResponse.getActualForWorker(request.user)
+
+                if request.is_ajax():
+                    return JsonResponse(response_array)
+                else:
+                    return render(request, 'workerresponses.html', {"response_array": response_array, "userType": userType})
+
+
+            elif userType == 2:
+
+                response_array = JobResponse.getActualForCompany(request.user)
+
+                if request.is_ajax():
+                    return JsonResponse(response_array)
+                else:
+                    return render(request, 'workerresponses.html', {"response_array": response_array, "userType": userType})
+
+                #recipient = UserType.GetUserByID(idRecipient)
+                #dialog    = None
+
+                #if recipient == None:
+                #    if request.is_ajax():
+                #        return JsonResponse({'status': False, 'errors': 'не удалось определить диалог'})
+                #    else:
+                #        return redirect('/servererror')
+                #elif request.user == recipient:
+                #    if request.is_ajax():
+                #        return JsonResponse({'status': False, 'errors': 'нельзя писать самому себе'})
+                #    else:
+                #        return redirect('/servererror')
+                #else:
+                #    dialog = Dialog.GetDialog(request.user, recipient)
+
+                #if request.is_ajax():
+                #    if dialog == None:
+                #return JsonResponse({'status': False, 'errors': 'не удалось определить диалог'})
+                #    else:
+
+                #        if (request.user == dialog.idUser1):
+                #            sender = UserType.GetElementByUser(dialog.idUser2)
+                #        else:
+                #            sender = UserType.GetElementByUser(dialog.idUser1)
+
+                #        return JsonResponse({'status': True,
+                #                            'dialog': {'id': dialog.id, 'sender': {'name': sender.name, 'foto': Attacment.getresizelink(sender.image)},}
+                #                            })
+
+                #else:
+
+                #    if dialog == None:
+                #        return redirect('/servererror')
+                #    else:
+                #        return redirect('/dialogs/?id='+str(dialog.id))
+                return JsonResponse({'status': False, 'errors': 'Не удалось получить данные'})
+
+            else:
+
+                if request.is_ajax():
+
+                    return JsonResponse({'status': False, 'errors': 'Не удалось получить данные'})
+
+                else:
+                    return redirect('/forbiden/', status='403')
+
+        elif request.method == 'POST':
+
+            return JsonResponse({'status': False, 'errors': 'нельзя писать самому себе'})
 
     else:
 

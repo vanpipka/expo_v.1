@@ -233,7 +233,7 @@ class Worker(models.Model):
     #user_id     = models.ForeignKey(User, on_delete=models.CASCADE)
     #user_id     = models.OneToOneField(User, on_delete=models.CASCADE)
     block       = models.BooleanField(default=False) #Заблокирован
-    name        = models.CharField(max_length=100)
+    name        = models.CharField(max_length=100, default="Не указано")
     surname     = models.CharField(max_length=100)
     nationality = models.ForeignKey(Country, on_delete=models.CASCADE, default="00000000000000000000000000000000")
     education   = models.TextField()
@@ -337,7 +337,7 @@ class Worker(models.Model):
 class Company(models.Model):
 
     id              = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name            = models.CharField(max_length=100)
+    name            = models.CharField(max_length=100, default="Не указано")
     vatnumber       = models.CharField(max_length=10)
     foto            = models.ImageField(null=True, blank=True, upload_to="img/", verbose_name='Изображение')
     image           = models.ForeignKey(Attacment, on_delete=models.CASCADE, default="00000000000000000000000000000000")
@@ -551,7 +551,7 @@ class JobOrder(models.Model):
     description = models.TextField()
     created     = models.DateTimeField("Дата добавления", auto_now_add=True)
     date        = models.DateTimeField("Дата проведения работ", default=datetime.date(1900, 1, 1))
-    enddate        = models.DateTimeField("Дата окончания работ", default=datetime.date(1900, 1, 1))
+    enddate     = models.DateTimeField("Дата окончания работ", default=datetime.date(1900, 1, 1))
     place       = models.CharField(max_length=100)
     company     = models.ForeignKey(Company, on_delete=models.CASCADE)
     city            = models.ForeignKey(City, on_delete=models.CASCADE, default="00000000000000000000000000000000")
@@ -586,14 +586,11 @@ class JobOrder(models.Model):
         id_jobs = []
 
         for e in objects:
-            print(e.get('enddate'))
             id_jobs.append(e['id'])
 
         #print(id_jobs)
 
         jobComposition = list(JobComposition.objects.all().filter(jobOrder_id__in=id_jobs).select_related('profession').values('jobOrder_id', 'profession__id', 'profession__name', 'count', 'price'))
-
-        print(jobComposition)
 
         for e in objects:
 
@@ -619,7 +616,6 @@ class JobOrder(models.Model):
 
     def GetInfo(self, id, user=None):
 
-        print('получаем данные по заказу')
         response_array = []
         userType       = 0
 
@@ -627,48 +623,64 @@ class JobOrder(models.Model):
             return False
 
         if User != None:
+            if User.is_active:
 
-            userType = UserType.GetUserType(user)
+                userType    = UserType.GetUserType(user)
+                worker      = UserType.GetElementByUser(user)
+                response    = {"response_is_available": 1}
 
-            if userType == 1:
+                objects = list(JobOrder.objects.filter(id=id).select_related('city').select_related('company').order_by("-created").values('author', 'id', 'responseCount', 'description', 'enddate', 'date', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name', 'company__image'))
 
-                worker = UserType.GetElementByUser(user)
+                if len(objects) == 0:
+                    return False
 
-                response_list = list(JobResponse.objects.filter(worker=worker).values('jobOrder_id'))
+                e = objects[0]
 
-                for e in response_list:
-                    if response_array.count(e['jobOrder_id']) == 0:
-                        response_array.append(e['jobOrder_id'])
+                response_list = list(JobResponse.objects.filter(jobOrder_id = id).select_related('worker').values('id', 'answer', 'worker', 'worker__name', 'worker__image', 'worker__id', 'status', 'created'))
 
-            elif userType == 2:
+                for responses in response_list:
 
-                print('получаем отклики по заказу '+id)
+                    status = {'value': responses['status']}
 
-                response_list = list(JobResponse.objects.filter(jobOrder_id = id).select_related('worker').values('id', 'answer', 'worker__name', 'worker__image', 'worker__id'))
+                    if responses['status'] == 0:
+                        status['name'] = 'Отклик не просмотрен'
+                    elif responses['status'] == 1:
+                        status['name'] = 'Приглашение'
+                    elif responses['status'] == 2:
+                        status['name'] = 'Отказано'
+                    else:
+                        status['name'] = ''
 
-                print(response_list)
+                    if e['author'] == user:
+                        status['edit']: True
+                    else:
+                        status['edit']: False
 
-                for e in response_list:
-                    response_array.append({'description' : e['answer'],
-                                        'worker': e['worker__name'],
-                                        'photo': Attacment.getresizelink(Attacment.objects.get(id=e['worker__image'])),
-                                        'workerurl': '/worker/info?id='+str(e['worker__id'])})
+                    if responses['worker'] == worker.id:
 
-        print(response_array)
+                        response['status']                  = responses['status']
+                        response['response_is_available']   = 0
 
-        print('получаем данные по заказу 1')
+                        if responses['status'] == 0:
+                            response['name'] = 'Отклик отправлен'
+                        elif responses['status'] == 1:
+                            response['name'] = 'Вас пригласили'
+                        elif responses['status'] == 2:
+                            response['name'] = 'Вам отказано'
+                        else:
+                            response['name'] = 'Откликнуться'
 
-        objects = list(JobOrder.objects.filter(id=id).select_related('city').select_related('company').order_by("-created").values('author', 'id', 'responseCount', 'description', 'enddate', 'date', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name', 'company__image'))
+                    data = {'id': responses['id'],
+                                'description' : responses['answer'],
+                                'worker': responses['worker__name'],
+                                'photo': Attacment.getresizelink(Attacment.objects.get(id=responses['worker__image'])),
+                                'workerurl': '/worker/info?id='+str(responses['worker__id']),
+                                'created': responses['created'],
+                                'status': status}
 
-        if len(objects) == 0:
-            return False
-
-        e = objects[0]
-        print(e)
+                    response_array.append(data)
 
         jobComposition = list(JobComposition.objects.all().filter(jobOrder_id=id).select_related('profession').values('jobOrder_id', 'profession__id', 'profession__name', 'count', 'price'))
-
-        print(jobComposition)
 
         try:
             e['photo'] = Attacment.getresizelink(Attacment.objects.get(id=e['company__image']))
@@ -677,10 +689,8 @@ class JobOrder(models.Model):
 
         if (userType != 1):
             e['response_is_available'] = 2      #ничего не выводить
-        elif (response_array.count(e['id'])) == 0:
-            e['response_is_available'] = 1      #Можно откликнуться
-        else:
-            e['response_is_available'] = 0      #уже откликнулся
+
+        e['response'] = response
 
         e['job_composition'] = []
 
@@ -689,8 +699,6 @@ class JobOrder(models.Model):
                 e['job_composition'].append(j)
 
         e['response_array'] = response_array
-        print('========================================')
-        print(e)
 
         return e
 
@@ -706,8 +714,7 @@ class JobOrder(models.Model):
 
                 jobResponse.jobOrder = JobOrder.objects.get(id=data['job_id'])
                 jobResponse.worker   = UserType.GetElementByUser(user)
-                jobResponse.description  = data.get('job_description', '')
-
+                jobResponse.answer   = data.get('job_description', '')
                 jobResponse.save()
 
             except:
@@ -818,15 +825,90 @@ class JobResponse(models.Model):
     jobOrder = models.ForeignKey(JobOrder, on_delete=models.CASCADE)
     worker   = models.ForeignKey(Worker, on_delete=models.CASCADE)
     answer   = models.TextField()
-    status   = models.DecimalField(max_digits=2, decimal_places=0, default=0)
+    created  = models.DateTimeField("Дата добавления", auto_now_add=True)
+    status   = models.DecimalField(max_digits=1, decimal_places=0, default=0)
+    #0-новый, 1-принят, 2-отказ
 
     def save(self, *args, **kwargs):
+
         super(JobResponse, self).save(*args, **kwargs)  # Call the "real" save() method.
 
         self.jobOrder.responseCount = len(JobResponse.objects.filter(jobOrder = self.jobOrder).values('id'))
         self.jobOrder.save()
 
         Message.SaveJobResponse(self)
+
+    def getCount(user):
+
+        company = UserType.GetElementByUser(user);
+        response_list = list(JobResponse.objects.filter(jobOrder__company=company).filter(status=0))
+
+        return len(response_list)
+
+    def getActualForCompany(user):
+
+        company = UserType.GetElementByUser(user);
+
+        response_array = []
+
+        response_list = list(JobResponse.objects.filter(jobOrder__company=company).order_by("-created").select_related('jobOrder__company').values(
+            'id', 'status', 'created', 'answer', 'jobOrder_id', 'worker_id', 'worker__name', 'worker__image'))
+
+        for e in response_list:
+
+            status = {'value': e['status']}
+
+            if e['status'] == 0:
+                status['name'] = 'Отклик не просмотрен'
+            elif e['status'] == 1:
+                status['name'] = 'Приглашение'
+            elif e['status'] == 2:
+                status['name'] = 'Отказано'
+            else:
+                status['name'] = ''
+
+            response_array.append({'id': e['id'],
+                                    'jobOrder': '/jobs/info/?id='+str(e['jobOrder_id']),
+                                    'description':  e['answer'],
+                                    'created':  e['created'],
+                                    'status':   status,
+                                    'company': {'url': '/worker/info/?id='+str(e['worker_id']), 'name': e['worker__name'], 'photo': Attacment.getresizelink(Attacment.objects.get(id=e['worker__image']))},
+
+                                    })
+
+        return response_array
+
+    def getActualForWorker(user):
+
+        worker = UserType.GetElementByUser(user);
+        response_array = []
+
+        response_list = list(JobResponse.objects.filter(worker=worker).order_by("-created").select_related('jobOrder').select_related('jobOrder__company').values(
+            'id', 'status', 'created', 'jobOrder__description', 'jobOrder_id', 'jobOrder__company_id', 'jobOrder__company', 'jobOrder__company__name', 'jobOrder__company__image'))
+
+        for e in response_list:
+
+            status = {'value': e['status']}
+
+            if e['status'] == 0:
+                status['name'] = 'Отклик не просмотрен'
+            elif e['status'] == 1:
+                status['name'] = 'Приглашение'
+            elif e['status'] == 2:
+                status['name'] = 'Отказано'
+            else:
+                status['name'] = ''
+
+            response_array.append({'id': e['id'],
+                                    'jobOrder': '/jobs/info/?id='+str(e['jobOrder_id']),
+                                    'description':  e['jobOrder__description'],
+                                    'created':  e['created'],
+                                    'status':   status,
+                                    'company': {'url': '/company/?id='+str(e['jobOrder__company_id']), 'name': e['jobOrder__company__name'], 'photo': Attacment.getresizelink(Attacment.objects.get(id=e['jobOrder__company__image']))},
+
+                                    })
+
+        return response_array
 
 class UserType(models.Model):
 
@@ -924,8 +1006,6 @@ class UserType(models.Model):
 
         try:
             element = UserType.objects.get(user=user)
-
-            print(element)
 
             if element.type == 1:
                 elem = element.worker
@@ -1254,6 +1334,8 @@ class Message(models.Model):
             message.save()
 
     def SaveJobResponse(Jobresponse):
+
+
 
         sender = UserType.GetUserFromWorker(worker=Jobresponse.worker)
 

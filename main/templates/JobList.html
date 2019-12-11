@@ -28,7 +28,7 @@
         <table class="table table-hover">
             <tbody>
             {% for n in jobsList %}
-                <tr onclick="document.location = '/jobs/info/?id={{ n.id }}'">
+                  <tr onclick="document.location = '/jobs/info/?id={{ n.id }}'">
                     <td scope="row">
 
                         <div id="div_{{ n.id }}">
@@ -50,15 +50,6 @@
                                     <span class="text-menu txt-bold" id="job_city_{{ n.id }}">{{ n.city__name }}</span>
                                 </div>
 
-                                {% if user.is_active and userType == 1%}
-                                <div class="col col-2 col-md-4">
-                                    {% if n.response_is_available == 1 %}
-                                        <button class="btn btn-danger container-fluid" type="button" onclick="get_job_data(this)" style=" border-radius: 0px; margin-top: -13px" data-toggle="modal" data-target="#addResponse" id = '{{ n.id }}'>Откликнуться</button>
-                                    {% else %}
-                                        <button class="btn btn-secondary bg-white text-dark container-fluid" type="button" style="margin-top: -13px; border-radius: 0px" id = '{{ n.id }}'>Отклик отправлен</button>
-                                    {% endif %}
-                                </div>
-                                {% endif %}
                             </div>
                             <div class="row pt-3 mr-3" style="margin: 5px">
                                 <div class="col col-4">
@@ -76,24 +67,25 @@
                                 </div>
                             </div>
 
-                            <div class="row color-dark-grey mb-3 pr-4">
+                            <div class="row color-dark-grey mb-3 pr-4" style="height: 25px;">
                                 <div class="col col-2">
                                 </div>
-                                <div class="col col-6 text-right" id ="job_company_{{ n.id }}">
-                                  <div class="row">
-                                    <div class="col">
-                                      <div class="product-img mt-3" style="height: 25px;">
-                                          <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:25px" src="{{  n.photo }}" alt="">
-                                      </div>
+                                <div class="col col-6" id ="job_company_{{ n.id }}">
+                                  <div class="row text-right">
+
+                                    <div class="col col-10">
                                       {{ n.company__name }}
                                     </div>
-                                  </div>  
-                                </div>
-                                <div class="col col-2 text-right" >
-                                    {{ n.created|date:"j.m.Y f" }}
+                                    <div class="col col-2">
+                                      <div class="product-img">
+                                          <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:25px" src="{{  n.photo }}" alt="">
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
                                 <div class="col col-2 text-right pr-4" >
                                   <span class="badge {% if n.responseCount %}badge-success{% else %}badge-grey{% endif %}" style="font-family: sans-serif;">{% if n.responseCount %}{{ n.responseCount }} отклик(а){% else %}Откликов нет{% endif %}</span>
+                                  <p style="font-size: 10px">{{ n.created|date:"j.m.Y f" }}</p>
                                 </div>
                             </div>
 
@@ -114,129 +106,6 @@
             </div>
         {% endif %}
 
-        <div class="modal fade" id="addResponse" tabindex="-1" role="dialog" aria-labelledby="addResponseLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-
-                    {% if  userType == 1 %}
-                        <div class="modal-header">
-                            <span class="article">Новый отклик</span>
-                            <button type="button" class="close" data-dismiss="addResponse" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <form id="form" name = "form">
-                            <div class="modal-body" style="width: 100%; overflow: auto;">
-
-                                <div class="row">
-
-                                    <div class = "col">
-
-                                            {% csrf_token %}
-                                            <div class="form-group">
-                                                <div>
-                                                    <input id="job_id" hidden name="job_id"></input>
-                                                    <div class="row mr-3" style="margin: 5px">
-                                                        <div class="col col-6">
-                                                            <span class="text-menu-grey">Место проведения</span>
-                                                        </div>
-                                                        <div class="col col-6">
-                                                            <span class="text-menu txt-bold" id="job_city">--</span>
-                                                        </div>
-
-                                                    </div>
-                                                    <div class="row pt-3 mr-3" style="margin: 5px">
-                                                        <div class="col col-6">
-                                                            <span class="text-menu-grey">Дата проведения</span>
-                                                        </div>
-                                                        <div class="col col-6">
-                                                            <span class="text-menu txt-bold" id="job_date">--</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row pt-3 mr-3" style="margin: 5px">
-                                                        <div class="col col-6">
-                                                            <span class="text-menu-grey">Компания</span>
-                                                        </div>
-                                                        <div class="col col-6">
-                                                            <span class="text-menu txt-bold" id="job_company">--</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row"  style="padding-top: 5px">
-                                                    <div class="col">
-                                                        <textarea required name="job_description" class="form-control" rows="5" placeholder="Напишите почемы мы должны выбрать именно вас" id="job_description"></textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-                                                <button type="submit" class="btn btn-danger">Отправить</button>
-                                            </div>
-
-                                            <script>
-
-                                                $('#form').validate({
-
-                                                    submitHandler: function(form) {
-                                                        saveResponse();
-                                                        }
-                                                    }
-                                                );
-
-                                                function get_job_data(btn){
-                                                    var id = btn.id;
-                                                    document.getElementById('job_city').innerText       = document.getElementById('job_city_'+id).innerText;
-                                                    document.getElementById('job_date').innerText       = document.getElementById('job_date_'+id).innerText;
-                                                    document.getElementById('job_company').innerText    = document.getElementById('job_company_'+id).innerText;
-                                                    document.getElementById('job_id').value             = id;
-                                                }
-
-                                                function saveResponse() {
-
-                                                    var formData = new FormData();
-
-                                                    //Собираем конечный JSON
-
-                                                    var json = JSON.stringify({
-                                                        job_id: document.getElementById("job_id").value,
-                                                        job_description: document.getElementById("job_description").value
-                                                    });
-
-                                                    // добавить к пересылке ещё пару ключ - значение
-                                                    formData.append("data", json);
-                                                    formData.append("csrfmiddlewaretoken", document.getElementsByName("csrfmiddlewaretoken")[0].value);
-
-                                                    // отослать
-                                                    var xhr = new XMLHttpRequest();
-
-                                                    xhr.onreadystatechange = function() { // (3)
-
-                                                        if (xhr.readyState != 4) return;
-
-                                                        if (xhr.status != 200) {
-                                                            location.href = (xhr.responseText);
-                                                        } else {
-                                                            location.href = (xhr.responseText);
-                                                        }
-                                                    }
-
-                                                    xhr.open("POST", "{% get_attribute 'HOME_PAGE' %}jobs/save/", true);
-                                                    xhr.send(formData);
-                                                }
-                                            </script>
-                                    </div>
-                                </div>
-
-                            </div>
-
-
-                        </form>
-                    {% endif %}
-
-                </div>
-            </div>
-        </div>
     {% endif %}
 
 {% endblock %}

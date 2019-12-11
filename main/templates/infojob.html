@@ -7,11 +7,27 @@
     {% if user.is_active %}
             <div class="container mt-3">
 
-              <div id="div_{{ n.id }}">
+              <div class="card mb-3" id="div_{{ n.id }}">
+                <div class="card-header">
+                  <div class="row">
+                      <div class="col col-8">
+                          <span class="article">Заявка</span>
+                      </div>
+                      <div class="col col-4 text-right pt-2">
+                        {% if user.is_active and userType == 1%}
+                            {% if n.response.response_is_available == 1 %}
+                                <button class="btn btn-sm btn-danger container-fluid" type="button" onclick="get_job_data(this)" style=" border-radius: 0px; margin-top: -13px" data-toggle="modal" data-target="#addResponse" id = '{{ n.id }}'>Откликнуться</button>
+                            {% else %}
+                                <button class="btn btn-sm  btn-secondary bg-white text-dark container-fluid" type="button" style="margin-top: -13px; border-radius: 0px" id = '{{ n.id }}'>{{n.response.name}}</button>
+                            {% endif %}
+                        {% endif %}
+                      </div>
+                  </div>
 
+                </div>
                 <div class="row pt-3 mr-3" style="margin: 5px">
                     <div class="col col-4">
-                        <span class="article-sm">Описание</span>
+                        <span class="text-menu-grey">Описание</span>
                     </div>
                     <div class="col col-8">
                         <span>{{ n.description }}</span>
@@ -26,15 +42,6 @@
                           <span class="text-menu txt-bold" id="job_city_{{ n.id }}">{{ n.city__name }}</span>
                       </div>
 
-                      {% if user.is_active and userType == 1%}
-                      <div class="col col-2 col-md-4">
-                          {% if n.response_is_available == 1 %}
-                              <button class="btn btn-danger container-fluid" type="button" onclick="get_job_data(this)" style=" border-radius: 0px; margin-top: -13px" data-toggle="modal" data-target="#addResponse" id = '{{ n.id }}'>Откликнуться</button>
-                          {% else %}
-                              <button class="btn btn-secondary bg-white text-dark container-fluid" type="button" style="margin-top: -13px; border-radius: 0px" id = '{{ n.id }}'>Отклик отправлен</button>
-                          {% endif %}
-                      </div>
-                      {% endif %}
                   </div>
                   <div class="row pt-3 mr-3" style="margin: 5px">
                       <div class="col col-4">
@@ -52,12 +59,13 @@
                       </div>
                   </div>
 
-                  {% if  n.job_composition %}
+                <div class="row pt-3 mr-3" style="margin: 5px">
+                    <div class="col col-4">
+                        <span class="text-menu-grey">Требуются</span>
+                    </div>
+                {% if  n.job_composition %}
 
-                  <div class="row pt-3 mr-3" style="margin: 5px">
-                      <div class="col col-4">
-                          <span class="text-menu-grey">Требуются</span>
-                      </div>
+
                       <div class="col col-8">
 
                           <table class="table table-bordered">
@@ -81,74 +89,237 @@
                               </tbody>
                           </table>
                       </div>
+
+                  {% else %}
+                  <div class="col col-8">
+                        не указано
                   </div>
-
                   {% endif %}
+                  </div>
+                  <div class="card-footer">
 
-                  <div class="row color-dark-grey mb-3 pr-4">
-                      <div class="col col-4">
-                      </div>
-                      <div class="col col-6 text-right" id ="job_company_{{ n.id }}">
-                        <div class="row">
-                          <div class="col">
-                            <div class="product-img mt-3" style="height: 25px;">
-                                <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:25px" src="{{  n.photo }}" alt="">
+                    <div class="row color-dark-grey mb-3 pr-4" style="height: 25px;">
+                        <div class="col col-10" id ="job_company_{{ n.id }}">
+                          <div class="row">
+
+                            <div class="col col-10 col-md-8 text-right">
+                              {{ n.company__name }}
                             </div>
-                            {{ n.company__name }}
+                            <div class="col col-2 col-md-4 text-center">
+                              <div class="product-img">
+                                  <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:25px" src="{{  n.photo }}" alt="">
+                              </div>
+                              <p style="font-size: 10px">{{ n.created|date:"j.m.Y f" }}</p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div class="col col-2 text-right" >
-                          {{ n.created|date:"j.m.Y f" }}
-                      </div>
+                    </div>
                   </div>
+              </div>
+                  {% if n.responseCount %}
 
-                  <div class="ml-3">
-                      <div class="row">
-                          <div class="col">
-                            <label class="article-sm">Отклики
-                                {% if n.responseCount %}
-                                  ({{ n.responseCount }})
-                                {% else %}
-                                  (Откликов нет)
-                                {% endif %}
-                            </label>
-                          </div>
+                    <div class="">
+                        <div class="row">
+                            <div class="col">
+                              <label class="article-sm">Отклики
+                                  {% if n.responseCount %}
+                                    ({{ n.responseCount }})
+                                  {% else %}
+                                    (Откликов нет)
+                                  {% endif %}
+                              </label>
+                            </div>
 
-                      </div>
+                        </div>
 
-                      <div class="">
+                        <div class="mb-3">
 
-                      {% for comment in n.response_array %}
+                          {% for comment in n.response_array %}
 
+                          <div class="card
+                            {% if comment.status.value == 0 %}
 
-                                  <div class="row border mb-3 p-3">
-                                      <div class="col col-2 text-center">
-                                           <div class="product-img mt-3" style="height: 50px;">
-                                               <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:50px" src="{{  comment.photo }}" alt="">
+                            {% elif comment.status.value == 1 %}
+                                border-success
+                            {% elif comment.status.value == 2 %}
+                                border-danger
+                            {% endif %}" style="width: 100%;">
+                              <div class="card-header bg-transparent">
+                                <div class="row">
+                                  <div class="col col-1 text-center">
+                                       <div class="product-img" style="height: 40px;">
+                                           <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:50px" src="{{  comment.photo }}" alt="">
 
-                                           </div>
-                                           <a class="article-sm text-danger" href="{{ comment.workerurl }}">
-                                                  {{ comment.worker }}
-                                                </a>
+                                       </div>
+                                  </div>
+                                  <div class="col col-7 text-left mb-3" style="height: 40px;">
+                                      <div class="row">
+                                        <a class="article-sm text-danger" href="{{ comment.workerurl }}">{{ comment.worker }}</a>
                                       </div>
-
-                                      <div class="col col-10 text-left">
-                                          <span class="text-menu">{{ comment.description }}</span>
+                                      <div class="row" style="font-size: 10px; color: grey">
+                                          {{comment.created|date:"Y-m-d"}}
                                       </div>
                                   </div>
+                                  <div class="col col-4 text-center">
+                                    <span class="badge container-fluid
+                                      {% if comment.status.value == 0 %}
+                                          badge-light
+                                      {% elif comment.status.value == 1 %}
+                                          badge-success
+                                      {% elif comment.status.value == 2 %}
+                                          badge-danger
+                                      {% endif %}
+                                      " style="font-family: sans-serif;">
+                                      {{comment.status.name}}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="card-body">
+                              <p class="card-text">{{comment.description}}</p>
+                              </div>
 
+                          </div>
+                          {% endfor %}
 
-                      {% endfor %}
+                        </div>
 
-                      </div>
+                    </div>
 
-                  </div>
+                  {% else %}
 
-              </div>
+                  {% endif %}
 
             </div>
 
     {% endif %}
+
+    <div class="modal fade" id="addResponse" tabindex="-1" role="dialog" aria-labelledby="addResponseLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+
+                {% if  userType == 1 %}
+                    <div class="modal-header">
+                        <span class="article">Новый отклик</span>
+                        <button type="button" class="close" data-dismiss="addResponse" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form id="form" name = "form">
+                        <div class="modal-body" style="width: 100%; overflow: auto;">
+
+                            <div class="row">
+
+                                <div class = "col">
+
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <div>
+                                                <input id="job_id" hidden name="job_id"></input>
+                                                <div class="row mr-3" style="margin: 5px">
+                                                    <div class="col col-6">
+                                                        <span class="text-menu-grey">Место проведения</span>
+                                                    </div>
+                                                    <div class="col col-6">
+                                                        <span class="text-menu txt-bold" id="job_city">--</span>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row pt-3 mr-3" style="margin: 5px">
+                                                    <div class="col col-6">
+                                                        <span class="text-menu-grey">Дата проведения</span>
+                                                    </div>
+                                                    <div class="col col-3">
+                                                        <span class="text-menu txt-bold" id="job_date">--</span>
+                                                    </div>
+                                                    <div class="col col-3">
+                                                        <span class="text-menu txt-bold" id="job_date_end">--</span>
+                                                    </div>
+                                                </div>
+                                                <div class="row pt-3 mr-3" style="margin: 5px">
+                                                    <div class="col col-6">
+                                                        <span class="text-menu-grey">Компания</span>
+                                                    </div>
+                                                    <div class="col col-6">
+                                                        <span class="text-menu txt-bold" id="job_company">--</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row"  style="padding-top: 5px">
+                                                <div class="col">
+                                                    <textarea required name="job_description" class="form-control" rows="5" placeholder="Напишите почемы мы должны выбрать именно вас" id="job_description"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                                            <button type="submit" class="btn btn-danger">Отправить</button>
+                                        </div>
+
+                                        <script>
+
+                                            $('#form').validate({
+
+                                                submitHandler: function(form) {
+                                                    saveResponse();
+                                                    }
+                                                }
+                                            );
+
+                                            function get_job_data(btn){
+                                                var id = btn.id;
+                                                document.getElementById('job_city').innerText       = document.getElementById('job_city_'+id).innerText;
+                                                document.getElementById('job_date').innerText       = document.getElementById('job_date_'+id).innerText;
+                                                document.getElementById('job_date_end').innerText   = document.getElementById('job_enddate_'+id).innerText;
+                                                document.getElementById('job_company').innerText    = document.getElementById('job_company_'+id).innerText;
+                                                document.getElementById('job_id').value             = id;
+                                            }
+
+                                            function saveResponse() {
+
+                                                var formData = new FormData();
+
+                                                //Собираем конечный JSON
+
+                                                var json = JSON.stringify({
+                                                    job_id: document.getElementById("job_id").value,
+                                                    job_description: document.getElementById("job_description").value
+                                                });
+
+                                                // добавить к пересылке ещё пару ключ - значение
+                                                formData.append("data", json);
+                                                formData.append("csrfmiddlewaretoken", document.getElementsByName("csrfmiddlewaretoken")[0].value);
+
+                                                // отослать
+                                                var xhr = new XMLHttpRequest();
+
+                                                xhr.onreadystatechange = function() { // (3)
+
+                                                    if (xhr.readyState != 4) return;
+
+                                                    if (xhr.status != 200) {
+                                                        location.href = (xhr.responseText);
+                                                    } else {
+                                                        location.href = (xhr.responseText);
+                                                    }
+                                                }
+
+                                                xhr.open("POST", "{% get_attribute 'HOME_PAGE' %}jobs/save/", true);
+                                                xhr.send(formData);
+                                            }
+                                        </script>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </form>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

@@ -1,3 +1,4 @@
+{% load home_extras %}
             <form action="/accounts/login/" name="loginform" method="POST" action="" id="loginform">
                 {% csrf_token %}
 
@@ -7,7 +8,7 @@
                         <input style="border-radius: 0px" name="username" type="text" class="form-control" id="id_username" placeholder="Номер телефона" value="{{ username }}" required>
                         {% if errors %}
                             {% for i in errors %}
-                                <span style="color: red; font-size: 10px">{{ i }}</span>
+                                <span style="color: red; font-size: 10px">{{ i|gettranslate }}</span>
                             {% endfor %}
                         {% endif %}
                     </div>
