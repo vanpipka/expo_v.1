@@ -692,24 +692,29 @@ def setResponseStatus(request):
         else:
 
             if request.POST.__contains__('data'):
-
+                print(1)
                 data    = dict(json.loads(request.POST.__getitem__('data')))
+                print(2)
                 id      = data.get('id')
+                print(3)
                 status  = data.get('status')
-
+                print(4)
                 if validate_uuid4(id) != True:
+                    print(5)
                     return JsonResponse({'status': False})
 
                 response = JobResponse.objects.get(id=id)
-
+                print(6)
                 if response.jobOrder.author == request.user:
                     if status == True:
                         response.status = 1
                     else:
                         response.status = 2
+                    print(7)
                     response.save()
                     return JsonResponse({'status': True})
                 else:
+                    print(8)
                     return JsonResponse({'status': False})
 
             return JsonResponse({'status': False})
