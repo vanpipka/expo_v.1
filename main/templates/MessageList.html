@@ -268,6 +268,9 @@
                                     <div class="row" style="padding-right: 10px; float: right; min-width: 200px; max-width: 400px; white-space: normal">
                                         <div class="col alert alert-primary">
                                             {{n.text}}
+                                            {% if n.object != "" %}
+                                              <a class="text-danger"  style="font-size: 12px;" href="{{ n.object }}">Открыть заказ</a>
+                                            {% endif %}
                                             <div style="font-size: 8px">{{n.created}}</div>
                                         </div>
                                     </div>
@@ -275,6 +278,9 @@
                                     <div class="row" style="float: left; min-width: 200px; max-width: 400px; white-space: normal;">
                                         <div class="col alert alert-secondary">
                                             {{n.text}}
+                                            {% if n.object != "" %}
+                                              <a class="text-danger"  style="font-size: 12px;" href="{{ n.object }}">Открыть заказ</a>
+                                            {% endif %}
                                             <div style="font-size: 8px">{{n.created}}</div>
                                         </div>
                                     </div>

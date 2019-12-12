@@ -1503,11 +1503,18 @@ class MessageExpo(models.Model):
                     messageList = MessageExpo.objects.all().filter(idDialog = idDialog).order_by('created')
 
                     for m in messageList:
+
+                        if m.object != None:
+                            object = '/jobs/info/?id='+str(m.object.id)
+                        else:
+                            object = ''
+
                         answer['messageList'].append({'id': str(m.id),
                                                     'text': m.text,
                                                     'subject': m.subject,
                                                     'itsMe': True if user == m.sender else False,
                                                     'created': m.created.strftime("%d.%m.%Y %H:%M"),
+                                                    'object': object,
                                                     })
 
                         if m.read == False and m.recipient == user:
@@ -1605,7 +1612,7 @@ class MessageExpo(models.Model):
                 message.sender      = user1
                 message.recipient   = user2
                 message.subject     = 'Добавлен отклик на заявку'
-                message.text        = Jobresponse.answer
+                message.text        = 'Хочу с вами работать. '+ str(Jobresponse.answer)
                 message.object      = Jobresponse.jobOrder
                 message.save()
 
