@@ -1505,7 +1505,7 @@ class MessageExpo(models.Model):
                     for m in messageList:
 
                         if m.order != None:
-                            object = '/jobs/info/?id='+str(m.object.id)
+                            object = '/jobs/info/?id='+str(m.order.id)
                         else:
                             object = ''
 
