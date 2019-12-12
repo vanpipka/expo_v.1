@@ -714,8 +714,10 @@ class JobOrder(models.Model):
 
                 jobResponse.jobOrder = JobOrder.objects.get(id=data['job_id'])
                 jobResponse.worker   = UserType.GetElementByUser(user)
-                jobResponse.answer   = data.get('job_description', '')
+                jobResponse.answer   = data.get('job_description', 'Сопроводительного письма нет')
                 jobResponse.save()
+
+                MessageExpo.SaveJobResponse(self, userType)
 
             except:
 
@@ -835,8 +837,6 @@ class JobResponse(models.Model):
 
         self.jobOrder.responseCount = len(JobResponse.objects.filter(jobOrder = self.jobOrder).values('id'))
         self.jobOrder.save()
-
-        Message.SaveJobResponse(self)
 
     def getCount(user):
 
@@ -1333,23 +1333,6 @@ class Message(models.Model):
 
             message.save()
 
-    def SaveJobResponse(Jobresponse):
-
-
-
-        sender = UserType.GetUserFromWorker(worker=Jobresponse.worker)
-
-        if sender != None:
-
-            message = Message()
-
-            message.sender      = sender
-            message.recipient   = UserType.GetUserFromCompany(company=Jobresponse.jobOrder.company)
-            message.subject     = 'Добавлен новый отклик на заказ'
-            message.jobresponse = Jobresponse
-
-            message.save()
-
 class WorkerRating(models.Model):
 
     id              = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -1605,6 +1588,59 @@ class MessageExpo(models.Model):
             message.text        = 'Добавлен отзыв: '+Comment.text+' ('+str(Comment.rating)+'зв.)'
 
             message.save()
+
+    def SaveJobResponse(Jobresponse, userType):
+
+        if userType == 1:
+            user1 = UserType.GetUserFromWorker(worker=Jobresponse.worker)
+            user2 = Jobresponse.jobOrder.author
+            dialog = Dialog.GetDialog(user1, user2)
+
+            if dialog != None:
+
+                message = MessageExpo()
+
+                message.idDialog    = dialog
+                message.sender      = user1
+                message.recipient   = user2
+                message.subject     = 'Добавлен отклик на заявку'
+                message.text        = Jobresponse.answer
+
+                message.save()
+
+        elif userType == 2:
+
+            user1 = UserType.GetUserFromWorker(worker=Jobresponse.worker)
+            user2 = Jobresponse.jobOrder.author
+            dialog = Dialog.GetDialog(user1, user2)
+
+            if dialog != None:
+
+                message = MessageExpo()
+
+                message.idDialog    = dialog
+                message.sender      = user2
+                message.recipient   = user1
+                message.subject     = 'Ответ на отклик по заказу'
+
+                if Jobresponse.status == 1:
+                    message.text        = "Мы готовы сделать вам предложение"
+                elif Jobresponse.status == 2:
+                    message.text        = "Извините, на данный момент мы не готовы сделать вам предложение"
+                else:
+                    return
+
+                message.save()
+
+        def GetActualCount(user):
+
+            count = 0
+
+            if user.is_authenticated:
+
+                count = MessageExpo.objects.all().filter(recipient=user).filter(read=False).aggregate(models.Avg('recipient'), models.Count('id')).get('id__count', 0)
+
+            return count
 
     def GetActualCount(user):
 

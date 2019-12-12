@@ -705,6 +705,11 @@ def setResponseStatus(request):
                     else:
                         response.status = 2
                     response.save()
+                    print("8888888888888888888888888888888888888")
+                    userType = UserType.GetUserType(request.user)
+                    print("userType8888888888888888888888888888888888888"+str(userType))
+                    MessageExpo.SaveJobResponse(Jobresponse = response, userType = userType)
+
                     return JsonResponse({'status': True})
                 else:
                     return JsonResponse({'status': False})

@@ -311,7 +311,7 @@
                                        <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:50px" src="{{  comment.photo }}" alt="">
                                    </div>
                               </div>
-                              <div class="col col-7 col-md-4 text-left mb-3" style="height: 40px;">
+                              <div class="col col-9 col-md-7 text-left mb-3" style="height: 40px;">
                                   <div class="row">
                                     <a class="text-danger"  style="font-size: 12px;" href="{{ comment.workerurl }}">{{ comment.worker }}</a>
                                   </div>
@@ -319,7 +319,7 @@
                                       {{comment.created|date:"Y-m-d"}}
                                   </div>
                               </div>
-                              <div class="col col-4 col-md-6 text-center">
+                              <div class="col col-2 col-md-3 text-center">
                                 <span class="badge mb-1 container-fluid
                                   {% if comment.status.value == 0 %}
                                       badge-light
@@ -331,13 +331,11 @@
                                   " style="font-family: sans-serif;">
                                   {{comment.status.name}}
                                 </span>
+                                <div class="row mt-3">
+                                      <a href="" class="text-success text-right container-fluid" name="button" id={{comment.id}} onclick="setResponseStatus(this, true)">Пригласить</a>
+                                </div>
                                 <div class="row">
-                                  <div class="col col-6">
-                                      <button type="button" class="btn btn-sm btn-success container-fluid" name="button" id={{comment.id}} onclick="setResponseStatus(this, true)">Пригласить</button>
-                                  </div>
-                                  <div class="col col-6">
-                                      <button type="button" class="btn btn-sm btn-danger container-fluid" name="button" id={{comment.id}}  onclick="setResponseStatus(this, false)">Отказать</button>
-                                  </div>
+                                      <a href="" class="text-danger text-right container-fluid" name="button" id={{comment.id}}  onclick="setResponseStatus(this, false)">Отказать</a>
                                 </div>
                               </div>
                             </div>
