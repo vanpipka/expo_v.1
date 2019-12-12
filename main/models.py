@@ -1473,7 +1473,7 @@ class MessageExpo(models.Model):
     recipient       = models.ForeignKey(User, related_name= "ПолучательСообщения", verbose_name="Получатель", on_delete=models.CASCADE)
     text            = models.TextField("Текст")
     subject         = models.TextField("Тема")
-    order           = models.ForeignKey(JobOrder, related_name= "Order", verbose_name="JobOrder", on_delete=models.CASCADE, null=True)
+    order           = models.ForeignKey(JobOrder, related_name= "Order", verbose_name="Order", on_delete=models.CASCADE, null=True)
     read            = models.BooleanField("Прочитано", default=False)
     created         = models.DateTimeField("Дата добавления", default=timezone.now)
 
