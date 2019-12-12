@@ -717,7 +717,7 @@ class JobOrder(models.Model):
                 jobResponse.answer   = data.get('job_description', 'Сопроводительного письма нет')
                 jobResponse.save()
 
-                MessageExpo.SaveJobResponse(self, userType)
+                MessageExpo.SaveJobResponse(jobResponse, userType)
 
             except:
 
@@ -1473,6 +1473,7 @@ class MessageExpo(models.Model):
     recipient       = models.ForeignKey(User, related_name= "ПолучательСообщения", verbose_name="Получатель", on_delete=models.CASCADE)
     text            = models.TextField("Текст")
     subject         = models.TextField("Тема")
+    order           = models.ForeignKey(JobOrder, related_name= "Order", verbose_name="JobOrder", on_delete=models.CASCADE, null=True)
     read            = models.BooleanField("Прочитано", default=False)
     created         = models.DateTimeField("Дата добавления", default=timezone.now)
 
@@ -1605,7 +1606,7 @@ class MessageExpo(models.Model):
                 message.recipient   = user2
                 message.subject     = 'Добавлен отклик на заявку'
                 message.text        = Jobresponse.answer
-
+                message.object      = Jobresponse.jobOrder
                 message.save()
 
         elif userType == 2:
@@ -1622,6 +1623,7 @@ class MessageExpo(models.Model):
                 message.sender      = user2
                 message.recipient   = user1
                 message.subject     = 'Ответ на отклик по заказу'
+                message.object      = Jobresponse.jobOrder
 
                 if Jobresponse.status == 1:
                     message.text        = "Мы готовы сделать вам предложение"
