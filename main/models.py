@@ -465,7 +465,7 @@ class Company(models.Model):
             print(3)
             UserType.SetUserType(user=user, type=2)
             print(4)
-            company = UserType.GetCompanyByUser(user)
+            company = Company.GetCompanyByUser(user)
             print(5)
             company.name            = companyRequest.name
             company.vatnumber       = companyRequest.vatnumber
