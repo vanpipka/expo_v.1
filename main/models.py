@@ -475,7 +475,7 @@ class Company(models.Model):
             print(6)
             company.save()
             print(7)
-            text = 'Добро пожаловать на VseEXPO.RU! Ваш пароль для входа : '+srt(generate_password(7))
+            text = 'Добро пожаловать на VseEXPO.RU! Ваш пароль для входа : '+str(generate_password(7))
             print(8)
             sendMessage(company.phonenumber, text)
             print(9)
