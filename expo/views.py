@@ -145,10 +145,7 @@ def adminexponewcompanys(request):
             if request.POST.__contains__('data'):
                 data = dict(json.loads(request.POST.__getitem__('data')))
 
-                if data.get('status') == '1':
-                    Company.SignUpNewCompany(data)
-
-                CompanyRequest.setStatus(data.get('id'), data.get('status'))
+                Company.SignUpNewCompany(data)
 
             return HttpResponse(settings.HOME_PAGE + 'adminexpo/newcompanys/')
     else:
