@@ -458,11 +458,22 @@ class Company(models.Model):
 
     def SignUpNewCompany(data):
 
+        status = data.get('status')
+
+        CompanyRequest.setStatus(data.get('id'), data.get('status'))
+
+        if status == '0':
+            return True
+
+        password = str(generate_password(7))
+        companyRequest = CompanyRequest.objects.get(id=data.get('id'))
+
+        if data.get('status') == '2':
+            text = 'к сожалению Вам отказано в регистрации на vseEXPO.ru'
+            sendMessage(companyRequest.phonenumber, text)
+            return True
+
         try:
-
-            password = str(generate_password(7))
-            companyRequest = CompanyRequest.objects.get(id=data.get('id'))
-
 
             user = User.objects.create_user(companyRequest.phonenumber, companyRequest.emailaddress, password)
 
@@ -478,7 +489,7 @@ class Company(models.Model):
 
             company.save()
 
-            text = 'Добро пожаловать на VseEXPO.RU! Ваш пароль для входа : '+password)
+            text = 'Добро пожаловать на VseEXPO.RU! Ваш пароль для входа : '+password
 
             sendMessage(company.phonenumber, text)
 
