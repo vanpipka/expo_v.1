@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect
 from datetime import datetime as datet
 from datetime import timezone
-from main.models import JobResponse, Company, Dialog, MessageExpo, News, JobOrder, UserType, Attacment, Message, Worker, Comments, ConfirmCodes
+from main.models import JobResponse, Company, Dialog, MessageExpo, News, CompanyRequest, JobOrder, UserType, Attacment, Message, Worker, Comments, ConfirmCodes
 from expo.DataSet import refreshLastOnline
 from expo.DataGet import getCityListFull, getProfessionList, gerWorkList, getStatistics
 from expo.Balance import getBalance
@@ -113,6 +113,49 @@ def sendsms(request):
             return HttpResponse(settings.HOME_PAGE + 'success/', status=200)
 
         return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)
+
+def adminexponewcompanys(request):
+
+    userAauthorized = request.user.is_authenticated
+
+    if userAauthorized:
+        refreshLastOnline(request.user)
+
+    if request.user.is_superuser:
+        if request.method == "GET":
+
+            query = CompanyRequest.getAllRequest()
+            dataset = []
+            for e in query:
+
+                dataset.append({'name': e.name,
+                                    'id': e.id,
+                                    'status': e.status,
+                                    'name': e.name,
+                                    'email': e.emailaddress,
+                                    'phone': e.phonenumber,
+                                    'vatnumber': e.vatnumber,
+                                    })
+
+            return render(request, 'adminexpo/adminexporequestcompanys.html', {"dataset": dataset})
+        else:
+            print("6666666666666666666666666666666666666")
+            print(request.POST)
+
+            if request.POST.__contains__('data'):
+                data = dict(json.loads(request.POST.__getitem__('data')))
+
+                if data.get('status') == '1':
+                    Company.SignUpNewCompany(data)
+
+                CompanyRequest.setStatus(data.get('id'), data.get('status'))
+
+            return HttpResponse(settings.HOME_PAGE + 'adminexpo/newcompanys/')
+    else:
+        if request.method == "GET":
+            return render(request, 'errors/403.html', None, None, status='403')
+        else:
+            return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)
 
 def adminexpocompanys(request):
 

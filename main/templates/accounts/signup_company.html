@@ -4,62 +4,59 @@
 {% load home_extras %}
 {% block content %}
 
-<div style="left: 50%; top: 50%; position: absolute; margin: -250px 0 0 -250px;">
+<div class="container mt-3" style=" width: 500px">
 
-    <div class="card" style="width: 500px; border-radius: 0px">
+    <div class="card " style="">
         <div class="card-header text-center">
             <span class="article">Регистрация</span>
+            <p></p>
+            <span class="nav-link">Оставьте заявку на регистрацию, наши менеджеры свяжутся с вами и предоставят доступ к ресурсу</span>
         </div>
         <div class="card-body">
             <form action="" method="post" id = "signupform" name="signupform">
                 {% csrf_token %}
+                {% if error %}
+                    <span style="color: red; font-size: 10px">{{ error }}</span>
+                {% endif %}
+                <div class="form-group row">
+                    <label for="id_name" class="col-sm-4 col-form-label">Имя*</label>
+                    <div class="col-sm-8">
+                        <input style="border-radius: 0px" name="name" type="text" class="form-control input-sm" id="id_name" placeholder="Название организации" required>
+                    </div>
+                </div>
 
                 <div class="form-group row">
-                    <label for="id_username" class="col-sm-4 col-form-label">Телефон</label>
+                    <label for="id_vatnumber" class="col-sm-4 col-form-label">ИНН*</label>
                     <div class="col-sm-8">
-                        <input style="border-radius: 0px" name="username" type="text" class="form-control" id="id_username" placeholder="Номер телефона" value="{{ username }}" required>
-                        {% if errors.username %}
-                            <span style="color: red; font-size: 10px">{{ errors.username|gettranslate }}</span>
-                        {% endif %}
+                        <input style="border-radius: 0px" name="vatnumber" type="text" class="form-control input-sm" id="id_vatnumber" placeholder="ИНН" required>
                     </div>
                 </div>
 
-                {% if confirmphone %}
-                    <div class="form-group row">
-                        <label for="id_confirmphone" class="col-sm-4 col-form-label">Код подтверждения</label>
-                        <div class="col-sm-8">
-                            <input style="border-radius: 0px" name="confirmphone" type="text" class="form-control" id="id_confirmphone" placeholder="Код подтверждения" required>
-                           {% if errors.confirmphone %}
-                                <span style="color: red; font-size: 10px">{{ errors.confirmphone|gettranslate }}</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                {% endif %}
-
-                <div class="form-group row" {% if confirmphone %} hidden {% endif %}>
-                    <label for="id_password1" class="col-sm-4 col-form-label">Пароль</label>
+                <div class="form-group row">
+                    <label for="id_username" class="col-sm-4 col-form-label">Телефон*</label>
                     <div class="col-sm-8">
-                        <input style="border-radius: 0px" name="password1" type="password" class="form-control" id="id_password1" placeholder="Пароль" value="{{ password1 }}" required>
-                        {% if errors.password1 %}
-                            <span style="color: red; font-size: 10px">{{ errors.password1|gettranslate }}</span>
-                        {% endif %}
+                        <input style="border-radius: 0px" name="username" type="text" class="form-control input-sm" id="id_username" placeholder="Номер телефона" required>
                     </div>
                 </div>
 
-                <div class="form-group row" {% if confirmphone %} hidden {% endif %}>
-                    <label for="id_password2" class="col-sm-4 col-form-label">Повторите пароль</label>
+                <div class="form-group row">
+                    <label for="id_email" class="col-sm-4 col-form-label">Email*</label>
                     <div class="col-sm-8">
-                        <input style="border-radius: 0px" name="password2" type="password" class="form-control" id="id_password2" placeholder="Пароль" value="{{ password2 }}" required>
-                        {% if errors.password2 %}
-                            <span style="color: red; font-size: 10px">{{ errors.password2|gettranslate }}</span>
-                        {% endif %}
+                        <input style="border-radius: 0px" name="email" type="text" class="form-control input-sm" id="id_email" placeholder="Электронная почта" required>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="id_description" class="col-sm-4 col-form-label">Описание*</label>
+                    <div class="col-sm-8">
+                        <input style="border-radius: 0px" name="description" type="text" class="form-control input-sm" id="id_description" placeholder="Краткое описание" required>
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <div class="col col-6"></div>
                     <div class="col col-6">
-                        <button type="submit" class="btn btn-danger container-fluid">Зарегистрироваться</button>
+                        <button type="submit" class="btn btn-danger container-fluid">Оставить заявку</button>
                     </div>
                 </div>
 

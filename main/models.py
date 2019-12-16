@@ -14,6 +14,7 @@ from PIL import Image
 from django.conf import settings
 from os import path
 from expo.Balance import sendMessage
+from expo.PassGen import generate_password
 from expo.validate_uuid4 import validate_uuid4
 import logging
 
@@ -454,6 +455,81 @@ class Company(models.Model):
             print('не удалось получить работника по id')
 
         return elem
+
+    def SignUpNewCompany(data):
+
+            companyRequest = CompanyRequest.objects.get(id=data.get('id'))
+
+        #try:
+            user = User.objects.create_user(companyRequest.phonenumber, companyRequest.emailaddress,'12345')
+            UserType.SetUserType(user=user, type=2)
+
+            company = UserType.GetCompanyByUser(user)
+
+            company.name            = companyRequest.name
+            company.vatnumber       = companyRequest.vatnumber
+            company.phonenumber     = companyRequest.phonenumber
+            company.emailaddress    = companyRequest.emailaddress
+            company.description     = companyRequest.description
+
+            company.save()
+
+            text = 'Добро пожаловать на VseEXPO.RU! Ваш пароль для входа : '+srt(generate_password(7))
+
+            sendMessage(company.phonenumber, text)
+
+        #except Exception as e:
+        #    return False
+
+            return True
+
+class CompanyRequest(models.Model):
+
+    id              = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name            = models.CharField(max_length=100, default="Не указано")
+    vatnumber       = models.CharField(max_length=10)
+    #image           = models.ForeignKey(Attacment, on_delete=models.CASCADE, default="00000000000000000000000000000000")
+    phonenumber     = models.CharField(max_length=100)
+    emailaddress    = models.CharField(max_length=100)
+    description     = models.TextField()
+    idCity          = models.ForeignKey(City, on_delete=models.CASCADE, default="00000000000000000000000000000000")
+    status          = models.DecimalField(max_digits=1, decimal_places=0, default=0)
+    created         = models.DateTimeField("Дата добавления", auto_now_add=True)
+    #0-новый, 1-принят, 2-отказ
+
+    def __str__(self):
+        return self.name
+
+    def saveNewRequest(username, post):
+
+        try:
+            newRequest = CompanyRequest();
+            newRequest.name         = post['name'][0]
+            newRequest.vatnumber    = post['name'][0]
+            newRequest.phonenumber  = username
+            newRequest.emailaddress = post['email'][0]
+            newRequest.description  = post['description'][0]
+            newRequest.save()
+        except Exception as e:
+            return False
+
+        return True
+
+    def getAllRequest():
+
+        newRequest = CompanyRequest.objects.all().order_by("-created");
+
+        return newRequest
+
+    def setStatus(id, status):
+
+        newRequest = CompanyRequest.objects.get(id = id);
+
+        newRequest.status = status
+
+        newRequest.save()
+
+        return True
 
 class News(models.Model):
 

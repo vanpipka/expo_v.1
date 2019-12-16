@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.base import View
-from main.models import UserType, Attacment, ConfirmCodes
+from main.models import UserType, Attacment, ConfirmCodes, CompanyRequest
 import json
 import logging
 from django.middleware import csrf
@@ -26,7 +26,57 @@ def signup_worker(request):
     return signup(request, type=1)
 
 def signup_company(request):
-    return signup(request, type=2)
+
+    if request.user.is_authenticated:
+        if request.is_ajax():
+
+            error_dict = {'username': 'user is authenticated'}
+
+            jsonData = {'Access-Control-Allow-Origin': "*",
+                            'status': False,
+                            'errors': error_dict,
+                            'cookies': {'csrftoken': request.META["CSRF_COOKIE"],
+                                        'sessionid': request.session.session_key,
+                                        'csrfmiddlewaretoken': csrf.get_token(request)}}
+
+            return HttpResponse(json.dumps(jsonData),
+                                    status=200,
+                                    content_type='application/json')
+
+        else:
+            return HttpResponseRedirect('/')
+
+    else:
+
+        if request.method == 'GET':
+            return render(request, "accounts/signup_company.html");
+        else:
+            print(request.POST)
+
+            username    = request.POST['username']
+            vatnumber   = request.POST['vatnumber']
+            username = username.replace(' ', '')
+            username = username.replace(')', '')
+            username = username.replace('(', '')
+            username = username.replace('-', '')
+            username = username.replace('+7', '8')
+
+            if username.isdigit() != True:
+                return render(request, "accounts/signup_company.html", {'error': 'Номер телефона указан не верно'});
+
+            if vatnumber.isdigit() != True:
+                return render(request, "accounts/signup_company.html", {'error': 'ИНН указан не верно'});
+
+            if len(User.objects.filter(username=username)) > 0:
+                return render(request, "return True/signup_company.html", {'error': 'Пользователь с таким телефоном уже зарегистрирован'});
+
+            result = CompanyRequest.saveNewRequest(username, request.POST)
+
+            if result == True:
+                return render(request, "errors/success0.html");
+            else:
+                return render(request, "errors/500.html");
+    #return signup(request, type=2)
 
 def signup(request, type):
 

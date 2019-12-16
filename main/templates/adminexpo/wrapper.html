@@ -403,6 +403,15 @@
                         <li class="nav-item pt-2 nav-item-header">
                             <a class="txt-bold nav-link text-white text-menu {% if request.path == '/worker/search/'%}nav-item-expo-active{% endif %}" href="{% get_attribute 'HOME_PAGE' %}adminexpo/workers/" role="button">Специалисты</a>
                         </li>
+
+                        <li class="nav-item  pt-2 nav-item-header dropdown">
+                          <a class="txt-bold text-white text-menu nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Компании</a>
+                          <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{% get_attribute 'HOME_PAGE' %}adminexpo/newcompanys/">Новые заявки</a>
+                            <a class="dropdown-item" href="{% get_attribute 'HOME_PAGE' %}adminexpo/companys/">Все компании</a>
+                          </div>
+                        </li>
+
                         <li class="nav-item pt-2 nav-item-header">
                             <a class="txt-bold nav-link text-white text-menu {% if request.path == '/company/'%}nav-item-expo-active{% endif %}" href="{% get_attribute 'HOME_PAGE' %}adminexpo/companys/" role="button">Компании</a>
                         </li>

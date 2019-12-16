@@ -7,7 +7,7 @@
 
             {% csrf_token %}
 
-            <h3 class="mt-5">Компании</h3>
+            <h3 class="mt-5">Заявки на регистрацию</h3>
 
             <table class="table table-hover">
                 <thead class="thead-default">
@@ -25,20 +25,28 @@
                 {% for worker in dataset %}
                         <tr id="tr_{{ forloop.counter }}">
                             <td style="width: 5px">{{ forloop.counter }} </td>
-                            <td><a href="{{ worker.url }}" class="text-danger"> {{worker.name}} {{worker.surname}}</a></td>
+                            <td>{{worker.name}}</td>
                             <td>{{worker.phone}}</td>
                             <td>{{worker.email}}</td>
                             <td>{{worker.vatnumber}}</td>
-                            <td><input id = "block_{{worker.id}}" type="checkbox" {% if worker.block %}checked{% endif %} hidden>{% if worker.block %}<i id = "i_fsocheck_{{worker.id}}" class="text-danger fa fa-check" aria-hidden="true"></i>{% endif %}</td>
-                            <td>
-                                <button type="button" id = "edit_{{worker.id}}" onclick=edit_tr("{{ worker.id }}")>
-                                    <i class="fa fa-pencil" aria-hidden="true">
-                                    </i>
-                                </button>
-                                <button type="button" id = "save_{{worker.id}}" onclick=save_tr("{{ worker.id }}")>
-                                    <i class="fa fa-check" aria-hidden="true"></i>
-                                </button>
+                            <td><select id='status_{{ worker.id }}' disabled>
+                              <option value="0" {% if worker.status == 0 %} selected {% endif %}></option>
+                              <option value="1" {% if worker.status == 1 %} selected {% endif %}>Одобрено</option>
+                              <option value="2" {% if worker.status == 2 %} selected {% endif %}>Отказ</option>
+                            </select>
                             </td>
+                              <td>
+                                  {% if worker.status != 1 %}
+                                    <button type="button" id = "edit_{{worker.id}}" onclick=edit_tr("{{ worker.id }}")>
+                                        <i class="fa fa-pencil" aria-hidden="true">
+                                        </i>
+                                    </button>
+                                    <button type="button" id = "save_{{worker.id}}" onclick=save_tr("{{ worker.id }}")>
+                                        <i class="fa fa-check" aria-hidden="true"></i>
+                                    </button>
+                                  {% endif %}
+                              </td>
+
                         </tr>
                 {% endfor %}
                 </tbody>
@@ -51,9 +59,9 @@
     function edit_tr(id) {
 
         var id          = id;
-        var block   = document.getElementById("block_"+id);
+        var block   = document.getElementById("status_"+id);
 
-        if (block != null) {block.hidden    = !block.hidden;}
+        if (block != null) {block.disabled  = !block.disabled;}
 
     }
 
@@ -63,8 +71,9 @@
 
         var json = JSON.stringify({
             id: id,
-            block: document.getElementById("block_"+id).checked,
+            status: document.getElementById("status_"+id).value,
         });
+
         formsave(json)
     }
 
@@ -77,6 +86,8 @@
         formData.append("data", json);
         formData.append("csrfmiddlewaretoken", document.getElementsByName("csrfmiddlewaretoken")[0].value);
 
+        console.log(formData);
+
         // отослать
         var xhr = new XMLHttpRequest();
 
@@ -84,8 +95,10 @@
             if (xhr.readyState != 4) return;
 
             if (xhr.status != 200) {
+
                 location.href = (xhr.responseText);
             } else {
+                console.log(xhr.responseText);
                 location.href = (xhr.responseText);
             }
         }

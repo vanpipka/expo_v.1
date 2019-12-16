@@ -21,6 +21,7 @@ urlpatterns = [
     path('adminexpo/workers/', views.adminexpoworkers),
     path('adminexpo/comments/', views.adminexpocomments),
     path('adminexpo/companys/', views.adminexpocompanys),
+    path('adminexpo/newcompanys/', views.adminexponewcompanys),
     path('adminexpo/charts/', views.adminexpocharts),
     path('adminexpo/save/', views.adminexposave),
     path('adminexpo/news/', views.adminexponews),
