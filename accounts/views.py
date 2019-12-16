@@ -68,7 +68,7 @@ def signup_company(request):
                 return render(request, "accounts/signup_company.html", {'error': 'ИНН указан не верно'});
 
             if len(User.objects.filter(username=username)) > 0:
-                return render(request, "return True/signup_company.html", {'error': 'Пользователь с таким телефоном уже зарегистрирован'});
+                return render(request, "accounts/signup_company.html", {'error': 'Пользователь с таким телефоном уже зарегистрирован'});
 
             result = CompanyRequest.saveNewRequest(username, request.POST)
 

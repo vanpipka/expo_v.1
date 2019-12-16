@@ -487,7 +487,7 @@ class CompanyRequest(models.Model):
 
     id              = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name            = models.CharField(max_length=100, default="Не указано")
-    vatnumber       = models.CharField(max_length=10)
+    vatnumber       = models.CharField(max_length=12)
     #image           = models.ForeignKey(Attacment, on_delete=models.CASCADE, default="00000000000000000000000000000000")
     phonenumber     = models.CharField(max_length=100)
     emailaddress    = models.CharField(max_length=100)
@@ -505,7 +505,7 @@ class CompanyRequest(models.Model):
         try:
             newRequest = CompanyRequest();
             newRequest.name         = post['name']
-            newRequest.vatnumber    = post['name']
+            newRequest.vatnumber    = post['vatnumber']
             newRequest.phonenumber  = username
             newRequest.emailaddress = post['email']
             newRequest.description  = post['description']
