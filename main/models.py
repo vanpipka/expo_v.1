@@ -457,32 +457,35 @@ class Company(models.Model):
         return elem
 
     def SignUpNewCompany(data):
-            print(1)
+
+        try:
+
+            password = str(generate_password(7))
             companyRequest = CompanyRequest.objects.get(id=data.get('id'))
-            print(2)
-        #try:
-            user = User.objects.create_user(companyRequest.phonenumber, companyRequest.emailaddress,'12345')
-            print(3)
+
+
+            user = User.objects.create_user(companyRequest.phonenumber, companyRequest.emailaddress, password)
+
             UserType.SetUserType(user=user, type=2)
-            print(4)
+
             company = UserType.GetElementByUser(user)
-            print(5)
+
             company.name            = companyRequest.name
             company.vatnumber       = companyRequest.vatnumber
             company.phonenumber     = companyRequest.phonenumber
             company.emailaddress    = companyRequest.emailaddress
             company.description     = companyRequest.description
-            print(6)
-            company.save()
-            print(7)
-            text = 'Добро пожаловать на VseEXPO.RU! Ваш пароль для входа : '+str(generate_password(7))
-            print(8)
-            sendMessage(company.phonenumber, text)
-            print(9)
-        #except Exception as e:
-        #    return False
 
-            return True
+            company.save()
+
+            text = 'Добро пожаловать на VseEXPO.RU! Ваш пароль для входа : '+password)
+
+            sendMessage(company.phonenumber, text)
+
+        except Exception as e:
+            return False
+
+        return True
 
 class CompanyRequest(models.Model):
 
