@@ -492,7 +492,7 @@ class CompanyRequest(models.Model):
     phonenumber     = models.CharField(max_length=100)
     emailaddress    = models.CharField(max_length=100)
     description     = models.TextField()
-    idCity          = models.ForeignKey(City, on_delete=models.CASCADE, default="00000000000000000000000000000000")
+    #idCity          = models.ForeignKey(City, on_delete=models.CASCADE, default="00000000000000000000000000000000")
     status          = models.DecimalField(max_digits=1, decimal_places=0, default=0)
     created         = models.DateTimeField("Дата добавления", auto_now_add=True)
     #0-новый, 1-принят, 2-отказ
