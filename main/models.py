@@ -504,11 +504,11 @@ class CompanyRequest(models.Model):
 
         try:
             newRequest = CompanyRequest();
-            newRequest.name         = post['name'][0]
-            newRequest.vatnumber    = post['name'][0]
+            newRequest.name         = post['name']
+            newRequest.vatnumber    = post['name']
             newRequest.phonenumber  = username
-            newRequest.emailaddress = post['email'][0]
-            newRequest.description  = post['description'][0]
+            newRequest.emailaddress = post['email']
+            newRequest.description  = post['description']
             newRequest.save()
         except Exception as e:
             return False
