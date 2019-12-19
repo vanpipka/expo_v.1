@@ -165,7 +165,7 @@ class Attacment(models.Model):
                 attachment.resizePath = fullresizepath.replace(directory, '').replace('\\', '/')
             attachment.save()
         except Exception as e:
-            raise
+            return False
 
         return attachment
 
