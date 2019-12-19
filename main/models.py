@@ -150,8 +150,7 @@ class Attacment(models.Model):
         attachment      = Attacment()
         print("fullpath=============================================")
         print(fullpath)
-        #try:
-        if (True):
+        try:
             print('1')
             with open(fullpath, "wb") as fh:
                 b64decode = base64.b64decode(strOne.strip())
@@ -164,8 +163,9 @@ class Attacment(models.Model):
                 fullresizepath = path.join(directory, 'attacmentresize', resizename)
                 Attacment.scale_image(input_image_path=fullpath, output_image_path=fullresizepath)
                 attachment.resizePath = fullresizepath.replace(directory, '').replace('\\', '/')
-
-        attachment.save()
+            attachment.save()
+        except Exception as e:
+            raise
 
         return attachment
 
