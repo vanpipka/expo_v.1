@@ -931,11 +931,15 @@ class JobResponse(models.Model):
 
     def getCount(user):
 
-        company = UserType.GetElementByUser(user);
-        response_list = list(JobResponse.objects.filter(jobOrder__company=company).filter(status=0))
+        try:
+            company = UserType.GetElementByUser(user);
+            response_list = list(JobResponse.objects.filter(jobOrder__company=company).filter(status=0))
+            return len(response_list)
+        except Exception as e:
+            return 0
 
-        return len(response_list)
-
+        return 0
+        
     def getActualForCompany(user):
 
         company = UserType.GetElementByUser(user);

@@ -619,17 +619,16 @@ def getcountmessage(request):
         return JsonResponse({'count': 0})
 
 def getcountresponses(request):
-    print(1)
     userAauthorized = request.user.is_authenticated
-    print(2)
     if userAauthorized:
-        print(3)
         refreshLastOnline(request.user)
-        print(4)
-        return JsonResponse({'count': JobResponse.getCount(request.user)})
+        userType = UserType.GetUserType(request.user)
+        count = 0
+        if userType == 2:    
+            count = JobResponse.getCount(request.user)
+
+        return JsonResponse({'count': count})
     else:
-        print(5)
-        
         return JsonResponse({'count': 0})
 
 def dialogs(request):
