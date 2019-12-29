@@ -608,6 +608,29 @@ def messagesend(request):
             else:
                 return HttpResponse(settings.HOME_PAGE + 'forbiden/', status=403)
 
+
+def getcountmessage(request):
+    userAauthorized = request.user.is_authenticated
+
+    if userAauthorized:
+        refreshLastOnline(request.user)
+        return JsonResponse({'count': MessageExpo.GetActualCount(user = request.user)})
+    else:
+        return JsonResponse({'count': 0})
+
+def getcountresponses(request):
+    print(1)
+    userAauthorized = request.user.is_authenticated
+    print(2)
+    if userAauthorized:
+        print(3)
+        refreshLastOnline(request.user)
+        print(4)
+        return JsonResponse({'count': JobResponse.getCount(request.user)})
+    else:
+        print(5)
+        return JsonResponse({'count': 0})
+
 def dialogs(request):
 
     userAauthorized = request.user.is_authenticated
