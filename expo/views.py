@@ -619,7 +619,7 @@ def getcountmessage(request):
         return JsonResponse({'count': 0})
 
 def getcountresponses(request):
-    print(1)
+    print(1) 
     userAauthorized = request.user.is_authenticated
     print(2)
     if userAauthorized:
