@@ -241,10 +241,19 @@
         <div class="card" style="height: 100%;">
 
             <div class="card-header">
+
                 <div class="row mb-1 pl-3">
-                    <div class="col-8">
-                        <span class="article article-sm">Сообщения: {{messageData.companion}}</span>
-                    </div>
+                  <div class="col col-1 text-center">
+                       <div class="product-img" style="height: 40px;">
+                           <img id ="fotourl" style="max-width:100%; border-radius: 5px; margin-left: auto; margin-right: auto; display: block; max-height:50px" src="{{  messageData.sender.foto }}" alt="">
+
+                       </div>
+                  </div>
+                  <div class="col col-7 text-left mb-3" style="height: 40px;">
+                      <div class="row">
+                        <a class="text-danger" style="font-size: 16px;" href="{{ messageData.sender.url }}">{{ messageData.sender.name }}</a>
+                      </div>
+                  </div>
                 </div>
             </div>
             <div class="card-body table-responsive" style="max-width: 100%; overflow-x: auto;overflow-y: auto">

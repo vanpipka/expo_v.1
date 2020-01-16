@@ -939,7 +939,7 @@ class JobResponse(models.Model):
             return 0
 
         return 0
-        
+
     def getActualForCompany(user):
 
         company = UserType.GetElementByUser(user);
@@ -1591,8 +1591,18 @@ class MessageExpo(models.Model):
                 dialog = Dialog.GetCurrentDialog(idDialog)
 
                 if dialog != None:
+
+                    sender = UserType.GetElementByUser(dialog.idUser2 if user == dialog.idUser1 else dialog.idUser1)
+
+                    if type(sender) == Worker:
+                        url = '/worker/info?id='+str(sender.id)
+                    else:
+                        url = '/company?id='+str(sender.id)
+
                     answer['status'] = True
-                    answer['companion'] = UserType.GetElementByUser(dialog.idUser2 if user == dialog.idUser1 else dialog.idUser1).name
+                    answer['sender'] = {'name': sender.name,
+                                        'foto': Attacment.getresizelink(sender.image),
+                                        'url': url}
                     answer['messageList'] = []
 
                     messageList = MessageExpo.objects.all().filter(idDialog = idDialog).order_by('created')
