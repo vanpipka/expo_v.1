@@ -731,7 +731,7 @@ class JobOrder(models.Model):
 
                 for responses in response_list:
 
-                    if responses['worker'] == worker.id or e['author'] == user:
+                    if responses['worker'] == worker.id or e['author'] == user.id:
 
                         status = {'value': responses['status']}
 
