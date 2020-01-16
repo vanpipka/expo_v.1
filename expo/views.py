@@ -624,7 +624,7 @@ def getcountresponses(request):
         refreshLastOnline(request.user)
         userType = UserType.GetUserType(request.user)
         count = 0
-        if userType == 2:    
+        if userType == 2:
             count = JobResponse.getCount(request.user)
 
         return JsonResponse({'count': count})
@@ -951,9 +951,6 @@ def infojobs(request):
 
         if jobInfo == False:
             return render(request, 'errors/500.html', status=500)
-
-        print(request.user.id)
-        print(jobInfo['author'])
 
         if jobInfo['author'] == request.user.id or request.user.is_superuser:
             return render(request, 'NewJob.html', {'edit': True, 'n': jobInfo, 'userType': userType, 'citylist': getCityListFull(), 'professionsList': getProfessionList()})

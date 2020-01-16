@@ -731,45 +731,47 @@ class JobOrder(models.Model):
 
                 for responses in response_list:
 
-                    status = {'value': responses['status']}
+                    if responses['worker'] == worker.id or e['author'] == user:
 
-                    if responses['status'] == 0:
-                        status['name'] = 'Отклик не просмотрен'
-                    elif responses['status'] == 1:
-                        status['name'] = 'Приглашение'
-                    elif responses['status'] == 2:
-                        status['name'] = 'Отказано'
-                    else:
-                        status['name'] = ''
-
-                    if e['author'] == user:
-                        status['edit']: True
-                    else:
-                        status['edit']: False
-
-                    if responses['worker'] == worker.id:
-
-                        response['status']                  = responses['status']
-                        response['response_is_available']   = 0
+                        status = {'value': responses['status']}
 
                         if responses['status'] == 0:
-                            response['name'] = 'Отклик отправлен'
+                            status['name'] = 'Отклик не просмотрен'
                         elif responses['status'] == 1:
-                            response['name'] = 'Вас пригласили'
+                            status['name'] = 'Приглашение'
                         elif responses['status'] == 2:
-                            response['name'] = 'Вам отказано'
+                            status['name'] = 'Отказано'
                         else:
-                            response['name'] = 'Откликнуться'
+                            status['name'] = ''
 
-                    data = {'id': responses['id'],
-                                'description' : responses['answer'],
-                                'worker': responses['worker__name'],
-                                'photo': Attacment.getresizelink(Attacment.objects.get(id=responses['worker__image'])),
-                                'workerurl': '/worker/info?id='+str(responses['worker__id']),
-                                'created': responses['created'],
-                                'status': status}
+                        if e['author'] == user:
+                            status['edit']: True
+                        else:
+                            status['edit']: False
 
-                    response_array.append(data)
+                        if responses['worker'] == worker.id:
+
+                            response['status']                  = responses['status']
+                            response['response_is_available']   = 0
+
+                            if responses['status'] == 0:
+                                response['name'] = 'Отклик отправлен'
+                            elif responses['status'] == 1:
+                                response['name'] = 'Вас пригласили'
+                            elif responses['status'] == 2:
+                                response['name'] = 'Вам отказано'
+                            else:
+                                response['name'] = 'Откликнуться'
+
+                        data = {'id': responses['id'],
+                                    'description' : responses['answer'],
+                                    'worker': responses['worker__name'],
+                                    'photo': Attacment.getresizelink(Attacment.objects.get(id=responses['worker__image'])),
+                                    'workerurl': '/worker/info?id='+str(responses['worker__id']),
+                                    'created': responses['created'],
+                                    'status': status}
+
+                        response_array.append(data)
 
         jobComposition = list(JobComposition.objects.all().filter(jobOrder_id=id).select_related('profession').values('jobOrder_id', 'profession__id', 'profession__name', 'count', 'price'))
 
