@@ -798,7 +798,7 @@ def responses(request):
                 response_array = JobResponse.getActualForWorker(request.user)
 
                 if request.is_ajax():
-                    return JsonResponse(response_array)
+                    return JsonResponse({"data": response_array})
                 else:
                     return render(request, 'workerresponses.html', {"response_array": response_array, "userType": userType})
 
@@ -810,7 +810,7 @@ def responses(request):
                 if request.is_ajax():
                     print(8)
                     print(response_array)
-                    return JsonResponse(response_array)
+                    return JsonResponse({"data": response_array})
                 else:
                     print(9)
                     return render(request, 'workerresponses.html', {"response_array": response_array, "userType": userType})
