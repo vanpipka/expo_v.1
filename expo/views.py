@@ -780,18 +780,21 @@ def setResponseStatus(request):
             return JsonResponse({'status': False})
 
 def responses(request):
-
+    print(1)
     userAauthorized = request.user.is_authenticated
 
     if userAauthorized:
+
+        print(2)
         refreshLastOnline(request.user)
 
+        print(3)
         if request.method == 'GET':
-
+            print(4)
             userType = UserType.GetUserType(request.user)
-
+            print('usertype: '+str(userType))
             if userType == 1:
-
+                print(5)
                 response_array = JobResponse.getActualForWorker(request.user)
 
                 if request.is_ajax():
@@ -801,13 +804,18 @@ def responses(request):
 
 
             elif userType == 2:
-
+                print(6)
                 response_array = JobResponse.getActualForCompany(request.user)
-
+                print(7)
                 if request.is_ajax():
+                    print(8)
+                    print(response_array)
                     return JsonResponse(response_array)
                 else:
+                    print(9)
                     return render(request, 'workerresponses.html', {"response_array": response_array, "userType": userType})
+
+                print(10)
 
                 #recipient = UserType.GetUserByID(idRecipient)
                 #dialog    = None
