@@ -793,7 +793,7 @@ def responses(request):
                 response_array = JobResponse.getActualForWorker(request.user)
 
                 if request.is_ajax():
-                    return JsonResponse({"dataset": response_array, "status": true})
+                    return JsonResponse({"dataset": response_array, "status": True})
                 else:
                     return render(request, 'workerresponses.html', {"response_array": response_array, "userType": userType})
 
@@ -801,7 +801,7 @@ def responses(request):
             elif userType == 2:
                 response_array = JobResponse.getActualForCompany(request.user)
                 if request.is_ajax():
-                    return JsonResponse({"dataset": response_array, "status": true})
+                    return JsonResponse({"dataset": response_array, "status": True})
                 else:
                     print(9)
                     return render(request, 'workerresponses.html', {"response_array": response_array, "userType": userType})
