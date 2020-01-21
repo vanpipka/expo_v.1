@@ -100,7 +100,7 @@ def getFIOList(order):
             array.append(index)
 
             context.append({
-                        "name": p['name'] +" "+ p['surname']
+                        "name": p['surname'] +" "+ p['name']
                     });
 
     return context
