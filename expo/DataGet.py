@@ -420,6 +420,7 @@ def searchWorker(user, searchList, userAauthorized=False, returnCount = False, g
     datacheck       = searchList.get('datacheck')
     sex             = str(searchList.get('sex'))
     haveip          = searchList.get('haveip')
+    fio             = searchList.get('fio')
     haveshengen     = searchList.get('haveshengen')
     haveintpass     = searchList.get('haveintpass')
     haveinstrument  = searchList.get('haveinstrument')
@@ -502,6 +503,18 @@ def searchWorker(user, searchList, userAauthorized=False, returnCount = False, g
         print("Готов к командировкам:" + str(readytotravel))
         searchProperty["readytotravel"] = True
         searchquery = searchquery.filter(readytotravel=True)
+
+    if fio != None and fio != "":
+        print("Поиск по фио:" + str(fio))
+        searchProperty["fio"] = fio
+
+        #Первый элемент имя второй фамилия
+        lst = s.split()
+
+        if len(lst) == 1:
+            searchquery = searchquery.filter(Q(name__icontains=fio) | Q(surname__icontains=fio))
+        elif len(lst) > 1 :
+            searchquery = searchquery.filter(Q(name__icontains=lst[0]) and Q(surname__icontains=lst[1]))
 
     if workpermit != None and workpermit == True:
         print("Есть разрешение на работу:" + str(workpermit))
