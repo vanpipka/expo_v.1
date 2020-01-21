@@ -1,6 +1,6 @@
 from django.http import  JsonResponse
 from django.shortcuts import render, redirect
-from expo.DataGet import  getProfessionList, getAllProfessionsAndGroups, getCityListFull, getServiceList, getCountryList, getCityList
+from expo.DataGet import  getFIOList, getProfessionList, getAllProfessionsAndGroups, getCityListFull, getServiceList, getCountryList, getCityList
 from expo.DataSet import refreshLastOnline
 from main.models import Professions, Service, UserType, News, Comments, Company, Attacment, CostOfService, Worker, ConfirmCodes
 import json
@@ -82,6 +82,18 @@ def jsonProfessionList(request):
         refreshLastOnline(request.user)
 
     context = getProfessionList()
+
+    response = JsonResponse({'dataset': context})
+    response['Access-Control-Allow-Origin'] = "*"
+
+    return response
+
+def jsonFioList(request):
+
+    if request.user.is_authenticated:
+        refreshLastOnline(request.user)
+
+    context = getFIOList(request.GET.get('order'))
 
     response = JsonResponse({'dataset': context})
     response['Access-Control-Allow-Origin'] = "*"

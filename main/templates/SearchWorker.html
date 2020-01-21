@@ -41,6 +41,12 @@
                         <input type="text" data-toggle="dropdown" class="input-medium search-query form-control" id="profession" name="profession" placeholder="Все специалисты..." value="{{ searchproperty.profession }}">
                     </div>
                 </div>
+                <div class="ml-4 mr-4 mt-3">
+                    <label for="FIO" class="text-menu txt-bold">ФИО</label>
+                    <div class="input-group">
+                        <input type="text" data-toggle="dropdown" class="input-medium search-query form-control" id="FIO" name="FIO" placeholder="ФИО специалиста..." value="{{ searchproperty.fio }}">
+                    </div>
+                </div>
                 <div class="search-down text-center mt-3 pt-2" id="search-down" style="background-color: #edeef0">
                     <label class="text-menu txt-bold"><button class="btn" style="background-color: #edeef0" onclick="showSearch(this)">Показать все отборы</button></label>
                 </div>
@@ -599,6 +605,7 @@
                 onlycomments: document.getElementById("onlycomments").checked,
                 profession: document.getElementById("profession").value,
                 city: document.getElementById("City").value,
+                fio: document.getElementById("FIO").value,
                 sex: $('input[name=sex]:checked').val(),
                 //salary: $('input[name=price]:checked').val(),
                 inputrating: document.getElementById("inputrating").value,

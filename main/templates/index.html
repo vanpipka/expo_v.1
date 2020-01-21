@@ -66,12 +66,26 @@
 
             <div class="row mt-4">
                 <div class="col">
-                    <span class="article">Заголовок что вы ищете?</span>
+                    <span class="article">Что вы ищете?</span>
                 </div>
             </div>
 
             <div class="row mt-3">
-                <div class="col col-6 text-center" >
+
+              <div class="col col-4 text-center" >
+                  <div class="pt-3 pb-3 pr-3 pl-3 bg-light">
+                      <div>
+                          <a href="{% get_attribute 'HOME_PAGE' %}jobs/">
+                            <img src="{% get_attribute 'STATIC_URL' %}main/img/1-4.png">
+                          </a>
+                      </div>
+                      <div>
+                          <span class="article article-sm">Вам нужна работа?</span>
+                      </div>
+                  </div>
+              </div>
+
+                <div class="col col-4 text-center" >
                     <div class="pt-3 pb-3 pr-3 pl-3 bg-light">
                         <div>
                             <a href="{% get_attribute 'HOME_PAGE' %}worker/search/">
@@ -84,7 +98,7 @@
                     </div>
                 </div>
 
-                <div class="col col-6 text-center">
+                <div class="col col-4 text-center">
                     <div class="pt-3 pb-3 pr-3 pl-3 bg-light" style="width: 99%;">
                         <div>
                           <a href="{% get_attribute 'HOME_PAGE' %}companys/">

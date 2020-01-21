@@ -35,6 +35,7 @@ urlpatterns = [
     path('m/checklogin/', views.checkLogin),
     path('m/checkserver/', views.checkServer),
     path('m/professionlist/', views.jsonProfessionList),
+    path('m/fiolist/', views.jsonFioList),
     #path('m/professionlist/save/', views.ProfessionsListSave),
     path('m/professionandgroups/', views.showJson),
     path('m/companies/', views.jsonCompanyList)

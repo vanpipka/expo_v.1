@@ -2,7 +2,7 @@
 <script>
     var prof_tags = [];
     var city_tags = [];
-    //var city_Dict = {};
+    var fio_tags  = [];
 
     $( "#profession" ).autocomplete({
         source: function( request, response ) {
@@ -32,6 +32,36 @@
         minLength: 2
         }
     });
+
+    $( "#FIO" ).autocomplete({
+        source: function( request, response ) {
+              fio_tags = [];
+                $.ajax({
+                    url: "{% get_attribute 'HOME_PAGE' %}m/fiolist/?order="+request.term,
+                    dataType: "json",
+                      // параметры запроса, передаваемые на сервер (последний - подстрока для поиска):
+                    data:{
+                        featureClass: "P",
+                        style: "full",
+                        maxRows: 12,
+                        name_startsWith: request.term
+                },
+                success: function(data){
+                    $.map(data.dataset, function(item){
+                        fio_tags.push(item.name)
+                    });
+                  }
+                });
+
+            var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
+            response( $.grep(fio_tags, function( item ){
+                return matcher.test( item );
+            }) );
+        minLength: 2
+        }
+    });
+
+
     $( "#City" ).autocomplete({
         source: function( request, response ) {
             if (city_tags.length == 0) {

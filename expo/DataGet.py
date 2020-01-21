@@ -81,6 +81,23 @@ def getAllProfessionsAndGroups(count = None):
 
     return all_workGroups
 
+def getFIOList(order):
+
+    print("fio: " + str(order))
+
+    if order == None:
+        data = Worker.objects.all().distinct('name', 'surname')
+    else:
+        data = Worker.objects.all().filter(Q(name__iexact=order) | Q(surname__iexact=order)).distinct('name', 'surname')
+
+    context = []
+    for p in data:
+        context.append({
+                    "name": p['name'] + " " + p['surname']
+                });
+
+    return context
+
 def getProfessionList():
 
     context = []
