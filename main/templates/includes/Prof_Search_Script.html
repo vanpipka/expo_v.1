@@ -51,13 +51,11 @@
                         fio_tags.push(item.name)
                     });
 
-                    var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
-                    response( $.grep(fio_tags, function( item ){
-                        console.log(3);
-                        console.log(item);
-                        return matcher.test( item );
-                    }) );
-                    
+
+
+                    //var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
+                    response( fio_tags);
+
                   }
                 });
 
