@@ -507,9 +507,10 @@ def searchWorker(user, searchList, userAauthorized=False, returnCount = False, g
     if fio != None and fio != "":
         print("Поиск по фио:" + str(fio))
         searchProperty["fio"] = fio
-
+        print("Поиск по фио: 1")
         #Первый элемент имя второй фамилия
         lst = fio.split()
+        print("Поиск по фио: 2")
         print(lst)
         if len(lst) == 1:
             searchquery = searchquery.filter(Q(name__icontains=fio) | Q(surname__icontains=fio))
