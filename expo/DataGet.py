@@ -90,7 +90,7 @@ def getFIOList(order):
     if order == None:
         return context
     else:
-        data = Worker.objects.all().filter(Q(name__iexact=order) | Q(surname__iexact=order)).values('name', 'surname')
+        data = Worker.objects.all().filter(Q(name__icontains=order) | Q(surname__icontains=order)).values('name', 'surname')
 
 
     for p in data:
