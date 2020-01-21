@@ -97,6 +97,8 @@ def getFIOList(order):
         index = p['name'] + p['surname']
 
         if (index in array) != True:
+
+            print(index)    
             array.append(index)
 
             context.append({
