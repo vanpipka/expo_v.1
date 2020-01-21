@@ -49,15 +49,19 @@
                 success: function(data){
                     $.map(data.dataset, function(item){
                         fio_tags.push(item.name)
+
+                        var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
+                        response( $.grep(fio_tags, function( item ){
+                            console.log(3);
+                            console.log(item);
+                            return matcher.test( item );
+                        }) );
                     });
+
                   }
                 });
 
-            var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
-            response( $.grep(fio_tags, function( item ){
-                return matcher.test( item );
-            }) );
-        minLength: 2
+        minLength: 3
         }
     });
 
