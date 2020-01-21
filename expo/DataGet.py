@@ -90,7 +90,7 @@ def getFIOList(order):
     if order == None:
         return context
     else:
-        data = Worker.objects.all().filter(Q(name__icontains=order) | Q(surname__icontains=order)).values('name', 'surname')
+        data = Worker.objects.all().filter(block=False).filter(publishdata=True).filter(Q(name__icontains=order) | Q(surname__icontains=order)).values('name', 'surname')
 
 
     for p in data:
@@ -515,7 +515,7 @@ def searchWorker(user, searchList, userAauthorized=False, returnCount = False, g
         if len(lst) == 1:
             searchquery = searchquery.filter(Q(name__icontains=fio) | Q(surname__icontains=fio))
         elif len(lst) > 1 :
-            searchquery = searchquery.filter(Q(name__icontains=lst[0]) and Q(surname__icontains=lst[1]))
+            searchquery = searchquery.filter(Q(name__icontains=lst[1]) and Q(surname__icontains=lst[0]))
 
     if workpermit != None and workpermit == True:
         print("Есть разрешение на работу:" + str(workpermit))
