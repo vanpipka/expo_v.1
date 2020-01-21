@@ -89,7 +89,7 @@ def getFIOList(order):
     if order == None:
         data = Worker.objects.all().values('name', 'surname')
     else:
-        data = Worker.objects.all().filter(Q(name__iexact=order) | Q(surname__iexact=order)).values('name', 'surname')
+        data = Worker.objects.all().filter(Q(name__icontains=order) | Q(surname__icontains=order)).values('name', 'surname')
 
     context = []
     for p in data:
@@ -98,7 +98,7 @@ def getFIOList(order):
 
         if (index in array) != True:
 
-            print(index)    
+            print(index)
             array.append(index)
 
             context.append({
