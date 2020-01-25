@@ -306,13 +306,13 @@ def checkLogin(request):
 
         if userType == 1:
             data = {'name': elem.name, 'surname': elem.surname, 'fotourl': Attacment.getresizelink(elem.image) + str(elem.foto), 'id': str(elem.id)}
-
+            answer['usertype'] = 'worker'
         elif userType == 2:
             data = {'name': elem.name, 'surname': '', 'fotourl': Attacment.getresizelink(elem.image) + str(elem.foto), 'id': str(elem.id)}
-
+            answer['usertype'] = 'company'
         else:
             data = {'name': '', 'surname': '', 'fotourl': '', 'id': ''}
-
+            answer['usertype'] = ''
         answer['status'] = True
         answer['user'] = data
 
@@ -320,6 +320,7 @@ def checkLogin(request):
 
         answer['status'] = False
         answer['errors'] = {'username': 'user is not authenticated'}
+        answer['usertype'] = ''
 
     response = JsonResponse(answer)
     response['Access-Control-Allow-Origin'] = "*"
