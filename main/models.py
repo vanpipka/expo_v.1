@@ -686,7 +686,7 @@ class JobOrder(models.Model):
             else:
                 response_list = list(JobResponse.objects.filter(worker=worker).filter(id=e['id']).values('status'))
                 e['response_is_available'] = 0
-                if (len(response_list) == 0:
+                if len(response_list) == 0:
                     e['response_is_available'] = 1      #Можно откликнуться
                 elif response_list['status'] == 2:      #Отказ
                     e['status'] = "Отказано"
