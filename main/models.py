@@ -682,17 +682,19 @@ class JobOrder(models.Model):
             except:
                 e['photo'] = '';
 
-            if (userType != 1):
+            if (userType != 1 or ):
                 e['response_is_available'] = 2      #ничего не выводить
             else:
                 print(e['id'])
                 response_list = list(JobResponse.objects.filter(worker=worker).values('status'))
+
+                print(1)
                 e['response_is_available'] = 0
                 if len(response_list) == 0:
                     e['response_is_available'] = 1      #Можно откликнуться
-                elif response_list['status'] == 2:      #Отказ
+                elif response_list[0]['status'] == 2:      #Отказ
                     e['status'] = "Отказано"
-                elif response_list['status'] == 1:      #Приглашение
+                elif response_list[0]['status'] == 1:      #Приглашение
                     e['status'] = "Приглашение"
                 else:
                     e['status'] = "Не просмотрено"
