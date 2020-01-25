@@ -682,7 +682,7 @@ class JobOrder(models.Model):
             except:
                 e['photo'] = '';
 
-            if (userType != 1 or ):
+            if (userType != 1 ):
                 e['response_is_available'] = 2      #ничего не выводить
             else:
                 print(e['id'])
