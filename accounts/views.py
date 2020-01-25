@@ -799,6 +799,8 @@ def getJsonData(request, type):
         else:
             ajax_response['status'] = False
 
+        ajax_response['usertype'] = '';
+
     else:
 
         if request.session.session_key != None:
@@ -808,17 +810,19 @@ def getJsonData(request, type):
 
             if userType == 1:
                 data = {'name': elem.name, 'surname': elem.surname, 'fotourl': Attacment.getresizelink(elem.image), 'id': str(elem.id)}
-
+                ajax_response['usertype'] = 'worker';
             elif userType == 2:
                 data = {'name': elem.name, 'surname': '', 'fotourl': Attacment.getresizelink(elem.image), 'id': str(elem.id)}
-
+                ajax_response['usertype'] = 'company';
             else:
                 data = {'name': '', 'surname': '', 'fotourl': '', 'id': ''}
+                ajax_response['usertype'] = '';
 
             ajax_response['status'] = True
             ajax_response['user'] = data
 
         else:
             ajax_response['status'] = False
-
+            ajax_response['usertype'] = '';
+            
     return ajax_response
