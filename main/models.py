@@ -659,18 +659,9 @@ class JobOrder(models.Model):
         userType       = 0
 
         if User != None:
-
             userType = UserType.GetUserType(user)
-
             if userType == 1:
-
                 worker = UserType.GetElementByUser(user)
-
-                response_list = list(JobResponse.objects.filter(worker=worker).values('jobOrder_id'))
-
-                for e in response_list:
-                    if response_array.count(e['jobOrder_id']) == 0:
-                        response_array.append(e['jobOrder_id'])
 
         objects = list(JobOrder.objects.all().filter(deleted=False).select_related('city').select_related('company').order_by("-created").values('id', 'deleted', 'responseCount', 'description', 'date', 'enddate', 'place', 'created', 'company', 'city', 'city_id', 'city__name', 'company__name', 'company__image'))
 
@@ -692,10 +683,17 @@ class JobOrder(models.Model):
 
             if (userType != 1):
                 e['response_is_available'] = 2      #ничего не выводить
-            elif (response_array.count(e['id'])) == 0:
-                e['response_is_available'] = 1      #Можно откликнуться
             else:
-                e['response_is_available'] = 0      #уже откликнулся
+                response_list = list(JobResponse.objects.filter(worker=worker).filter(id=e['id']).values('status'))
+                e['response_is_available'] = 0
+                if (len(response_list) == 0:
+                    e['response_is_available'] = 1      #Можно откликнуться
+                elif response_list['status'] == 2:      #Отказ
+                    e['status'] = "Отказано"
+                elif response_list['status'] == 1:      #Приглашение
+                    e['status'] = "Приглашение"
+                else:
+                    e['status'] = "Не просмотрено"
 
             e['job_composition'] = []
 
