@@ -657,6 +657,7 @@ class JobOrder(models.Model):
 
         response_array = []
         userType       = 0
+        worker         = None
 
         if User != None:
             userType = UserType.GetUserType(user)
@@ -685,7 +686,7 @@ class JobOrder(models.Model):
                 e['response_is_available'] = 2      #ничего не выводить
             else:
                 print(e['id'])
-                response_list = list(JobResponse.objects.filter(worker=worker).filter(jobOrder_id = e).values('status'))
+                response_list = list(JobResponse.objects.filter(worker=worker).values('status'))
                 e['response_is_available'] = 0
                 if len(response_list) == 0:
                     e['response_is_available'] = 1      #Можно откликнуться
