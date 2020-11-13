@@ -1,0 +1,44 @@
+version: '3.3'
+
+services:
+  db:
+    image: mysql:5
+    restart: 'always'
+    expose:
+      - '3306'
+    ports:
+      - '3306:3306'
+    networks:
+      - expo-network
+    environment:
+       MYSQL_DATABASE: 'vseexpo'
+       MYSQL_USER: 'vseexpo'
+       MYSQL_PASSWORD: 'cnreuhfdji3'
+       MYSQL_ROOT_PASSWORD: 'core'
+       #MYSQL_ROOT_HOST: 127.0.0.1
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./conf/my.cnf:/etc/mysql/conf.d/my.cnf
+  expo:
+    build: .
+    restart: always
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/expo
+    ports:
+      - "192.168.89.2:8000:8000"
+    networks:
+      - expo-network
+    depends_on:
+      - db
+
+networks:
+    expo-network:
+        driver: bridge
+volumes:
+    db_data:
+      driver: local
+      driver_opts:
+        type: 'none'
+        o: 'bind'
+        device: '/root/expo_v.1/db_data'

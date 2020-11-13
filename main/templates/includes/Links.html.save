@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load static %}
 {% load home_extras %}
 
     <link rel="stylesheet" href="/static/main/css/bootstrap.css"/>
