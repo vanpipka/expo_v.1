@@ -1,13 +1,13 @@
-version: '3.3'
+version: '3.7'
 
 services:
   db:
     image: mysql:5
     restart: 'always'
-    expose:
-      - '3306'
+#    expose:
+#      - '3306'
     ports:
-      - '3306:3306'
+      - '127.0.0.1:3306:3306'
     networks:
       - expo-network
     environment:
@@ -26,12 +26,35 @@ services:
     volumes:
       - .:/expo
     ports:
-      - "192.168.89.2:8000:8000"
+      - '127.0.0.1:8000:8000'
     networks:
       - expo-network
     depends_on:
       - db
-
+  web:
+    container_name: nginx
+    image: nginx:latest
+    restart: unless-stopped
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/certbot/conf:/etc/letsencrypt
+      - ./nginx/certbot/www:/var/www/certbot
+    ports:
+      - 80:80
+      - 443:443
+    links:
+      - expo
+    networks:
+      - expo-network
+  certbot:
+    restart: unless-stopped
+    container_name: certbot
+    image: certbot/certbot
+    networks:
+      - expo-network
+    volumes:
+      - ./nginx/certbot/conf:/etc/letsencrypt
+      - ./nginx/certbot/www:/var/www/certbot
 networks:
     expo-network:
         driver: bridge
@@ -41,4 +64,4 @@ volumes:
       driver_opts:
         type: 'none'
         o: 'bind'
-        device: '/root/expo_v.1/db_data'
+        device: '/home/expo/expo_v.1/db_data'
