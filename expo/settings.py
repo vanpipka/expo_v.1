@@ -63,7 +63,7 @@ SECRET_KEY = '6i0a)qi2!4&^(c7ie2@_v1y2w^sq##9+ilw)3^v!d5&xuh)=3a'
 # SECURITY WARNING: don't run with debug turned on in production!
 #DEBUG = True
 
-ALLOWED_HOSTS=['192.168.89.2']
+ALLOWED_HOSTS=['vseexpo.ru']
 #ALLOWED_HOSTS = ['10.10.48.201', 'vpn2.contrail.ru', 'cs.itoe.ru', 'py.itoe.ru']
 
 
